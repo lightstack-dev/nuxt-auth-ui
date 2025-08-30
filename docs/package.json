@@ -1,0 +1,17 @@
+{
+  "private": true,
+  "name": "nuxt-auth-ui-docs",
+  "type": "module",
+  "scripts": {
+    "dev": "nuxi dev",
+    "build": "nuxi build",
+    "generate": "nuxi generate",
+    "preview": "nuxi preview"
+  },
+  "dependencies": {
+    "@nuxt/content": "^2.13.0",
+    "@nuxt/image": "^1.11.0",
+    "@nuxt/ui": "next",
+    "nuxt": "^4.0.3"
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "private": true,
+  "name": "nuxt-auth-ui-playground",
+  "type": "module",
+  "scripts": {
+    "dev": "nuxi dev",
+    "build": "nuxi build",
+    "generate": "nuxi generate"
+  },
+  "dependencies": {
+    "@logto/nuxt": "^0.5.0",
+    "@nuxt/ui": "next",
+    "nuxt": "^4.0.3"
+  }
+}
