@@ -8,8 +8,8 @@
     "generate": "nuxi generate"
   },
   "dependencies": {
-    "@logto/nuxt": "^0.5.0",
-    "@nuxt/ui": "next",
+    "@logto/nuxt": "latest",
+    "@nuxt/ui": "^4.0.0-alpha.0",
     "nuxt": "^4.0.3"
   }
 }

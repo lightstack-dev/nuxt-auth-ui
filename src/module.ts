@@ -4,7 +4,7 @@ import { defineNuxtModule, addPlugin, createResolver } from '@nuxt/kit'
 export interface AuthUIConfig {
   // Routes
   prefix?: string
-  
+
   // Component naming
   componentPrefix?: string
 
@@ -42,12 +42,12 @@ export default defineNuxtModule<AuthUIConfig>({
     componentPrefix: 'A',
     redirects: {
       afterSignIn: '/',
-      afterSignOut: '/'
+      afterSignOut: '/',
     },
     middleware: {
       global: false,
-      name: 'auth'
-    }
+      name: 'auth',
+    },
   },
   setup(_options, _nuxt) {
     const resolver = createResolver(import.meta.url)

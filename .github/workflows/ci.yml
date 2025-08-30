@@ -19,13 +19,18 @@ jobs:
         with:
           node-version: 20
 
-      - run: npm i -g --force corepack@latest && corepack enable
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
 
       - name: Install dependencies
-        run: npx nypm@latest i
+        run: |
+          bun install
+          cd playground && bun install
+          cd ../docs && bun install
 
       - name: Lint
-        run: npm run lint
+        run: bun run lint
 
   test:
     runs-on: ubuntu-latest
@@ -37,13 +42,18 @@ jobs:
         with:
           node-version: 20
 
-      - run: npm i -g --force corepack@latest && corepack enable
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
 
       - name: Install dependencies
-        run: npx nypm@latest i
+        run: |
+          bun install
+          cd playground && bun install
+          cd ../docs && bun install
 
       - name: Playground prepare
-        run: npm run dev:prepare
+        run: bun run dev:prepare
 
       - name: Test
-        run: npm run test
+        run: bun run test
