@@ -1,4 +1,4 @@
-import { defineNuxtModule, addPlugin, createResolver } from '@nuxt/kit'
+import { defineNuxtModule, addPlugin, addImports, createResolver } from '@nuxt/kit'
 
 // Module options TypeScript interface definition
 export interface AuthUIConfig {
@@ -49,8 +49,20 @@ export default defineNuxtModule<AuthUIConfig>({
       name: 'auth',
     },
   },
-  setup(_options, _nuxt) {
+  setup(options, nuxt) {
     const resolver = createResolver(import.meta.url)
+
+    // Add runtime config
+    nuxt.options.runtimeConfig.public.authUi = {
+      ...nuxt.options.runtimeConfig.public.authUi,
+      ...options,
+    }
+
+    // Auto-import composable
+    addImports({
+      name: 'useAuthUI',
+      from: resolver.resolve('./runtime/composables/useAuthUI'),
+    })
 
     // Do not add the extension since the `.ts` will be transpiled to `.mjs` after `npm run prepack`
     addPlugin(resolver.resolve('./runtime/plugin'))
