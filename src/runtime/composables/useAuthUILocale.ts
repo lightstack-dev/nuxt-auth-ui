@@ -34,15 +34,6 @@ const defaultMessages = {
     dontHaveAccount: 'Don\'t have an account?',
     agreeToTerms: 'I agree to the terms and conditions',
   },
-  // Add more languages as needed
-  de: {
-    signIn: 'Anmelden',
-    signOut: 'Abmelden',
-    signUp: 'Registrieren',
-    profile: 'Profil',
-    settings: 'Einstellungen',
-    // ... etc
-  },
 }
 
 export type AuthUILocale = keyof typeof defaultMessages
