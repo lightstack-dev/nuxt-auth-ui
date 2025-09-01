@@ -1,8 +1,5 @@
 export default defineNuxtConfig({
-  compatibilityDate: '2025-08-30',
 
-  css: ['~/assets/css/main.css'],
-  
   modules: [
     '@nuxt/ui',
     '@logto/nuxt',
@@ -10,6 +7,9 @@ export default defineNuxtConfig({
   ],
 
   devtools: { enabled: true },
+
+  css: ['~/assets/css/main.css'],
+  compatibilityDate: '2025-08-30',
 
   authUi: {
     appName: 'nuxt-auth-ui',

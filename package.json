@@ -24,10 +24,10 @@
   ],
   "scripts": {
     "prepack": "nuxt-module-build build",
-    "dev": "npm run dev:prepare && nuxi dev playground",
-    "dev:docs": "npm run dev:prepare && nuxi dev docs",
+    "dev": "bun run dev:prepare && nuxi dev playground",
+    "dev:docs": "bun run dev:prepare && nuxi dev docs",
     "dev:build": "nuxi build playground",
-    "dev:prepare": "nuxt-module-build build --stub && nuxt-module-build prepare && nuxi prepare playground && nuxi prepare docs",
+    "dev:prepare": "nuxt-module-build build --stub && nuxt-module-build prepare && cd playground && bun install && nuxi prepare && cd ../docs && bun install && nuxi prepare && cd ..",
     "docs:build": "nuxi build docs",
     "docs:generate": "nuxi generate docs",
     "release": "npm run lint && npm run test && npm run prepack && changelogen --release && npm publish && git push --follow-tags",

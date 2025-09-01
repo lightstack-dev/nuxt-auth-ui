@@ -8,5 +8,14 @@
   "tailwindCSS.classAttributes": ["class", "ui"],
   "tailwindCSS.experimental.classRegex": [
     ["ui:\\s*{([^)]*)\\s*}", "(?:'|\"|`)([^']*)(?:'|\"|`)"]
+  ],
+  "editor.formatOnSave": false,
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": "explicit"
+  },
+  "eslint.validate": [
+    "javascript",
+    "typescript",
+    "vue"
   ]
 }

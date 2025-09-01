@@ -1,32 +1,15 @@
+// https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
+
   modules: [
-    '@nuxt/content',
     '@nuxt/ui',
+    '@nuxt/content',
+    '@nuxt/eslint',
     '@nuxt/image',
-    '../src/module', // Our auth UI module for showcasing
+    '@nuxt/test-utils',
   ],
 
-  content: {
-    documentDriven: true,
-    highlight: {
-      theme: 'github-dark',
-    },
-  },
-
-  ui: {
-    global: true,
-  },
-
-  nitro: {
-    prerender: {
-      routes: ['/'],
-    },
-  },
-
-  // Mock auth for documentation examples
-  authUi: {
-    appName: 'Lightstack Auth',
-    prefix: '/demo/auth',
-    componentPrefix: 'A',
-  },
+  devtools: { enabled: true },
+  css: ['~/assets/css/main.css'],
+  compatibilityDate: '2025-08-30',
 })

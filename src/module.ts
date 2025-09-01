@@ -1,4 +1,4 @@
-import { defineNuxtModule, addPlugin, addImports, createResolver } from '@nuxt/kit'
+import { defineNuxtModule, addPlugin, addImports, addComponent, addTemplate, createResolver } from '@nuxt/kit'
 
 // Module options TypeScript interface definition
 export interface AuthUIConfig {
@@ -29,6 +29,10 @@ export interface AuthUIConfig {
     primary?: string
     gray?: string
   }
+
+  // i18n
+  locale?: string
+  messages?: Record<string, Record<string, string>>
 }
 
 export default defineNuxtModule<AuthUIConfig>({
@@ -49,19 +53,59 @@ export default defineNuxtModule<AuthUIConfig>({
       name: 'auth',
     },
   },
-  setup(options, nuxt) {
+  async setup(options, nuxt) {
     const resolver = createResolver(import.meta.url)
 
-    // Add runtime config
-    nuxt.options.runtimeConfig.public.authUi = {
-      ...nuxt.options.runtimeConfig.public.authUi,
-      ...options,
+    // Extend app.config with our defaults
+    // This merges with user's app.config automatically
+    nuxt.hook('app:resolve', (app) => {
+      app.configs.push(resolver.resolve('./runtime/app.config'))
+    })
+
+    // Merge options with defaults to ensure all values are defined
+    const resolvedOptions = {
+      prefix: options.prefix || '/auth',
+      componentPrefix: options.componentPrefix || 'A',
+      redirects: {
+        afterSignIn: options.redirects?.afterSignIn || '/',
+        afterSignOut: options.redirects?.afterSignOut || '/',
+      },
+      middleware: {
+        global: options.middleware?.global ?? false,
+        name: options.middleware?.name || 'auth',
+      },
+      appName: options.appName,
+      logo: options.logo,
+      theme: options.theme,
+      locale: options.locale,
+      messages: options.messages,
     }
 
-    // Auto-import composable
-    addImports({
-      name: 'useAuthUI',
-      from: resolver.resolve('./runtime/composables/useAuthUI'),
+    // Add runtime config
+    nuxt.options.runtimeConfig.public.authUi = resolvedOptions
+
+    // Auto-import composables
+    addImports([
+      {
+        name: 'useAuthUI',
+        from: resolver.resolve('./runtime/composables/useAuthUI'),
+      },
+      {
+        name: 'useAuthUILocale',
+        from: resolver.resolve('./runtime/composables/useAuthUILocale'),
+      },
+    ])
+
+    // Add type declarations
+    addTemplate({
+      filename: 'types/auth-ui.d.ts',
+      src: resolver.resolve('./runtime/types/app-config.d.ts'),
+    })
+
+    // Register components with configurable prefix
+    addComponent({
+      name: `${resolvedOptions.componentPrefix}SignInButton`,
+      filePath: resolver.resolve('./runtime/components/SignInButton.vue'),
     })
 
     // Do not add the extension since the `.ts` will be transpiled to `.mjs` after `npm run prepack`

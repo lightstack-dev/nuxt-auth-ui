@@ -1,3 +1,16 @@
+import { useRuntimeConfig, computed, navigateTo } from '#imports'
+
+// Declare the Logto types that will be available at runtime
+declare global {
+  const useLogtoUser: () => {
+    sub: string
+    username?: string
+    email?: string
+    name?: string
+    picture?: string
+  } | null
+}
+
 export interface AuthUIUser {
   id: string
   username?: string
@@ -7,37 +20,38 @@ export interface AuthUIUser {
 }
 
 export function useAuthUI() {
-  const logto = useLogto()
+  // useLogtoUser is auto-imported by Logto module in the consuming app
+  const logtoUser = typeof useLogtoUser !== 'undefined' ? useLogtoUser() : null
   const config = useRuntimeConfig().public.authUi || {}
 
-  const isAuthenticated = computed(() => logto.isAuthenticated.value)
-  const isLoading = computed(() => logto.isLoading.value)
-  
+  const isAuthenticated = computed(() => !!logtoUser)
+
   const user = computed<AuthUIUser | null>(() => {
-    if (!logto.user.value) return null
-    
+    if (!logtoUser) return null
+
     return {
-      id: logto.user.value.sub,
-      username: logto.user.value.username,
-      primaryEmail: logto.user.value.primary_email,
-      name: logto.user.value.name,
-      avatar: logto.user.value.picture,
+      id: logtoUser.sub,
+      username: logtoUser.username,
+      primaryEmail: logtoUser.email,
+      name: logtoUser.name,
+      avatar: logtoUser.picture,
     }
   })
 
-  const signIn = (redirectTo?: string) => {
-    const redirect = redirectTo || config.redirects?.afterSignIn || '/'
-    return logto.signIn(redirect)
+  const signIn = async () => {
+    // Navigate to our auth sign-in page
+    await navigateTo(getAuthUrl('sign-in'))
   }
 
-  const signUp = (redirectTo?: string) => {
-    const redirect = redirectTo || config.redirects?.afterSignIn || '/'
-    return logto.signUp(redirect)
+  const signUp = async () => {
+    // Navigate to our auth sign-up page
+    await navigateTo(getAuthUrl('sign-up'))
   }
 
-  const signOut = (redirectTo?: string) => {
-    const redirect = redirectTo || config.redirects?.afterSignOut || '/'
-    return logto.signOut(redirect)
+  const signOut = async () => {
+    // Navigate to Logto's sign-out route
+    // This is Logto's route, not ours
+    await navigateTo('/sign-out')
   }
 
   const getAuthUrl = (type: 'sign-in' | 'sign-up' | 'profile') => {
@@ -55,14 +69,13 @@ export function useAuthUI() {
   return {
     // State
     isAuthenticated,
-    isLoading,
     user,
-    
+
     // Actions
     signIn,
     signUp,
     signOut,
-    
+
     // Utilities
     getAuthUrl,
   }
