@@ -3,7 +3,7 @@ title: SignInButton
 description: A ready-to-use authentication button
 ---
 
-The `SignInButton` component provides a simple, pre-configured authentication entry point. It automatically renders based on authentication state and links to your configured sign-in route.
+The SignInButton component provides a simple, pre-configured authentication entry point. It automatically renders based on authentication state and links to your configured sign-in route.
 
 ## Basic Usage and Defaults
 

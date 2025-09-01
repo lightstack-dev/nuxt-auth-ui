@@ -12,11 +12,9 @@
 <script setup lang="ts">
 import { useAuthUI, useAuthUILocale, useAppConfig } from '#imports'
 
-interface Props {
+defineProps<{
   persistent?: boolean
-}
-
-defineProps<Props>()
+}>()
 
 const auth = useAuthUI()
 const locale = useAuthUILocale()
