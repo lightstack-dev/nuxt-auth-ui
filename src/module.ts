@@ -1,9 +1,14 @@
-import { defineNuxtModule, addPlugin, addImports, addComponent, addTemplate, createResolver } from '@nuxt/kit'
+import { defineNuxtModule, addPlugin, addImports, addComponent, addTemplate, createResolver, extendPages } from '@nuxt/kit'
 
 // Module options TypeScript interface definition
 export interface AuthUIConfig {
-  // Routes
-  prefix?: string
+  // Routes - individually configurable for maximum control
+  routes?: {
+    signIn?: string
+    signUp?: string
+    signOut?: string
+    profile?: string
+  }
 
   // Component naming
   componentPrefix?: string
@@ -24,15 +29,8 @@ export interface AuthUIConfig {
     name?: string
   }
 
-  // Theme (auto-inherits from app.config.ts if using Nuxt UI)
-  theme?: {
-    primary?: string
-    gray?: string
-  }
-
-  // i18n
-  locale?: string
-  messages?: Record<string, Record<string, string>>
+  // Messages - simple text overrides
+  messages?: Record<string, string>
 }
 
 export default defineNuxtModule<AuthUIConfig>({
@@ -42,7 +40,12 @@ export default defineNuxtModule<AuthUIConfig>({
   },
   // Default configuration options of the Nuxt module
   defaults: {
-    prefix: '/auth',
+    routes: {
+      signIn: '/auth/sign-in',
+      signUp: '/auth/sign-up',
+      signOut: '/auth/sign-out',
+      profile: '/auth/profile',
+    },
     componentPrefix: 'A',
     redirects: {
       afterSignIn: '/',
@@ -51,6 +54,12 @@ export default defineNuxtModule<AuthUIConfig>({
     middleware: {
       global: false,
       name: 'auth',
+    },
+    messages: {
+      signIn: 'Sign In',
+      signOut: 'Sign Out',
+      signInTitle: 'Welcome Back',
+      signInDescription: 'Sign in to your account to continue',
     },
   },
   async setup(options, nuxt) {
@@ -64,7 +73,12 @@ export default defineNuxtModule<AuthUIConfig>({
 
     // Merge options with defaults to ensure all values are defined
     const resolvedOptions = {
-      prefix: options.prefix || '/auth',
+      routes: {
+        signIn: options.routes?.signIn || '/auth/sign-in',
+        signUp: options.routes?.signUp || '/auth/sign-up',
+        signOut: options.routes?.signOut || '/auth/sign-out',
+        profile: options.routes?.profile || '/auth/profile',
+      },
       componentPrefix: options.componentPrefix || 'A',
       redirects: {
         afterSignIn: options.redirects?.afterSignIn || '/',
@@ -76,12 +90,18 @@ export default defineNuxtModule<AuthUIConfig>({
       },
       appName: options.appName,
       logo: options.logo,
-      theme: options.theme,
-      locale: options.locale,
-      messages: options.messages,
+      messages: {
+        signIn: 'Sign In',
+        signOut: 'Sign Out',
+        signInTitle: 'Welcome Back',
+        signInDescription: 'Sign in to your account to continue',
+        ...options.messages,
+      },
     }
 
     // Add runtime config
+    nuxt.options.runtimeConfig = nuxt.options.runtimeConfig || { public: {} }
+    nuxt.options.runtimeConfig.public = nuxt.options.runtimeConfig.public || {}
     nuxt.options.runtimeConfig.public.authUi = resolvedOptions
 
     // Auto-import composables
@@ -106,6 +126,15 @@ export default defineNuxtModule<AuthUIConfig>({
     addComponent({
       name: `${resolvedOptions.componentPrefix}SignInButton`,
       filePath: resolver.resolve('./runtime/components/SignInButton.vue'),
+    })
+
+    // Add the sign-in route
+    extendPages((pages) => {
+      pages.push({
+        name: 'auth-sign-in',
+        path: resolvedOptions.routes.signIn,
+        file: resolver.resolve('./runtime/pages/sign-in.vue'),
+      })
     })
 
     // Do not add the extension since the `.ts` will be transpiled to `.mjs` after `npm run prepack`

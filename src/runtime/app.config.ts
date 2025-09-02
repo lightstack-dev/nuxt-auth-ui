@@ -11,6 +11,7 @@ export default defineAppConfig({
       authPassword: 'i-heroicons-key',
       authEmail: 'i-heroicons-envelope',
       authSocial: 'i-heroicons-globe-alt',
+      authProvider: 'i-heroicons-arrow-right-on-rectangle',
       authGoogle: 'i-simple-icons-google',
       authGitHub: 'i-simple-icons-github',
       authMicrosoft: 'i-simple-icons-microsoft',

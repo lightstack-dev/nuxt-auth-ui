@@ -1,4 +1,5 @@
 import { useRuntimeConfig, computed, navigateTo } from '#imports'
+import type { AuthUIConfig } from '../types/config'
 
 // Declare the Logto types that will be available at runtime
 declare global {
@@ -22,7 +23,8 @@ export interface AuthUIUser {
 export function useAuthUI() {
   // useLogtoUser is auto-imported by Logto module in the consuming app
   const logtoUser = typeof useLogtoUser !== 'undefined' ? useLogtoUser() : null
-  const config = useRuntimeConfig().public.authUi || {}
+  const runtimeConfig = useRuntimeConfig()
+  const config = (runtimeConfig.public.authUi || {}) as AuthUIConfig
 
   const isAuthenticated = computed(() => !!logtoUser)
 
@@ -55,14 +57,20 @@ export function useAuthUI() {
   }
 
   const getAuthUrl = (type: 'sign-in' | 'sign-up' | 'profile') => {
-    const prefix = config.prefix || '/auth'
+    const routes = config.routes || {
+      signIn: '/auth/sign-in',
+      signUp: '/auth/sign-up',
+      signOut: '/auth/sign-out',
+      profile: '/auth/profile',
+    }
+
     switch (type) {
       case 'sign-in':
-        return `${prefix}/sign-in`
+        return routes.signIn || '/auth/sign-in'
       case 'sign-up':
-        return `${prefix}/sign-up`
+        return routes.signUp || '/auth/sign-up'
       case 'profile':
-        return `${prefix}/profile`
+        return routes.profile || '/auth/profile'
     }
   }
 

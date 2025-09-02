@@ -3,7 +3,7 @@ title: SignInButton
 description: A ready-to-use authentication button
 ---
 
-The SignInButton component provides a simple, pre-configured authentication entry point. It automatically renders based on authentication state and links to your configured sign-in route.
+The SignInButton component provides a simple, pre-configured authentication entry point. It automatically renders based on authentication state and navigates to the configured sign-in route.
 
 ## Basic Usage and Defaults
 
@@ -23,7 +23,7 @@ By default, the button:
 - Comes in default color, size, and variant as defined by [Nuxt UI](<(https://ui4.nuxt.com/docs/components/button)>)
 - Displays localized "Sign in" text with `locale.t('signIn')`
 - Shows the icon from `appConfig.ui.icons.authSignIn`
-- Navigates to `/auth/sign-in`, using the configured route prefix
+- Navigates to `/auth/sign-in` by default (fully configurable via `routes.signIn` in module options)
 - Automatically renders as long as the user is unauthenticated with `!useAuthUI().isAuthenticated`
 
 ## Authentication State Behavior
@@ -103,12 +103,12 @@ The component extends [Nuxt UI's `UButton`](https://ui4.nuxt.com/docs/components
 
 ### Props
 
-| Prop           | Type                  | Default                         | Description                                    |
-| -------------- | --------------------- | ------------------------------- | ---------------------------------------------- |
-| `label`        | `string`              | `locale.t('signIn')`            | Button text label                              |
-| `leading-icon` | `string \| undefined` | `appConfig.ui.icons.authSignIn` | Icon shown before text                         |
-| `persistent`   | `boolean`             | `false`                         | Keep button visible when user is authenticated |
-| `to`           | `string`              | `/auth/sign-in`                 | Navigation destination                         |
+| Prop           | Type                  | Default                         | Description                                               |
+| -------------- | --------------------- | ------------------------------- | --------------------------------------------------------- |
+| `label`        | `string`              | `locale.t('signIn')`            | Button text label                                         |
+| `leading-icon` | `string \| undefined` | `appConfig.ui.icons.authSignIn` | Icon shown before text                                    |
+| `persistent`   | `boolean`             | `false`                         | Keep button visible when user is authenticated            |
+| `to`           | `string`              | `/auth/sign-in`                 | Navigation destination (configurable via `routes.signIn`) |
 
 ### Slots
 

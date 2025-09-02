@@ -1,18 +1,18 @@
 import { useRuntimeConfig, computed } from '#imports'
-
-// Runtime config interface for our module
-interface AuthUIRuntimeConfig {
-  locale?: string
-  messages?: Record<string, Record<string, string>>
-  [key: string]: unknown // Allow other auth config properties
-}
+import type { AuthUIConfig } from '../types/config'
 
 // Default translations
 const defaultMessages = {
   en: {
-    signIn: 'Sign in',
-    signOut: 'Sign out',
-    signUp: 'Sign up',
+    signIn: 'Sign In',
+    signOut: 'Sign Out',
+    signUp: 'Sign Up',
+    signInTitle: 'Welcome Back',
+    signInDescription: 'Sign in to your account to continue',
+    signUpTitle: 'Create Account',
+    signUpDescription: 'Create your account to get started',
+    continueWithProvider: 'Continue with Provider',
+    // Future messages for additional components
     profile: 'Profile',
     settings: 'Settings',
     security: 'Security',
@@ -25,8 +25,6 @@ const defaultMessages = {
     back: 'Back',
     continue: 'Continue',
     welcome: 'Welcome',
-    welcomeBack: 'Welcome back',
-    createAccount: 'Create account',
     forgotPassword: 'Forgot password?',
     rememberMe: 'Remember me',
     orContinueWith: 'Or continue with',
@@ -39,8 +37,9 @@ const defaultMessages = {
 export type AuthUILocale = keyof typeof defaultMessages
 export type AuthUIMessageKey = keyof typeof defaultMessages.en
 
-export function useAuthUILocale(locale: AuthUILocale = 'en') {
-  const config = useRuntimeConfig().public.authUi as AuthUIRuntimeConfig
+export function useAuthUILocale() {
+  const runtimeConfig = useRuntimeConfig()
+  const config = (runtimeConfig.public.authUi || {}) as AuthUIConfig
 
   // Check if app is using @nuxtjs/i18n
   let i18n = null
@@ -54,7 +53,7 @@ export function useAuthUILocale(locale: AuthUILocale = 'en') {
 
   const currentLocale = computed(() => {
     if (i18n?.locale?.value) return i18n.locale.value as AuthUILocale
-    return config?.locale || locale
+    return 'en' // Default to English
   })
 
   const messages = computed(() => {
@@ -62,7 +61,7 @@ export function useAuthUILocale(locale: AuthUILocale = 'en') {
     return {
       ...defaultMessages.en, // Fallback to English
       ...(defaultMessages[lang as keyof typeof defaultMessages] || {}),
-      ...(config?.messages?.[lang] || {}), // User overrides
+      ...(config?.messages || {}), // User overrides (simplified - no nested locale keys)
     }
   })
 
