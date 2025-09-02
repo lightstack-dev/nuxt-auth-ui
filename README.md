@@ -18,54 +18,38 @@ Building auth sucks. You either spend weeks building forms and flows, or you get
 ## Quick Start
 
 ```bash
-npm install @lightstack/nuxt-auth-ui @logto/nuxt
+npm install @lightstack-dev/nuxt-auth-ui @logto/nuxt
 ```
 
 ```typescript
 // nuxt.config.ts
 export default defineNuxtConfig({
-  modules: [
-    "@logto/nuxt",
-    "@lightstack/nuxt-auth-ui"
-  ],
+  modules: ["@logto/nuxt", "@lightstack-dev/nuxt-auth-ui"],
 });
 ```
 
 That's it! You now have:
 
-- Sign-up/-in at `/auth/sign-up` and `/auth/sign-in`
-- Password reset flow at `/auth/reset`
-- User profile at `/auth/profile`
-- Security settings at `/auth/security`
+- Sign-in page at `/auth/sign-in`
+- Ready-to-use SignInButton component
 
 ## Features
 
-✅ **Email + password authentication**  
-✅ **Social sign-in** (Google, GitHub, Microsoft, Apple)  
-✅ **Password reset flow**  
-✅ **User profile management**  
-✅ **Session management**  
-✅ **Account deletion**  
+✅ **SignInButton component** - Drop-in sign-in button  
+✅ **Sign-in page** - Beautiful sign-in form  
 ✅ **Built with Nuxt UI** - automatically themed  
 ✅ **Self-hostable** - works with any Logto instance  
-✅ **TypeScript** - fully typed
+✅ **TypeScript** - fully typed  
+🚧 **More components coming soon** - User menu, profile pages, etc.
 
 ## Components
 
-Drop these anywhere in your app:
+Drop the SignInButton anywhere in your app:
 
 ```vue
 <template>
   <!-- Sign-in button -->
-  <AButton />
-
-  <!-- User menu with profile/logout -->
-  <AUserMenu />
-
-  <!-- Protect content -->
-  <AProtected>
-    <SecretContent />
-  </AProtected>
+  <ASignInButton />
 </template>
 ```
 
@@ -76,23 +60,30 @@ Customize everything:
 ```typescript
 // nuxt.config.ts
 export default defineNuxtConfig({
-  modules: [
-    "@logto/nuxt",
-    "@lightstack/nuxt-auth-ui"
-  ],
+  modules: ["@logto/nuxt", "@lightstack-dev/nuxt-auth-ui"],
   authUi: {
     // Branding
     appName: "My SaaS",
     logo: "/logo.svg",
 
-    // Routes
-    prefix: "/auth",
+    // Routes (customizable)
+    routes: {
+      signIn: "/auth/sign-in",  // default
+    },
     redirects: {
       afterSignIn: "/dashboard",
+      afterSignOut: "/",
     },
 
     // Component prefix (default: 'A')
     componentPrefix: "A",
+
+    // Messages
+    messages: {
+      signIn: "Sign In",
+      signInTitle: "Welcome Back",
+      signInDescription: "Sign in to your account to continue",
+    },
   },
 });
 ```
@@ -109,26 +100,26 @@ export default defineNuxtConfig({
   
   ```bash
   # Install dependencies
-  npm install
-  
-  # Generate type stubs
-  npm run dev:prepare
+  bun install
   
   # Develop with the playground
-  npm run dev
+  bun run dev
   
-  # Build the playground
-  npm run dev:build
+  # Develop with the docs
+  bun run dev:docs
   
   # Run ESLint
-  npm run lint
+  bun run lint
   
   # Run Vitest
-  npm run test
-  npm run test:watch
+  bun run test
+  bun run test:watch
+  
+  # Run type checks
+  bun run test:types
   
   # Release new version
-  npm run release
+  bun run release
   ```
 
 </details>
@@ -138,11 +129,12 @@ export default defineNuxtConfig({
 MIT License - see [LICENSE](LICENSE) for details.
 
 <!-- Badges -->
-[npm-version-src]: https://img.shields.io/npm/v/@lightstack/nuxt-auth-ui/latest.svg?style=flat&colorA=020420&colorB=00DC82
-[npm-version-href]: https://npmjs.com/package/@lightstack/nuxt-auth-ui
-[npm-downloads-src]: https://img.shields.io/npm/dm/@lightstack/nuxt-auth-ui.svg?style=flat&colorA=020420&colorB=00DC82
-[npm-downloads-href]: https://npm.chart.dev/@lightstack/nuxt-auth-ui
-[license-src]: https://img.shields.io/npm/l/@lightstack/nuxt-auth-ui.svg?style=flat&colorA=020420&colorB=00DC82
-[license-href]: https://npmjs.com/package/@lightstack/nuxt-auth-ui
+
+[npm-version-src]: https://img.shields.io/npm/v/@lightstack-dev/nuxt-auth-ui/latest.svg?style=flat&colorA=020420&colorB=00DC82
+[npm-version-href]: https://npmjs.com/package/@lightstack-dev/nuxt-auth-ui
+[npm-downloads-src]: https://img.shields.io/npm/dm/@lightstack-dev/nuxt-auth-ui.svg?style=flat&colorA=020420&colorB=00DC82
+[npm-downloads-href]: https://npm.chart.dev/@lightstack-dev/nuxt-auth-ui
+[license-src]: https://img.shields.io/npm/l/@lightstack-dev/nuxt-auth-ui.svg?style=flat&colorA=020420&colorB=00DC82
+[license-href]: https://npmjs.com/package/@lightstack-dev/nuxt-auth-ui
 [nuxt-src]: https://img.shields.io/badge/Nuxt-020420?logo=nuxt.js
 [nuxt-href]: https://nuxt.com

@@ -35,7 +35,7 @@ export interface AuthUIConfig {
 
 export default defineNuxtModule<AuthUIConfig>({
   meta: {
-    name: '@lightstack/nuxt-auth-ui',
+    name: '@lightstack-dev/nuxt-auth-ui',
     configKey: 'authUi',
   },
   // Default configuration options of the Nuxt module

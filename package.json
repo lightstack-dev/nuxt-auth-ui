@@ -1,5 +1,5 @@
 {
-  "name": "@lightstack/nuxt-auth-ui",
+  "name": "@lightstack-dev/nuxt-auth-ui",
   "version": "0.1.0",
   "description": "Beautiful, production-ready authentication UI for Nuxt, powered by Logto",
   "repository": "lightstack-dev/nuxt-auth-ui",
