@@ -37,19 +37,34 @@ const defaultMessages = {
 export type AuthUILocale = keyof typeof defaultMessages
 export type AuthUIMessageKey = keyof typeof defaultMessages.en
 
+// Memoize i18n detection to avoid repeated try-catch
+let i18nInstance: any = undefined
+let i18nChecked = false
+
+function getI18n() {
+  if (!i18nChecked) {
+    i18nChecked = true
+    try {
+      // @ts-expect-error - useI18n may or may not be available
+      if (typeof useI18n !== 'undefined') {
+        // @ts-expect-error - useI18n may or may not be available
+        i18nInstance = useI18n()
+      }
+    }
+    catch {
+      // useI18n not available or error occurred
+      console.debug('[nuxt-auth-ui] i18n module not detected, using built-in translations')
+    }
+  }
+  return i18nInstance as any
+}
+
 export function useAuthUILocale() {
   const runtimeConfig = useRuntimeConfig()
   const config = (runtimeConfig.public.authUi || {}) as AuthUIConfig
 
-  // Check if app is using @nuxtjs/i18n
-  let i18n = null
-  try {
-    // @ts-expect-error - useI18n may or may not be available
-    i18n = typeof useI18n !== 'undefined' ? useI18n() : null
-  }
-  catch {
-    // useI18n not available, ignore
-  }
+  // Get memoized i18n instance
+  const i18n = getI18n()
 
   const currentLocale = computed(() => {
     if (i18n?.locale?.value) return i18n.locale.value as AuthUILocale
