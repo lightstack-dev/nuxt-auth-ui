@@ -12,13 +12,15 @@ export default createConfigForNuxt({
       quotes: 'single',
     },
   },
-  dirs: {
-    src: [
-      './docs',
-      './playground',
-    ],
-  },
 })
   .append(
-    // your custom flat config here...
+    // Special rules for Nuxt app directories (docs and playground)
+    {
+      files: ['docs/**/*.vue', 'playground/**/*.vue'],
+      rules: {
+        // Disable multi-word component name for ALL Vue files in apps
+        // This includes pages, layouts, AND components like DocsDemo
+        'vue/multi-word-component-names': 'off',
+      },
+    },
   )

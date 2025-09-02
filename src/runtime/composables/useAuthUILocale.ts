@@ -1,6 +1,12 @@
 import { useRuntimeConfig, computed } from '#imports'
 import type { AuthUIConfig } from '../types/config'
 
+// Type for i18n instance (when available)
+interface I18nInstance {
+  locale: { value: string }
+  t: (key: string) => string
+}
+
 // Default translations
 const defaultMessages = {
   en: {
@@ -38,10 +44,10 @@ export type AuthUILocale = keyof typeof defaultMessages
 export type AuthUIMessageKey = keyof typeof defaultMessages.en
 
 // Memoize i18n detection to avoid repeated try-catch
-let i18nInstance: any = undefined
+let i18nInstance: I18nInstance | undefined = undefined
 let i18nChecked = false
 
-function getI18n() {
+function getI18n(): I18nInstance | undefined {
   if (!i18nChecked) {
     i18nChecked = true
     try {
@@ -56,7 +62,7 @@ function getI18n() {
       console.debug('[nuxt-auth-ui] i18n module not detected, using built-in translations')
     }
   }
-  return i18nInstance as any
+  return i18nInstance
 }
 
 export function useAuthUILocale() {
