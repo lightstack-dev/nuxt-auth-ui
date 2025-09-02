@@ -1,9 +1,14 @@
-import { defineNuxtModule, addPlugin, createResolver } from '@nuxt/kit'
+import { defineNuxtModule, addPlugin, addImports, addComponent, addTemplate, createResolver, extendPages } from '@nuxt/kit'
 
 // Module options TypeScript interface definition
 export interface AuthUIConfig {
-  // Routes
-  prefix?: string
+  // Routes - individually configurable for maximum control
+  routes?: {
+    signIn?: string
+    signUp?: string
+    signOut?: string
+    profile?: string
+  }
 
   // Component naming
   componentPrefix?: string
@@ -24,11 +29,8 @@ export interface AuthUIConfig {
     name?: string
   }
 
-  // Theme (auto-inherits from app.config.ts if using Nuxt UI)
-  theme?: {
-    primary?: string
-    gray?: string
-  }
+  // Messages - simple text overrides
+  messages?: Record<string, string>
 }
 
 export default defineNuxtModule<AuthUIConfig>({
@@ -38,7 +40,12 @@ export default defineNuxtModule<AuthUIConfig>({
   },
   // Default configuration options of the Nuxt module
   defaults: {
-    prefix: '/auth',
+    routes: {
+      signIn: '/auth/sign-in',
+      signUp: '/auth/sign-up',
+      signOut: '/auth/sign-out',
+      profile: '/auth/profile',
+    },
     componentPrefix: 'A',
     redirects: {
       afterSignIn: '/',
@@ -48,9 +55,87 @@ export default defineNuxtModule<AuthUIConfig>({
       global: false,
       name: 'auth',
     },
+    messages: {
+      signIn: 'Sign In',
+      signOut: 'Sign Out',
+      signInTitle: 'Welcome Back',
+      signInDescription: 'Sign in to your account to continue',
+    },
   },
-  setup(_options, _nuxt) {
+  async setup(options, nuxt) {
     const resolver = createResolver(import.meta.url)
+
+    // Extend app.config with our defaults
+    // This merges with user's app.config automatically
+    nuxt.hook('app:resolve', (app) => {
+      app.configs.push(resolver.resolve('./runtime/app.config'))
+    })
+
+    // Merge options with defaults to ensure all values are defined
+    const resolvedOptions = {
+      routes: {
+        signIn: options.routes?.signIn || '/auth/sign-in',
+        signUp: options.routes?.signUp || '/auth/sign-up',
+        signOut: options.routes?.signOut || '/auth/sign-out',
+        profile: options.routes?.profile || '/auth/profile',
+      },
+      componentPrefix: options.componentPrefix || 'A',
+      redirects: {
+        afterSignIn: options.redirects?.afterSignIn || '/',
+        afterSignOut: options.redirects?.afterSignOut || '/',
+      },
+      middleware: {
+        global: options.middleware?.global ?? false,
+        name: options.middleware?.name || 'auth',
+      },
+      appName: options.appName,
+      logo: options.logo,
+      messages: {
+        signIn: 'Sign In',
+        signOut: 'Sign Out',
+        signInTitle: 'Welcome Back',
+        signInDescription: 'Sign in to your account to continue',
+        ...options.messages,
+      },
+    }
+
+    // Add runtime config
+    nuxt.options.runtimeConfig = nuxt.options.runtimeConfig || { public: {} }
+    nuxt.options.runtimeConfig.public = nuxt.options.runtimeConfig.public || {}
+    nuxt.options.runtimeConfig.public.authUi = resolvedOptions
+
+    // Auto-import composables
+    addImports([
+      {
+        name: 'useAuthUI',
+        from: resolver.resolve('./runtime/composables/useAuthUI'),
+      },
+      {
+        name: 'useAuthUILocale',
+        from: resolver.resolve('./runtime/composables/useAuthUILocale'),
+      },
+    ])
+
+    // Add type declarations
+    addTemplate({
+      filename: 'types/auth-ui.d.ts',
+      src: resolver.resolve('./runtime/types/app-config.d.ts'),
+    })
+
+    // Register components with configurable prefix
+    addComponent({
+      name: `${resolvedOptions.componentPrefix}SignInButton`,
+      filePath: resolver.resolve('./runtime/components/SignInButton.vue'),
+    })
+
+    // Add the sign-in route
+    extendPages((pages) => {
+      pages.push({
+        name: 'auth-sign-in',
+        path: resolvedOptions.routes.signIn,
+        file: resolver.resolve('./runtime/pages/sign-in.vue'),
+      })
+    })
 
     // Do not add the extension since the `.ts` will be transpiled to `.mjs` after `npm run prepack`
     addPlugin(resolver.resolve('./runtime/plugin'))

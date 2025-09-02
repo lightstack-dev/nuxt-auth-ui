@@ -5,6 +5,10 @@
   "repository": "lightstack-dev/nuxt-auth-ui",
   "license": "MIT",
   "type": "module",
+  "workspaces": [
+    "docs",
+    "playground"
+  ],
   "exports": {
     ".": {
       "types": "./dist/types.d.mts",
@@ -24,14 +28,17 @@
   ],
   "scripts": {
     "prepack": "nuxt-module-build build",
-    "dev": "npm run dev:prepare && nuxi dev playground",
-    "dev:docs": "npm run dev:prepare && nuxi dev docs",
+    "dev": "nuxi dev playground",
+    "dev:docs": "nuxi dev docs",
     "dev:build": "nuxi build playground",
-    "dev:prepare": "nuxt-module-build build --stub && nuxt-module-build prepare && nuxi prepare playground && nuxi prepare docs",
+    "prepare": "nuxt-module-build build --stub && nuxt-module-build prepare",
     "docs:build": "nuxi build docs",
     "docs:generate": "nuxi generate docs",
     "release": "npm run lint && npm run test && npm run prepack && changelogen --release && npm publish && git push --follow-tags",
     "lint": "eslint .",
+    "lint:module": "eslint src/",
+    "lint:docs": "eslint docs/",
+    "lint:playground": "eslint playground/",
     "test": "vitest run",
     "test:watch": "vitest watch",
     "test:types": "vue-tsc --noEmit && cd playground && vue-tsc --noEmit"
@@ -53,6 +60,7 @@
     "@nuxt/schema": "^4.0.3",
     "@nuxt/test-utils": "^3.19.2",
     "@types/node": "latest",
+    "@vue/test-utils": "^2.4.6",
     "changelogen": "^0.6.2",
     "eslint": "^9.34.0",
     "nuxt": "^4.0.3",
