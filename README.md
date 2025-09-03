@@ -31,25 +31,30 @@ export default defineNuxtConfig({
 That's it! You now have:
 
 - Sign-in page at `/auth/sign-in`
-- Ready-to-use SignInButton component
+- Ready-to-use SignInButton and SignUpButton components
 
 ## Features
 
 ✅ **SignInButton component** - Drop-in sign-in button  
+✅ **SignUpButton component** - Drop-in sign-up button  
 ✅ **Sign-in page** - Beautiful sign-in form  
-✅ **Built with Nuxt UI** - automatically themed  
+✅ **Built with Nuxt UI v4** - automatically themed with Lucide icons  
 ✅ **Self-hostable** - works with any Logto instance  
 ✅ **TypeScript** - fully typed  
+✅ **i18n ready** - works with @nuxtjs/i18n when available  
 🚧 **More components coming soon** - User menu, profile pages, etc.
 
 ## Components
 
-Drop the SignInButton anywhere in your app:
+Drop authentication buttons anywhere in your app:
 
 ```vue
 <template>
   <!-- Sign-in button -->
   <ASignInButton />
+  
+  <!-- Sign-up button -->
+  <ASignUpButton />
 </template>
 ```
 
@@ -69,6 +74,7 @@ export default defineNuxtConfig({
     // Routes (customizable)
     routes: {
       signIn: "/auth/sign-in",  // default
+      signUp: "/auth/sign-up",  // default
     },
     redirects: {
       afterSignIn: "/dashboard",
