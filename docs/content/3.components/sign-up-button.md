@@ -1,19 +1,19 @@
 ---
-title: SignInButton
-description: A ready-to-use authentication button
+title: SignUpButton
+description: A ready-to-use registration button
 ---
 
-The SignInButton component provides a simple, pre-configured authentication entry point. It automatically renders based on authentication state and navigates to the configured sign-in route.
+The SignUpButton component provides a simple, pre-configured registration entry point. It automatically renders based on authentication state and navigates to the configured sign-up route.
 
 ## Basic Usage and Defaults
 
 ::docs-demo
-<ASignInButton :to="undefined" />
+<ASignUpButton :to="undefined" />
 
 #code
 
 ```vue
-<ASignInButton />
+<ASignUpButton />
 ```
 
 ::
@@ -21,9 +21,9 @@ The SignInButton component provides a simple, pre-configured authentication entr
 By default, the button:
 
 - Comes in default color, size, and variant as defined by [Nuxt UI](<(https://ui4.nuxt.com/docs/components/button)>)
-- Displays localized "Sign in" text with `locale.t('signIn')`
-- Shows the icon from `appConfig.ui.icons.authSignIn`
-- Navigates to `/auth/sign-in` by default (fully configurable via `routes.signIn` in module options)
+- Displays localized "Sign up" text with `locale.t('signUp')`
+- Shows the icon from `appConfig.ui.icons.authSignUp`
+- Navigates to `/auth/sign-up` by default (fully configurable via `routes.signUp` in module options)
 - Automatically renders as long as the user is unauthenticated with `!useAuthUI().isAuthenticated`
 
 ## Authentication State Behavior
@@ -38,7 +38,7 @@ This automatic visibility toggle means you don't need to wrap the button in cond
 To keep the button visible regardless of authentication state, use the `persistent` prop:
 
 ```vue
-<ASignInButton persistent />
+<ASignUpButton persistent />
 ```
 
 ## Customization
@@ -49,14 +49,14 @@ Use the `label` prop or `default` slot to override the button's text:
 
 ```vue
 <!-- Using `label` prop -->
-<ASignInButton label="Get Started" />
+<ASignUpButton label="Create Account" />
 
 <!-- Using `default` slot, takes precedence over `label` prop -->
-<ASignInButton>Get Started</ASignInButton>
+<ASignUpButton>Create Account</ASignUpButton>
 ```
 
 ::docs-demo
-<ASignInButton label="Get Started" :to="undefined" />
+<ASignUpButton label="Create Account" :to="undefined" />
 ::
 
 ### Icon
@@ -65,36 +65,36 @@ Remove or change the leading icon:
 
 ```vue
 <!-- No icon -->
-<ASignInButton :leading-icon="undefined" />
+<ASignUpButton :leading-icon="undefined" />
 ```
 
 ::docs-demo
-<ASignInButton :leading-icon="undefined" :to="undefined" />
+<ASignUpButton :leading-icon="undefined" :to="undefined" />
 ::
 
 ```vue
 <!-- Custom icon -->
-<ASignInButton leading-icon="i-lucide-arrow-right-circle" />
+<ASignUpButton leading-icon="i-lucide-user-plus-2" />
 ```
 
 ::docs-demo
-<ASignInButton leading-icon="i-lucide-arrow-right-circle" :to="undefined" />
+<ASignUpButton leading-icon="i-lucide-user-plus-2" :to="undefined" />
 ::
 
 ### Styling
 
-The `SignInButton` is based on [Nuxt UI's `UButton`](https://ui4.nuxt.com/docs/components/button), so you can use any of its style props, for example:
+The `SignUpButton` is based on [Nuxt UI's `UButton`](https://ui4.nuxt.com/docs/components/button), so you can use any of its style props, for example:
 
 ```vue
-<ASignInButton color="success" size="xl" variant="subtle">
-  Join Now
-</ASignInButton>
+<ASignUpButton color="success" size="xl" variant="subtle">
+  Get Started Free
+</ASignUpButton>
 ```
 
 ::docs-demo
-<ASignInButton color="success" size="xl" :to="undefined" variant="subtle">
-Join Now
-</ASignInButton>
+<ASignUpButton color="success" size="xl" :to="undefined" variant="subtle">
+Get Started Free
+</ASignUpButton>
 ::
 
 ## API
@@ -105,10 +105,10 @@ The component extends [Nuxt UI's `UButton`](https://ui4.nuxt.com/docs/components
 
 | Prop           | Type                  | Default                         | Description                                               |
 | -------------- | --------------------- | ------------------------------- | --------------------------------------------------------- |
-| `label`        | `string`              | `locale.t('signIn')`            | Button text label                                         |
-| `leading-icon` | `string \| undefined` | `appConfig.ui.icons.authSignIn` | Icon shown before text                                    |
+| `label`        | `string`              | `locale.t('signUp')`            | Button text label                                         |
+| `leading-icon` | `string \| undefined` | `appConfig.ui.icons.authSignUp` | Icon shown before text                                    |
 | `persistent`   | `boolean`             | `false`                         | Keep button visible when user is authenticated            |
-| `to`           | `string`              | `/auth/sign-in`                 | Navigation destination (configurable via [`routes.signIn`](/configuration#routes)) |
+| `to`           | `string`              | `/auth/sign-up`                 | Navigation destination (configurable via [`routes.signUp`](/configuration#routes)) |
 
 ### Slots
 
