@@ -4,6 +4,7 @@ declare module '@nuxt/schema' {
       icons?: {
         // Auth-specific icons
         authSignIn?: string
+        authSignUp?: string
         authSignOut?: string
         authUser?: string
         authProfile?: string

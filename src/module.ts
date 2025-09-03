@@ -128,6 +128,11 @@ export default defineNuxtModule<AuthUIConfig>({
       filePath: resolver.resolve('./runtime/components/SignInButton.vue'),
     })
 
+    addComponent({
+      name: `${resolvedOptions.componentPrefix}SignUpButton`,
+      filePath: resolver.resolve('./runtime/components/SignUpButton.vue'),
+    })
+
     // Add the sign-in route
     extendPages((pages) => {
       pages.push({

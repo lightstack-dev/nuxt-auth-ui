@@ -44,8 +44,11 @@
     "test:types": "vue-tsc --noEmit && cd playground && vue-tsc --noEmit"
   },
   "dependencies": {
+    "@iconify-json/lucide": "^1.2.66",
+    "@iconify-json/simple-icons": "^1.2.50",
     "@nuxt/kit": "^4.0.3",
     "@nuxt/ui": "^4.0.0-alpha.0",
+    "i": "^0.3.7",
     "zod": "^3.24.0"
   },
   "peerDependencies": {
