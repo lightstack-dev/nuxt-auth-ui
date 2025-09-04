@@ -6,7 +6,12 @@
     </template>
     <template #right>
       <UTooltip text="nuxt-auth-ui on GitHub">
-        <UButton color="neutral" icon="i-simple-icons-github" to="https://github.com/lightstack-dev/nuxt-auth-ui" variant="ghost" />
+        <UButton
+          color="neutral"
+          icon="i-simple-icons-github"
+          to="https://github.com/lightstack-dev/nuxt-auth-ui"
+          variant="ghost"
+        />
       </UTooltip>
       <UColorModeButton />
     </template>

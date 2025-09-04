@@ -20,7 +20,7 @@ const auth = useAuthUI()
 const locale = useAuthUILocale()
 const appConfig = useAppConfig()
 
-// Get icon with proper typing - no casting needed as types are properly augmented
+// Get icon with proper typing
 const signUpIcon = computed(() => {
   return appConfig.ui?.icons?.authSignUp
 })

@@ -1,4 +1,4 @@
-import { useRuntimeConfig, computed, navigateTo, useState, useFetch } from '#imports'
+import { useRuntimeConfig, computed, navigateTo, useFetch } from '#imports'
 import type { AuthUIConfig, SocialProvider } from '../types/config'
 
 // Declare the Logto types that will be available at runtime
@@ -29,7 +29,16 @@ export function useAuthUI() {
   const isAuthenticated = computed(() => !!logtoUser)
 
   // Auto-detect social providers from Logto
-  const { data: connectorsData } = useFetch('/api/auth-ui/connectors', {
+  const { data: connectorsData } = useFetch<{
+    connectors: Array<{
+      name: string
+      label: string
+      icon: string
+      logo: string
+      logoDark?: string
+      platform: string
+    }>
+  }>('/api/auth-ui/connectors', {
     lazy: true,
     default: () => ({ connectors: [] }),
   })
@@ -37,7 +46,7 @@ export function useAuthUI() {
   const autoDetectedProviders = computed<SocialProvider[]>(() => {
     if (!connectorsData.value?.connectors) return []
 
-    return connectorsData.value.connectors.map((connector: any) => ({
+    return connectorsData.value.connectors.map(connector => ({
       name: connector.name,
       label: connector.label,
       icon: connector.icon,
