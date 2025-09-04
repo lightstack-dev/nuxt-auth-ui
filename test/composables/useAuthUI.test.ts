@@ -19,6 +19,9 @@ vi.mock('#imports', () => ({
       },
     },
   })),
+  useFetch: vi.fn(() => ({
+    data: { value: { connectors: [] } },
+  })),
   useNuxtData: vi.fn(() => ({
     value: null,
   })),
@@ -51,7 +54,7 @@ describe('useAuthUI', () => {
     expect(auth.getAuthUrl('sign-in')).toBe('/auth/sign-in')
     expect(auth.getAuthUrl('sign-up')).toBe('/auth/sign-up')
     expect(auth.getAuthUrl('profile')).toBe('/auth/profile')
-    // Note: 'sign-out' is not a valid type for getAuthUrl
+    expect(auth.getAuthUrl('password-reset')).toBe('/auth/password-reset')
   })
 
   it('should handle unknown route types', () => {
@@ -67,5 +70,12 @@ describe('useAuthUI', () => {
     expect(typeof auth.signIn).toBe('function')
     expect(typeof auth.signUp).toBe('function')
     expect(typeof auth.signOut).toBe('function')
+  })
+
+  it('should provide social providers functionality', () => {
+    const auth = useAuthUI()
+
+    expect(typeof auth.getSocialProviders).toBe('function')
+    expect(auth.getSocialProviders()).toEqual([])
   })
 })

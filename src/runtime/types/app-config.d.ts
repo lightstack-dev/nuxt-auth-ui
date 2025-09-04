@@ -1,5 +1,5 @@
 declare module '@nuxt/schema' {
-  interface AppConfig {
+  interface AppConfigInput {
     ui?: {
       icons?: {
         // Auth-specific icons
@@ -22,7 +22,9 @@ declare module '@nuxt/schema' {
       [key: string]: unknown
     }
   }
+}
 
+declare module '@nuxt/schema' {
   interface RuntimeConfig {
     public: {
       authUi?: {

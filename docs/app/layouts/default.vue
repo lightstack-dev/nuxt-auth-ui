@@ -1,7 +1,7 @@
 <template>
   <UHeader>
     <template #title>
-      <LightstackLogo202508 class="max-h-4 w-auto" />
+      <LightstackLogogram202508 class="max-h-4 w-auto" />
       nuxt-auth-ui
     </template>
     <template #right>

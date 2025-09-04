@@ -7,8 +7,9 @@ The SignUpButton component provides a simple, pre-configured registration entry 
 
 ## Basic Usage and Defaults
 
-::docs-demo
-<ASignUpButton :to="undefined" />
+::code-preview
+::a-sign-up-button{:to="undefined"}
+::
 
 #code
 
@@ -21,10 +22,12 @@ The SignUpButton component provides a simple, pre-configured registration entry 
 By default, the button:
 
 - Comes in default color, size, and variant as defined by [Nuxt UI](<(https://ui4.nuxt.com/docs/components/button)>)
-- Displays localized "Sign up" text with `locale.t('signUp')`
-- Shows the icon from `appConfig.ui.icons.authSignUp`
-- Navigates to `/auth/sign-up` by default (fully configurable via `routes.signUp` in module options)
-- Automatically renders as long as the user is unauthenticated with `!useAuthUI().isAuthenticated`
+- Displays `Sign Up` message
+- Shows the `i-lucide-user-plus` icon
+- Navigates to `/auth/sign-up`
+- Automatically renders as long as the user is unauthenticated
+
+See the component's [API](#api) for how to override these defaults.
 
 ## Authentication State Behavior
 
@@ -47,6 +50,12 @@ To keep the button visible regardless of authentication state, use the `persiste
 
 Use the `label` prop or `default` slot to override the button's text:
 
+::code-preview
+::a-sign-up-button{label="Create Account" :to="undefined"}
+::
+
+#code
+
 ```vue
 <!-- Using `label` prop -->
 <ASignUpButton label="Create Account" />
@@ -55,35 +64,62 @@ Use the `label` prop or `default` slot to override the button's text:
 <ASignUpButton>Create Account</ASignUpButton>
 ```
 
-::docs-demo
-<ASignUpButton label="Create Account" :to="undefined" />
 ::
 
 ### Icon
 
-Remove or change the leading icon:
+Remove or change the leading icon _for all SignUpButtons_:
+
+```typescript [app.config.ts]
+export default defineAppConfig({
+  ui: {
+    icons: {
+      auth: {
+        signUp: undefined, // No icon, or
+        signUp: "i-lucide-user-plus-2", // Custom icon
+      },
+    },
+  },
+});
+```
+
+Remove or change the leading icon _for a single SignInButton_:
+
+::code-preview
+::a-sign-up-button{:leading-icon="undefined" :to="undefined"}
+::
+
+#code
 
 ```vue
 <!-- No icon -->
 <ASignUpButton :leading-icon="undefined" />
 ```
 
-::docs-demo
-<ASignUpButton :leading-icon="undefined" :to="undefined" />
 ::
+
+::code-preview
+::a-sign-up-button{leading-icon="i-lucide-user-plus-2" :to="undefined"}
+::
+
+#code
 
 ```vue
 <!-- Custom icon -->
 <ASignUpButton leading-icon="i-lucide-user-plus-2" />
 ```
 
-::docs-demo
-<ASignUpButton leading-icon="i-lucide-user-plus-2" :to="undefined" />
 ::
 
 ### Styling
 
-The `SignUpButton` is based on [Nuxt UI's `UButton`](https://ui4.nuxt.com/docs/components/button), so you can use any of its style props, for example:
+The SignUpButton is based on [Nuxt UI's `UButton`](https://ui4.nuxt.com/docs/components/button), so you can use any of its style props, for example:
+
+::code-preview
+::a-sign-up-button{color="success" label="Get Started Free" size="xl" :to="undefined" variant="subtle"}
+::
+
+#code
 
 ```vue
 <ASignUpButton color="success" size="xl" variant="subtle">
@@ -91,10 +127,6 @@ The `SignUpButton` is based on [Nuxt UI's `UButton`](https://ui4.nuxt.com/docs/c
 </ASignUpButton>
 ```
 
-::docs-demo
-<ASignUpButton color="success" size="xl" :to="undefined" variant="subtle">
-Get Started Free
-</ASignUpButton>
 ::
 
 ## API
@@ -103,12 +135,12 @@ The component extends [Nuxt UI's `UButton`](https://ui4.nuxt.com/docs/components
 
 ### Props
 
-| Prop           | Type                  | Default                         | Description                                               |
-| -------------- | --------------------- | ------------------------------- | --------------------------------------------------------- |
-| `label`        | `string`              | `locale.t('signUp')`            | Button text label                                         |
-| `leading-icon` | `string \| undefined` | `appConfig.ui.icons.authSignUp` | Icon shown before text                                    |
-| `persistent`   | `boolean`             | `false`                         | Keep button visible when user is authenticated            |
-| `to`           | `string`              | `/auth/sign-up`                 | Navigation destination (configurable via [`routes.signUp`](/configuration#routes)) |
+| Prop           | Type                  | Default              | Description                                                                         |
+| -------------- | --------------------- | -------------------- | ----------------------------------------------------------------------------------- |
+| `label`        | `string`              | `Sign Up`            | Button text label, configurable via [`messages.signUp`](/configuration#messages)    |
+| `leading-icon` | `string \| undefined` | `i-lucide-user-plus` | Icon shown before text, configurable via [`icons.authSignUp`](/configuration#icons) |
+| `persistent`   | `boolean`             | `false`              | Keep button visible when user is authenticated                                      |
+| `to`           | `string`              | `/auth/sign-up`      | Navigation destination, configurable via [`routes.signUp`](/configuration#routes)   |
 
 ### Slots
 

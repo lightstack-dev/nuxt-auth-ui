@@ -13,4 +13,21 @@ export default defineNuxtConfig({
   devtools: { enabled: true },
   css: ['~/assets/css/main.css'],
   compatibilityDate: '2025-08-30',
+
+  authUi: {
+    appName: 'Auth UI Docs',
+    socialProviders: [
+      {
+        name: 'google',
+        enabled: true,
+      },
+      {
+        name: 'microsoft',
+        enabled: true,
+      },
+    ],
+  },
+  icon: {
+    cssLayer: 'components',
+  },
 })

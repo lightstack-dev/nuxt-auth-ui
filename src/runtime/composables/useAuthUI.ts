@@ -1,5 +1,5 @@
-import { useRuntimeConfig, computed, navigateTo } from '#imports'
-import type { AuthUIConfig } from '../types/config'
+import { useRuntimeConfig, computed, navigateTo, useFetch } from '#imports'
+import type { AuthUIConfig, SocialProvider } from '../types/config'
 
 // Declare the Logto types that will be available at runtime
 declare global {
@@ -28,6 +28,32 @@ export function useAuthUI() {
 
   const isAuthenticated = computed(() => !!logtoUser)
 
+  // Auto-detect social providers from Logto
+  const { data: connectorsData } = useFetch<{
+    connectors: Array<{
+      name: string
+      label: string
+      icon: string
+      logo: string
+      logoDark?: string
+      platform: string
+    }>
+  }>('/api/auth-ui/connectors', {
+    lazy: true,
+    default: () => ({ connectors: [] }),
+  })
+
+  const autoDetectedProviders = computed<SocialProvider[]>(() => {
+    if (!connectorsData.value?.connectors) return []
+
+    return connectorsData.value.connectors.map(connector => ({
+      name: connector.name,
+      label: connector.label,
+      icon: connector.icon,
+      enabled: true,
+    }))
+  })
+
   const user = computed<AuthUIUser | null>(() => {
     if (!logtoUser) return null
 
@@ -40,14 +66,40 @@ export function useAuthUI() {
     }
   })
 
-  const signIn = async () => {
-    // Navigate to our auth sign-in page
-    await navigateTo(getAuthUrl('sign-in'))
+  const signIn = async (email?: string, password?: string, rememberMe?: boolean) => {
+    if (!email || !password) {
+      // Navigate to our auth sign-in page
+      await navigateTo(getAuthUrl('sign-in'))
+      return
+    }
+
+    // TODO: Integrate with Logto authentication
+    // This is a placeholder implementation
+    console.log('Sign in with:', { email, password, rememberMe })
+    throw new Error('Authentication not yet implemented')
   }
 
-  const signUp = async () => {
-    // Navigate to our auth sign-up page
-    await navigateTo(getAuthUrl('sign-up'))
+  const signInWithSocial = async (provider: string) => {
+    // Logto uses the direct sign-in parameter format: social:<provider>
+    // This will redirect to the social provider's login page directly
+    const directSignIn = `social:${provider}`
+
+    // Navigate to Logto's sign-in route with the direct sign-in parameter
+    // The Logto module handles the OAuth flow automatically
+    await navigateTo(`/sign-in?direct_sign_in=${encodeURIComponent(directSignIn)}`)
+  }
+
+  const signUp = async (email?: string, password?: string, name?: string) => {
+    if (!email || !password) {
+      // Navigate to our auth sign-up page
+      await navigateTo(getAuthUrl('sign-up'))
+      return
+    }
+
+    // TODO: Integrate with Logto registration
+    // This is a placeholder implementation
+    console.log('Sign up with:', { email, password, name })
+    throw new Error('Registration not yet implemented')
   }
 
   const signOut = async () => {
@@ -56,12 +108,13 @@ export function useAuthUI() {
     await navigateTo('/sign-out')
   }
 
-  const getAuthUrl = (type: 'sign-in' | 'sign-up' | 'profile') => {
+  const getAuthUrl = (type: 'sign-in' | 'sign-up' | 'profile' | 'password-reset') => {
     const routes = config.routes || {
       signIn: '/auth/sign-in',
       signUp: '/auth/sign-up',
       signOut: '/auth/sign-out',
       profile: '/auth/profile',
+      passwordReset: '/auth/password-reset',
     }
 
     switch (type) {
@@ -71,7 +124,20 @@ export function useAuthUI() {
         return routes.signUp || '/auth/sign-up'
       case 'profile':
         return routes.profile || '/auth/profile'
+      case 'password-reset':
+        return routes.passwordReset || '/auth/password-reset'
     }
+  }
+
+  // Get social providers - prefer configured, fallback to auto-detected
+  const getSocialProviders = () => {
+    // If providers are explicitly configured, use those
+    if (config.socialProviders && config.socialProviders.length > 0) {
+      return config.socialProviders.filter(p => p.enabled !== false)
+    }
+
+    // Otherwise use auto-detected providers
+    return autoDetectedProviders.value || []
   }
 
   return {
@@ -81,10 +147,15 @@ export function useAuthUI() {
 
     // Actions
     signIn,
+    signInWithSocial,
     signUp,
     signOut,
 
     // Utilities
     getAuthUrl,
+    getSocialProviders,
+
+    // Raw data (for debugging/advanced use)
+    autoDetectedProviders,
   }
 }

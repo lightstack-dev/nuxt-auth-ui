@@ -5,7 +5,7 @@
     :leading-icon="signInIcon"
     :to="auth.getAuthUrl('sign-in')"
   >
-    <slot v-if="$slots.default" />
+    <slot />
   </UButton>
 </template>
 
@@ -20,7 +20,7 @@ const auth = useAuthUI()
 const locale = useAuthUILocale()
 const appConfig = useAppConfig()
 
-// Get icon with proper typing - no casting needed as types are properly augmented
+// Get icon with proper typing
 const signInIcon = computed(() => {
   return appConfig.ui?.icons?.authSignIn
 })
