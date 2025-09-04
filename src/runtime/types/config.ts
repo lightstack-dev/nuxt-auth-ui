@@ -11,6 +11,7 @@ export interface AuthUIConfig {
     signUp?: string
     signOut?: string
     profile?: string
+    passwordReset?: string
   }
   componentPrefix?: string
   redirects?: {

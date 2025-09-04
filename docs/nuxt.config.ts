@@ -22,16 +22,8 @@ export default defineNuxtConfig({
         enabled: true,
       },
       {
-        name: 'github',
-        enabled: true,
-      },
-      {
         name: 'microsoft',
         enabled: true,
-      },
-      {
-        name: 'facebook',
-        enabled: false, // Disabled for demo
       },
     ],
   },

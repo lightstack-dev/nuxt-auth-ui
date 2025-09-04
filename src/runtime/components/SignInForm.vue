@@ -7,7 +7,7 @@
     @submit="onSubmit"
   >
     <div
-      v-if="!nosocial && socialProviders.length > 0"
+      v-if="!basic && socialProviders.length > 0"
       class="space-y-3"
     >
       <UButton
@@ -23,7 +23,7 @@
     </div>
 
     <USeparator
-      v-if="!nosocial && socialProviders.length > 0"
+      v-if="!basic && socialProviders.length > 0"
       :label="locale.t('or')"
     />
 
@@ -37,7 +37,7 @@
         type="email"
         placeholder="email@example.com"
         autocomplete="email"
-        autofocus
+        :autofocus="mock ? false : true"
         :disabled="loading"
         size="lg"
       />
@@ -49,7 +49,7 @@
     >
       <template #help>
         <ULink
-          :to="forgotPasswordUrl"
+          :to="mock ? undefined : forgotPasswordUrl"
           class="text-xs"
         >
           {{ locale.t('forgotPassword') }}
@@ -82,22 +82,16 @@
       @close="error = null"
     />
 
-    <div class="flex gap-x-4">
-      <ASignUpButton
-        v-if="mock"
-        block
-        :to="undefined"
-        variant="ghost"
-      />
-      <ASignUpButton
-        v-else
-        block
-        variant="ghost"
+    <div :class="$slots.default ? 'flex gap-x-4' : undefined">
+      <slot
+        :loading="loading"
+        :disabled="loadingProvider !== null"
       />
       <UButton
         block
         icon="i-lucide-mail"
         type="submit"
+        :loading="loading"
         :disabled="loadingProvider !== null"
         :label="locale.t('withEmail')"
       />
@@ -113,7 +107,7 @@ import type { SocialProvider } from '../types/config'
 
 // Define props
 const props = defineProps<{
-  nosocial?: boolean
+  basic?: boolean
   mock?: boolean
 }>()
 
@@ -140,8 +134,7 @@ const state = ref<SignInFormData>({
 
 // Computed
 const forgotPasswordUrl = computed(() => {
-  // TODO: Get this from config once we refactor how config is accessed
-  return '/auth/password-reset'
+  return auth.getAuthUrl('password-reset')
 })
 
 // Get social providers - will use configured or auto-detected
@@ -172,12 +165,17 @@ const onSubmit = async (data: SignInFormData) => {
   error.value = null
 
   try {
+    // Emit the event for parent components to handle if needed
     emit('submit', data)
+
+    // Perform the actual sign-in
+    await auth.signIn(data.email, data.password, data.rememberMe)
+
+    // Emit success if sign-in completes
+    emit('success')
   }
   catch (err) {
     error.value = err instanceof Error ? err.message : 'An error occurred'
-  }
-  finally {
     loading.value = false
   }
 }
@@ -196,17 +194,21 @@ const handleSocialSignIn = async (provider: SocialProvider) => {
   }
 
   try {
+    // Emit the event for parent components to handle if needed
     emit('submit', {
       email: '',
       password: '',
       provider: provider.name,
       rememberMe: false,
     })
+
+    // Perform the actual social sign-in
+    await auth.signInWithSocial(provider.name)
+
+    // Note: success event not emitted here as social sign-in redirects
   }
   catch (err) {
     error.value = err instanceof Error ? err.message : 'An error occurred'
-  }
-  finally {
     loadingProvider.value = null
   }
 }

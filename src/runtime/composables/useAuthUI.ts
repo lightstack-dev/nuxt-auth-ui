@@ -27,16 +27,16 @@ export function useAuthUI() {
   const config = (runtimeConfig.public.authUi || {}) as AuthUIConfig
 
   const isAuthenticated = computed(() => !!logtoUser)
-  
+
   // Auto-detect social providers from Logto
   const { data: connectorsData } = useFetch('/api/auth-ui/connectors', {
     lazy: true,
-    default: () => ({ connectors: [] })
+    default: () => ({ connectors: [] }),
   })
-  
+
   const autoDetectedProviders = computed<SocialProvider[]>(() => {
     if (!connectorsData.value?.connectors) return []
-    
+
     return connectorsData.value.connectors.map((connector: any) => ({
       name: connector.name,
       label: connector.label,
@@ -74,7 +74,7 @@ export function useAuthUI() {
     // Logto uses the direct sign-in parameter format: social:<provider>
     // This will redirect to the social provider's login page directly
     const directSignIn = `social:${provider}`
-    
+
     // Navigate to Logto's sign-in route with the direct sign-in parameter
     // The Logto module handles the OAuth flow automatically
     await navigateTo(`/sign-in?direct_sign_in=${encodeURIComponent(directSignIn)}`)
@@ -99,12 +99,13 @@ export function useAuthUI() {
     await navigateTo('/sign-out')
   }
 
-  const getAuthUrl = (type: 'sign-in' | 'sign-up' | 'profile') => {
+  const getAuthUrl = (type: 'sign-in' | 'sign-up' | 'profile' | 'password-reset') => {
     const routes = config.routes || {
       signIn: '/auth/sign-in',
       signUp: '/auth/sign-up',
       signOut: '/auth/sign-out',
       profile: '/auth/profile',
+      passwordReset: '/auth/password-reset',
     }
 
     switch (type) {
@@ -114,6 +115,8 @@ export function useAuthUI() {
         return routes.signUp || '/auth/sign-up'
       case 'profile':
         return routes.profile || '/auth/profile'
+      case 'password-reset':
+        return routes.passwordReset || '/auth/password-reset'
     }
   }
 
@@ -123,7 +126,7 @@ export function useAuthUI() {
     if (config.socialProviders && config.socialProviders.length > 0) {
       return config.socialProviders.filter(p => p.enabled !== false)
     }
-    
+
     // Otherwise use auto-detected providers
     return autoDetectedProviders.value || []
   }
@@ -142,7 +145,7 @@ export function useAuthUI() {
     // Utilities
     getAuthUrl,
     getSocialProviders,
-    
+
     // Raw data (for debugging/advanced use)
     autoDetectedProviders,
   }

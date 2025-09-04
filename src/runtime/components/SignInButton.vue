@@ -5,7 +5,7 @@
     :leading-icon="signInIcon"
     :to="auth.getAuthUrl('sign-in')"
   >
-    <slot v-if="$slots.default" />
+    <slot />
   </UButton>
 </template>
 
