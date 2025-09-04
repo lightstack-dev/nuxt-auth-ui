@@ -1,6 +1,13 @@
-import { defineNuxtModule, addPlugin, addImports, addComponent, addTemplate, createResolver, extendPages } from '@nuxt/kit'
+import { defineNuxtModule, addPlugin, addImports, addComponent, addTemplate, createResolver, extendPages, addServerHandler } from '@nuxt/kit'
 
 // Module options TypeScript interface definition
+export interface SocialProvider {
+  name: string
+  label?: string
+  icon?: string
+  enabled?: boolean
+}
+
 export interface AuthUIConfig {
   // Routes - individually configurable for maximum control
   routes?: {
@@ -31,6 +38,9 @@ export interface AuthUIConfig {
 
   // Messages - simple text overrides
   messages?: Record<string, string>
+
+  // Social providers configuration
+  socialProviders?: SocialProvider[]
 }
 
 export default defineNuxtModule<AuthUIConfig>({
@@ -90,6 +100,7 @@ export default defineNuxtModule<AuthUIConfig>({
       },
       appName: options.appName,
       logo: options.logo,
+      socialProviders: options.socialProviders,
       messages: {
         signIn: 'Sign In',
         signOut: 'Sign Out',
@@ -134,13 +145,14 @@ export default defineNuxtModule<AuthUIConfig>({
     })
 
     addComponent({
-      name: `${resolvedOptions.componentPrefix}Container`,
-      filePath: resolver.resolve('./runtime/components/Container.vue'),
-    })
-
-    addComponent({
       name: `${resolvedOptions.componentPrefix}SignInForm`,
       filePath: resolver.resolve('./runtime/components/SignInForm.vue'),
+    })
+
+    // Add server API routes
+    addServerHandler({
+      route: '/api/auth-ui/connectors',
+      handler: resolver.resolve('./runtime/server/api/auth-ui/connectors.get'),
     })
 
     // Add the sign-in route

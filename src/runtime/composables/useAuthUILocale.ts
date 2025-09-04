@@ -33,12 +33,24 @@ const defaultMessages = {
     forgotPassword: 'Forgot password?',
     acceptTerms: 'I agree to the terms and conditions',
 
-    // Social sign-in
-    continueWithProvider: 'Continue with Provider',
-    continueWithGoogle: 'Continue with Google',
-    continueWithGitHub: 'Continue with GitHub',
-    continueWithMicrosoft: 'Continue with Microsoft',
-    orContinueWith: 'Or continue with',
+    // Social providers (key = provider name from Logto)
+    google: 'With Google',
+    github: 'With GitHub',
+    microsoft: 'With Microsoft',
+    facebook: 'With Facebook',
+    apple: 'With Apple',
+    twitter: 'With Twitter',
+    linkedin: 'With LinkedIn',
+    discord: 'With Discord',
+    gitlab: 'With GitLab',
+    slack: 'With Slack',
+    azure: 'With Azure AD',
+    okta: 'With Okta',
+    auth0: 'With Auth0',
+
+    // Authentication options
+    withEmail: 'With Email',
+    or: 'OR',
 
     // Navigation messages
     alreadyHaveAccount: 'Already have an account?',
@@ -113,7 +125,7 @@ export function useAuthUILocale() {
     }
   })
 
-  const t = (key: AuthUIMessageKey): string => {
+  const t = (key: AuthUIMessageKey | string): string => {
     // If @nuxtjs/i18n is available, try to use it first
     if (i18n && typeof i18n.t === 'function') {
       const translated = i18n.t(`authUi.${key}`)
@@ -123,11 +135,27 @@ export function useAuthUILocale() {
     }
 
     // Fall back to our messages
-    return messages.value[key] || key
+    return messages.value[key as AuthUIMessageKey] || key
+  }
+
+  // Helper function to get social provider label
+  const getProviderLabel = (providerName: string): string => {
+    // Direct lookup using provider name as key
+    const label = t(providerName)
+
+    // If we have a translation, use it; otherwise fall back to generic format
+    if (label !== providerName) {
+      return label
+    }
+
+    // Fall back to generic "With [Provider]" format
+    const providerDisplayName = providerName.charAt(0).toUpperCase() + providerName.slice(1)
+    return `With ${providerDisplayName}`
   }
 
   return {
     t,
+    getProviderLabel,
     locale: currentLocale,
     messages,
   }

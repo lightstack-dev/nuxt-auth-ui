@@ -1,5 +1,5 @@
-import { useRuntimeConfig, computed, navigateTo } from '#imports'
-import type { AuthUIConfig } from '../types/config'
+import { useRuntimeConfig, computed, navigateTo, useState, useFetch } from '#imports'
+import type { AuthUIConfig, SocialProvider } from '../types/config'
 
 // Declare the Logto types that will be available at runtime
 declare global {
@@ -27,6 +27,23 @@ export function useAuthUI() {
   const config = (runtimeConfig.public.authUi || {}) as AuthUIConfig
 
   const isAuthenticated = computed(() => !!logtoUser)
+  
+  // Auto-detect social providers from Logto
+  const { data: connectorsData } = useFetch('/api/auth-ui/connectors', {
+    lazy: true,
+    default: () => ({ connectors: [] })
+  })
+  
+  const autoDetectedProviders = computed<SocialProvider[]>(() => {
+    if (!connectorsData.value?.connectors) return []
+    
+    return connectorsData.value.connectors.map((connector: any) => ({
+      name: connector.name,
+      label: connector.label,
+      icon: connector.icon,
+      enabled: true,
+    }))
+  })
 
   const user = computed<AuthUIUser | null>(() => {
     if (!logtoUser) return null
@@ -54,10 +71,13 @@ export function useAuthUI() {
   }
 
   const signInWithSocial = async (provider: string) => {
-    // TODO: Integrate with Logto social authentication
-    // This is a placeholder implementation
-    console.log('Sign in with social provider:', provider)
-    throw new Error('Social authentication not yet implemented')
+    // Logto uses the direct sign-in parameter format: social:<provider>
+    // This will redirect to the social provider's login page directly
+    const directSignIn = `social:${provider}`
+    
+    // Navigate to Logto's sign-in route with the direct sign-in parameter
+    // The Logto module handles the OAuth flow automatically
+    await navigateTo(`/sign-in?direct_sign_in=${encodeURIComponent(directSignIn)}`)
   }
 
   const signUp = async (email?: string, password?: string, name?: string) => {
@@ -97,6 +117,17 @@ export function useAuthUI() {
     }
   }
 
+  // Get social providers - prefer configured, fallback to auto-detected
+  const getSocialProviders = () => {
+    // If providers are explicitly configured, use those
+    if (config.socialProviders && config.socialProviders.length > 0) {
+      return config.socialProviders.filter(p => p.enabled !== false)
+    }
+    
+    // Otherwise use auto-detected providers
+    return autoDetectedProviders.value || []
+  }
+
   return {
     // State
     isAuthenticated,
@@ -110,5 +141,9 @@ export function useAuthUI() {
 
     // Utilities
     getAuthUrl,
+    getSocialProviders,
+    
+    // Raw data (for debugging/advanced use)
+    autoDetectedProviders,
   }
 }

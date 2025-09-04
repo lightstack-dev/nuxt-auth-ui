@@ -1,54 +1,80 @@
 <template>
-  <UForm 
-    :schema="signInSchema" 
-    :state="state" 
-    class="space-y-6"
+  <UForm
+    class="max-w-md space-y-6 w-full"
+    :schema="signInSchema"
+    :state="state"
+    :validate-on="mock ? [] : undefined"
     @submit="onSubmit"
   >
-    <UFormField name="email" :label="locale.t('email')">
-      <UInput 
+    <div
+      v-if="!nosocial && socialProviders.length > 0"
+      class="space-y-3"
+    >
+      <UButton
+        v-for="provider in socialProviders"
+        :key="provider.name"
+        block
+        :icon="provider.icon"
+        :label="provider.label"
+        :loading="loadingProvider === provider.name"
+        :disabled="loading || loadingProvider !== null"
+        @click="handleSocialSignIn(provider)"
+      />
+    </div>
+
+    <USeparator
+      v-if="!nosocial && socialProviders.length > 0"
+      :label="locale.t('or')"
+    />
+
+    <UFormField
+      name="email"
+      :label="locale.t('email')"
+    >
+      <UInput
         v-model="state.email"
+        class="w-full"
         type="email"
-        :placeholder="locale.t('email')"
+        placeholder="email@example.com"
         autocomplete="email"
+        autofocus
         :disabled="loading"
         size="lg"
       />
     </UFormField>
 
-    <UFormField name="password" :label="locale.t('password')">
-      <UInput 
+    <UFormField
+      name="password"
+      :label="locale.t('password')"
+    >
+      <template #help>
+        <ULink
+          :to="forgotPasswordUrl"
+          class="text-xs"
+        >
+          {{ locale.t('forgotPassword') }}
+        </ULink>
+      </template>
+      <UInput
         v-model="state.password"
+        class="w-full"
         type="password"
-        :placeholder="locale.t('password')"
         autocomplete="current-password"
         :disabled="loading"
         size="lg"
       />
     </UFormField>
 
-    <div class="flex items-center justify-between">
-      <UCheckbox 
-        v-model="state.rememberMe" 
-        :label="locale.t('rememberMe')"
-        :disabled="loading"
-      />
-      
-      <UButton
-        variant="link"
-        size="sm"
-        :to="forgotPasswordUrl"
-        :disabled="loading"
-        class="p-0"
-      >
-        {{ locale.t('forgotPassword') }}
-      </UButton>
-    </div>
+    <UCheckbox
+      v-model="state.rememberMe"
+      :label="locale.t('rememberMe')"
+      :disabled="loading"
+    />
 
     <!-- Inline error display for general form errors -->
-    <UAlert 
-      v-if="error" 
-      color="error" 
+    <UAlert
+      v-if="error"
+      color="error"
       variant="solid"
       :title="locale.t('signInFailed')"
       :description="error"
@@ -56,43 +82,40 @@
       @close="error = null"
     />
 
-    <div class="space-y-4">
-      <UButton
-        type="submit"
-        size="lg"
+    <div class="flex gap-x-4">
+      <ASignUpButton
+        v-if="mock"
         block
-        :loading="loading"
-        :disabled="loading"
-      >
-        {{ locale.t('signIn') }}
-      </UButton>
-
-      <!-- Social providers section -->
-      <div v-if="socialProviders.length > 0">
-        <UDivider :label="locale.t('orContinueWith')" />
-        
-        <div class="grid gap-3" :class="socialProviders.length === 1 ? 'grid-cols-1' : 'grid-cols-2'">
-          <UButton
-            v-for="provider in socialProviders"
-            :key="provider.name"
-            variant="outline"
-            size="lg"
-            :leading-icon="provider.icon"
-            :disabled="loading"
-            @click="handleSocialSignIn(provider)"
-          >
-            {{ provider.label }}
-          </UButton>
-        </div>
-      </div>
+        :to="undefined"
+        variant="ghost"
+      />
+      <ASignUpButton
+        v-else
+        block
+        variant="ghost"
+      />
+      <UButton
+        block
+        icon="i-lucide-mail"
+        type="submit"
+        :disabled="loadingProvider !== null"
+        :label="locale.t('withEmail')"
+      />
     </div>
   </UForm>
 </template>
 
 <script setup lang="ts">
 import { ref, computed } from 'vue'
-import { useAuthUILocale, useRuntimeConfig } from '#imports'
+import { useAuthUILocale, useAuthUI } from '#imports'
 import { signInSchema, type SignInFormData } from '../utils/validation'
+import type { SocialProvider } from '../types/config'
+
+// Define props
+const props = defineProps<{
+  nosocial?: boolean
+  mock?: boolean
+}>()
 
 // Define emits
 const emit = defineEmits<{
@@ -102,11 +125,11 @@ const emit = defineEmits<{
 
 // Composables
 const locale = useAuthUILocale()
-const runtimeConfig = useRuntimeConfig()
-const config = (runtimeConfig.public.authUi || {}) as { routes?: { passwordReset?: string } }
+const auth = useAuthUI()
 
 // Reactive state
 const loading = ref(false)
+const loadingProvider = ref<string | null>(null)
 const error = ref<string | null>(null)
 
 const state = ref<SignInFormData>({
@@ -117,47 +140,74 @@ const state = ref<SignInFormData>({
 
 // Computed
 const forgotPasswordUrl = computed(() => {
-  return config.routes?.passwordReset || '/auth/password-reset'
+  // TODO: Get this from config once we refactor how config is accessed
+  return '/auth/password-reset'
 })
 
-// Mock social providers - in real implementation this would be detected from Logto
-const socialProviders = computed(() => [
-  {
-    name: 'google',
-    label: locale.t('continueWithGoogle'),
-    icon: 'i-simple-icons-google',
-  },
-  // Add more providers as needed
-])
+// Get social providers - will use configured or auto-detected
+const socialProviders = computed<SocialProvider[]>(() => {
+  const providers = auth.getSocialProviders()
+
+  return providers.map(provider => ({
+    ...provider,
+    // Use explicitly configured label, or fall back to localized label
+    label: provider.label || locale.getProviderLabel(provider.name),
+    icon: provider.icon || `i-simple-icons-${provider.name}`,
+  }))
+})
 
 // Methods
 const onSubmit = async (data: SignInFormData) => {
+  if (props.mock) {
+    // In mock mode, just show a success state briefly
+    loading.value = true
+    setTimeout(() => {
+      loading.value = false
+      console.log('[Mock] Sign in with:', data)
+    }, 1000)
+    return
+  }
+
   loading.value = true
   error.value = null
-  
+
   try {
     emit('submit', data)
-  } catch (err) {
+  }
+  catch (err) {
     error.value = err instanceof Error ? err.message : 'An error occurred'
-  } finally {
+  }
+  finally {
     loading.value = false
   }
 }
 
-const handleSocialSignIn = async (provider: { name: string }) => {
-  loading.value = true
+const handleSocialSignIn = async (provider: SocialProvider) => {
+  loadingProvider.value = provider.name
   error.value = null
-  
+
+  if (props.mock) {
+    // In mock mode, just show a loading state briefly
+    setTimeout(() => {
+      loadingProvider.value = null
+      console.log('[Mock] Social sign in with:', provider.name)
+    }, 1000)
+    return
+  }
+
   try {
-    emit('submit', { 
-      email: '', 
-      password: '', 
-      provider: provider.name 
+    emit('submit', {
+      email: '',
+      password: '',
+      provider: provider.name,
+      rememberMe: false,
     })
-  } catch (err) {
+  }
+  catch (err) {
     error.value = err instanceof Error ? err.message : 'An error occurred'
-  } finally {
-    loading.value = false
+  }
+  finally {
+    loadingProvider.value = null
   }
 }
 
@@ -176,6 +226,7 @@ defineExpose({
       rememberMe: false,
     }
     error.value = null
+    loadingProvider.value = null
   },
 })
 </script>

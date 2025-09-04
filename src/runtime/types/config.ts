@@ -1,3 +1,10 @@
+export interface SocialProvider {
+  name: string
+  label?: string
+  icon?: string
+  enabled?: boolean
+}
+
 export interface AuthUIConfig {
   routes?: {
     signIn?: string
@@ -17,4 +24,5 @@ export interface AuthUIConfig {
   appName?: string
   logo?: string
   messages?: Record<string, string>
+  socialProviders?: SocialProvider[]
 }

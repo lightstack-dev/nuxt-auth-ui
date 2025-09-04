@@ -3,22 +3,17 @@ title: SignInForm
 description: A complete sign-in form with validation and error handling
 ---
 
-The SignInForm component provides a ready-to-use authentication form with email/password fields, validation, social provider buttons, and proper error handling following our design principles.
+The SignInForm component provides a ready-to-use authentication form with email/password fields, validation, social provider buttons, and proper error handling following our [design principles](/design-principles).
 
 ## Basic Usage and Defaults
 
-::docs-demo
-<UCard>
-  <ASignInForm />
-</UCard>
+::code-preview
+  ::a-sign-in-form{mock nosocial}
+  ::
 
 #code
-
 ```vue
-<ASignInForm 
-  @submit="handleSignIn"
-  @success="handleSuccess"
-/>
+<ASignInForm />
 ```
 
 ::
@@ -27,9 +22,9 @@ By default, the form includes:
 
 - Email and password fields with Zod validation
 - Remember me checkbox
-- Forgot password link (routes to `/auth/password-reset` by default)
-- Social provider buttons (auto-detected from Logto)
-- **Inline error display** for form errors (not toasts)
+- Forgot password link
+- Social provider buttons (auto-detected from Logto or configured)
+- Inline error display for form errors (not toasts)
 - Loading states during submission
 - Fully typed with TypeScript
 
@@ -62,19 +57,57 @@ The form displays errors in a `UAlert` component between the form fields and sub
 
 ### Social Providers
 
-The form automatically detects and displays available social providers configured in your Logto instance:
+The form automatically detects available social providers from your Logto instance. You can also explicitly configure them in your `nuxt.config.ts`:
 
-```vue
-<!-- Social buttons appear automatically -->
-<ASignInForm />
+```typescript
+export default defineNuxtConfig({
+  authUi: {
+    socialProviders: [
+      {
+        name: 'google',        // Provider identifier (used with Logto)
+        label: 'Continue with Google', // Button text
+        icon: 'i-simple-icons-google', // Icon class
+        enabled: true          // Show/hide provider
+      },
+      {
+        name: 'github',
+        label: 'Continue with GitHub',
+        icon: 'i-simple-icons-github',
+        enabled: true
+      },
+      // Add more providers as needed
+    ]
+  }
+})
 ```
 
-Common providers include:
-- Google
-- GitHub  
-- Microsoft
-- Facebook
-- And more...
+**Behavior:**
+- **With configuration:** Uses your explicitly configured providers
+- **Without configuration:** Auto-detects enabled social connectors from Logto
+- **No providers:** Shows only the email/password form
+
+When clicked, social buttons redirect to Logto's OAuth flow using the `social:<provider>` direct sign-in format.
+
+### Without Social Providers
+
+Use the `nosocial` prop to show only email/password authentication:
+
+```vue
+<ASignInForm nosocial />
+```
+
+### Mock Mode
+
+Use the `mock` prop for documentation, testing, or demos. In mock mode:
+
+- Form submissions show loading states without making actual API calls
+- Social buttons display loading animation without redirecting
+- Console logs show the submitted data for debugging
+- Perfect for showcasing UI without authentication setup
+
+```vue
+<ASignInForm mock />
+```
 
 ### With Container
 
@@ -114,6 +147,13 @@ Use standalone in a modal for inline authentication:
 ```
 
 ## API
+
+### Props
+
+| Prop       | Type      | Default | Description                              |
+| ---------- | --------- | ------- | ---------------------------------------- |
+| `nosocial` | `boolean` | `false` | Hide social provider buttons and separator |
+| `mock`     | `boolean` | `false` | Enable mock mode for documentation/testing |
 
 ### Events
 
