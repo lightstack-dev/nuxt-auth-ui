@@ -7,8 +7,9 @@ The SignInButton component provides a simple, pre-configured authentication entr
 
 ## Basic Usage and Defaults
 
-::docs-demo
-<ASignInButton :to="undefined" />
+::code-preview
+::a-sign-in-button{:to="undefined"}
+::
 
 #code
 
@@ -21,10 +22,12 @@ The SignInButton component provides a simple, pre-configured authentication entr
 By default, the button:
 
 - Comes in default color, size, and variant as defined by [Nuxt UI](<(https://ui4.nuxt.com/docs/components/button)>)
-- Displays localized "Sign in" text with `locale.t('signIn')`
-- Shows the icon from `appConfig.ui.icons.authSignIn`
-- Navigates to `/auth/sign-in` by default (fully configurable via `routes.signIn` in module options)
-- Automatically renders as long as the user is unauthenticated with `!useAuthUI().isAuthenticated`
+- Displays `Sign In` message
+- Shows the `i-lucide-log-in` icon
+- Navigates to `/auth/sign-in`
+- Automatically renders as long as the user is unauthenticated
+
+See the component's [API](#api) for how to override these defaults.
 
 ## Authentication State Behavior
 
@@ -47,6 +50,12 @@ To keep the button visible regardless of authentication state, use the `persiste
 
 Use the `label` prop or `default` slot to override the button's text:
 
+::code-preview
+::a-sign-in-button{label="Get Started" :to="undefined"}
+::
+
+#code
+
 ```vue
 <!-- Using `label` prop -->
 <ASignInButton label="Get Started" />
@@ -55,35 +64,62 @@ Use the `label` prop or `default` slot to override the button's text:
 <ASignInButton>Get Started</ASignInButton>
 ```
 
-::docs-demo
-<ASignInButton label="Get Started" :to="undefined" />
 ::
 
 ### Icon
 
-Remove or change the leading icon:
+Remove or change the leading icon _for all SignInButtons_:
+
+```typescript [app.config.ts]
+export default defineAppConfig({
+  ui: {
+    icons: {
+      auth: {
+        signIn: undefined, // No icon, or
+        signIn: "i-lucide-arrow-right-circle", // Custom icon
+      },
+    },
+  },
+});
+```
+
+Remove or change the leading icon _for a single SignInButton_:
+
+::code-preview
+::a-sign-in-button{:leading-icon="undefined" :to="undefined"}
+::
+
+#code
 
 ```vue
 <!-- No icon -->
 <ASignInButton :leading-icon="undefined" />
 ```
 
-::docs-demo
-<ASignInButton :leading-icon="undefined" :to="undefined" />
 ::
+
+::code-preview
+::a-sign-in-button{leading-icon="i-lucide-arrow-right-circle" :to="undefined"}
+::
+
+#code
 
 ```vue
 <!-- Custom icon -->
 <ASignInButton leading-icon="i-lucide-arrow-right-circle" />
 ```
 
-::docs-demo
-<ASignInButton leading-icon="i-lucide-arrow-right-circle" :to="undefined" />
 ::
 
 ### Styling
 
-The `SignInButton` is based on [Nuxt UI's `UButton`](https://ui4.nuxt.com/docs/components/button), so you can use any of its style props, for example:
+The SignInButton is based on [Nuxt UI's `UButton`](https://ui4.nuxt.com/docs/components/button), so you can use any of its style props, for example:
+
+::code-preview
+::a-sign-in-button{color="success" label="Join Now" size="xl" :to="undefined" variant="subtle"}
+::
+
+#code
 
 ```vue
 <ASignInButton color="success" size="xl" variant="subtle">
@@ -91,10 +127,6 @@ The `SignInButton` is based on [Nuxt UI's `UButton`](https://ui4.nuxt.com/docs/c
 </ASignInButton>
 ```
 
-::docs-demo
-<ASignInButton color="success" size="xl" :to="undefined" variant="subtle">
-Join Now
-</ASignInButton>
 ::
 
 ## API
@@ -103,12 +135,12 @@ The component extends [Nuxt UI's `UButton`](https://ui4.nuxt.com/docs/components
 
 ### Props
 
-| Prop           | Type                  | Default                         | Description                                               |
-| -------------- | --------------------- | ------------------------------- | --------------------------------------------------------- |
-| `label`        | `string`              | `locale.t('signIn')`            | Button text label                                         |
-| `leading-icon` | `string \| undefined` | `appConfig.ui.icons.authSignIn` | Icon shown before text                                    |
-| `persistent`   | `boolean`             | `false`                         | Keep button visible when user is authenticated            |
-| `to`           | `string`              | `/auth/sign-in`                 | Navigation destination (configurable via [`routes.signIn`](/configuration#routes)) |
+| Prop           | Type                  | Default              | Description                                                                         |
+| -------------- | --------------------- | -------------------- | ----------------------------------------------------------------------------------- |
+| `label`        | `string`              | `Sign In`            | Button text label, configurable via [`messages.signIn`](/configuration#messages)    |
+| `leading-icon` | `string \| undefined` | `i-lucide-log-in`    | Icon shown before text, configurable via [`icons.authSignIn`](/configuration#icons) |
+| `persistent`   | `boolean`             | `false`              | Keep button visible when user is authenticated                                      |
+| `to`           | `string`              | `/auth/sign-in`      | Navigation destination, configurable via [`routes.signIn`](/configuration#routes)   |
 
 ### Slots
 

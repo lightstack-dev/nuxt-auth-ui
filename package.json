@@ -46,13 +46,13 @@
   "dependencies": {
     "@iconify-json/lucide": "^1.2.66",
     "@iconify-json/simple-icons": "^1.2.50",
-    "@nuxt/kit": "^4.0.3",
-    "@nuxt/ui": "^4.0.0-alpha.0",
+    "@nuxt/kit": "^4.1.0",
+    "@nuxt/ui": "^4.0.0-alpha.1",
     "i": "^0.3.7",
-    "zod": "^3.24.0"
+    "zod": "^3.25.76"
   },
   "peerDependencies": {
-    "@logto/nuxt": "*",
+    "@logto/nuxt": "^1.2.6",
     "nuxt": "^4.0.0"
   },
   "devDependencies": {
@@ -60,13 +60,13 @@
     "@nuxt/eslint": "1.9.0",
     "@nuxt/eslint-config": "^1.9.0",
     "@nuxt/module-builder": "^1.0.2",
-    "@nuxt/schema": "^4.0.3",
+    "@nuxt/schema": "^4.1.0",
     "@nuxt/test-utils": "^3.19.2",
     "@types/node": "latest",
     "@vue/test-utils": "^2.4.6",
     "changelogen": "^0.6.2",
     "eslint": "^9.34.0",
-    "nuxt": "^4.0.3",
+    "nuxt": "^4.1.0",
     "typescript": "~5.9.2",
     "vitest": "^3.2.4",
     "vue-tsc": "^3.0.6"

@@ -10,33 +10,60 @@ interface I18nInstance {
 // Default translations
 const defaultMessages = {
   en: {
+    // Auth actions
     signIn: 'Sign In',
     signOut: 'Sign Out',
     signUp: 'Sign Up',
+
+    // Page titles and descriptions
     signInTitle: 'Welcome Back',
     signInDescription: 'Sign in to your account to continue',
     signUpTitle: 'Create Account',
     signUpDescription: 'Create your account to get started',
-    continueWithProvider: 'Continue with Provider',
-    // Future messages for additional components
-    profile: 'Profile',
-    settings: 'Settings',
-    security: 'Security',
-    password: 'Password',
+
+    // Form fields
     email: 'Email',
-    username: 'Username',
+    password: 'Password',
+    confirmPassword: 'Confirm Password',
     name: 'Name',
+    username: 'Username',
+
+    // Form actions
+    rememberMe: 'Remember me',
+    forgotPassword: 'Forgot password?',
+    acceptTerms: 'I agree to the terms and conditions',
+
+    // Social sign-in
+    continueWithProvider: 'Continue with Provider',
+    continueWithGoogle: 'Continue with Google',
+    continueWithGitHub: 'Continue with GitHub',
+    continueWithMicrosoft: 'Continue with Microsoft',
+    orContinueWith: 'Or continue with',
+
+    // Navigation messages
+    alreadyHaveAccount: 'Already have an account?',
+    dontHaveAccount: 'Don\'t have an account?',
+
+    // Success messages
+    signInSuccess: 'Signed in successfully!',
+    signUpSuccess: 'Account created successfully!',
+
+    // Error messages
+    signInFailed: 'Sign in failed',
+    signUpFailed: 'Sign up failed',
+    invalidCredentials: 'Invalid email or password',
+    accountNotFound: 'Account not found',
+    accountExists: 'An account with this email already exists',
+
+    // General UI
     save: 'Save',
     cancel: 'Cancel',
     back: 'Back',
     continue: 'Continue',
     welcome: 'Welcome',
-    forgotPassword: 'Forgot password?',
-    rememberMe: 'Remember me',
-    orContinueWith: 'Or continue with',
-    alreadyHaveAccount: 'Already have an account?',
-    dontHaveAccount: 'Don\'t have an account?',
-    agreeToTerms: 'I agree to the terms and conditions',
+    profile: 'Profile',
+    settings: 'Settings',
+    security: 'Security',
   },
 }
 

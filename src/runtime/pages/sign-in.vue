@@ -1,39 +1,81 @@
 <template>
-  <div class="min-h-screen flex items-center justify-center">
-    <div class="max-w-md w-full space-y-8">
-      <div class="text-center">
-        <h2 class="mt-6 text-3xl font-extrabold">
-          {{ locale.t('signInTitle') }}
-        </h2>
-        <p class="mt-2 text-sm">
-          {{ locale.t('signInDescription') }}
-        </p>
-      </div>
+  <AContainer 
+    :title="locale.t('signInTitle')"
+    :description="locale.t('signInDescription')"
+  >
+    <ASignInForm 
+      ref="signInForm"
+      @submit="handleSignIn" 
+      @success="handleSuccess"
+    />
 
-      <UButton
-        :label="locale.t('continueWithProvider')"
-        :leading-icon="providerIcon"
-        size="lg"
-        block
-        @click="handleSignIn"
-      />
-    </div>
-  </div>
+    <template #footer>
+      <p class="text-sm text-gray-600 dark:text-gray-400">
+        {{ locale.t('dontHaveAccount') }}
+        <UButton
+          variant="link"
+          :to="signUpUrl"
+          class="p-0 font-medium"
+        >
+          {{ locale.t('signUp') }}
+        </UButton>
+      </p>
+    </template>
+  </AContainer>
 </template>
 
 <script setup lang="ts">
-import { useAuthUILocale, useAppConfig, navigateTo, computed } from '#imports'
+import { ref, computed } from 'vue'
+import { useAuthUILocale, useAuthUI, useRuntimeConfig, navigateTo } from '#imports'
+import type { SignInFormData } from '../utils/validation'
 
+// Composables
 const locale = useAuthUILocale()
-const appConfig = useAppConfig()
+const auth = useAuthUI()
+const runtimeConfig = useRuntimeConfig()
+const config = (runtimeConfig.public.authUi || {}) as { routes?: { signUp?: string }; redirects?: { afterSignIn?: string } }
 
-// Get icon with proper typing
-const providerIcon = computed(() => {
-  const ui = appConfig.ui as { icons?: Record<string, string> }
-  return ui?.icons?.authProvider
-})
+// Template refs
+const signInForm = ref()
 
-const handleSignIn = async () => {
-  await navigateTo('/sign-in')
+// Computed
+const signUpUrl = computed(() => config.routes?.signUp || '/auth/sign-up')
+const redirectUrl = computed(() => config.redirects?.afterSignIn || '/')
+
+// Methods
+const handleSignIn = async (data: SignInFormData & { provider?: string }) => {
+  try {
+    signInForm.value?.setLoading(true)
+    signInForm.value?.setError(null)
+
+    if (data.provider) {
+      // Handle social sign-in
+      await auth.signInWithSocial(data.provider)
+    } else {
+      // Handle email/password sign-in
+      await auth.signIn(data.email, data.password, data.rememberMe)
+    }
+
+    // Success handled in handleSuccess
+  } catch (error) {
+    const errorMessage = error instanceof Error ? error.message : 'Failed to sign in'
+    signInForm.value?.setError(errorMessage)
+  } finally {
+    signInForm.value?.setLoading(false)
+  }
+}
+
+const handleSuccess = async () => {
+  // Show success toast only on navigation
+  if (process.client && window.$toast) {
+    window.$toast.add({
+      title: locale.t('signInSuccess'),
+      icon: 'i-lucide-check-circle',
+      color: 'green',
+    })
+  }
+  
+  // Navigate to redirect URL
+  await navigateTo(redirectUrl.value)
 }
 </script>

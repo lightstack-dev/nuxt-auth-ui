@@ -40,14 +40,37 @@ export function useAuthUI() {
     }
   })
 
-  const signIn = async () => {
-    // Navigate to our auth sign-in page
-    await navigateTo(getAuthUrl('sign-in'))
+  const signIn = async (email?: string, password?: string, rememberMe?: boolean) => {
+    if (!email || !password) {
+      // Navigate to our auth sign-in page
+      await navigateTo(getAuthUrl('sign-in'))
+      return
+    }
+
+    // TODO: Integrate with Logto authentication
+    // This is a placeholder implementation
+    console.log('Sign in with:', { email, password, rememberMe })
+    throw new Error('Authentication not yet implemented')
   }
 
-  const signUp = async () => {
-    // Navigate to our auth sign-up page
-    await navigateTo(getAuthUrl('sign-up'))
+  const signInWithSocial = async (provider: string) => {
+    // TODO: Integrate with Logto social authentication
+    // This is a placeholder implementation
+    console.log('Sign in with social provider:', provider)
+    throw new Error('Social authentication not yet implemented')
+  }
+
+  const signUp = async (email?: string, password?: string, name?: string) => {
+    if (!email || !password) {
+      // Navigate to our auth sign-up page
+      await navigateTo(getAuthUrl('sign-up'))
+      return
+    }
+
+    // TODO: Integrate with Logto registration
+    // This is a placeholder implementation
+    console.log('Sign up with:', { email, password, name })
+    throw new Error('Registration not yet implemented')
   }
 
   const signOut = async () => {
@@ -81,6 +104,7 @@ export function useAuthUI() {
 
     // Actions
     signIn,
+    signInWithSocial,
     signUp,
     signOut,
 
