@@ -214,7 +214,7 @@ const consentItems = computed(() => {
 
   // Get legal config from runtime config (nuxt.config.ts authUi.legal)
   const runtimeConfig = useRuntimeConfig()
-  const moduleConfig = (runtimeConfig.public.authUi || {}) as any
+  const moduleConfig = (runtimeConfig.public.authUi || {}) as Record<string, unknown>
   const legal = moduleConfig.legal || {}
   const items = []
 

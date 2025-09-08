@@ -185,7 +185,7 @@ export default defineNuxtModule<AuthUIConfig>({
         path: resolvedOptions.routes.signIn,
         file: resolver.resolve('./runtime/pages/sign-in.vue'),
       })
-      
+
       pages.push({
         name: 'auth-sign-up',
         path: resolvedOptions.routes.signUp,

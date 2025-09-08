@@ -26,12 +26,11 @@
 </template>
 
 <script setup lang="ts">
-import { useAuthUILocale, useAuthUI, useAppConfig, navigateTo, useToast } from '#imports'
+import { useAuthUILocale, useAppConfig, navigateTo, useToast } from '#imports'
 import SignUpForm from '../components/SignUpForm.vue'
 
 // Composables
 const locale = useAuthUILocale()
-const auth = useAuthUI()
 const appConfig = useAppConfig()
 const toast = useToast()
 

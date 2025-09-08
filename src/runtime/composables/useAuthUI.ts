@@ -30,18 +30,18 @@ export function useAuthUI() {
 
   // Only auto-detect social providers if none are configured
   const shouldAutoDetect = !config.socialProviders || config.socialProviders.length === 0
-  
-  const { data: connectorsData } = shouldAutoDetect 
+
+  const { data: connectorsData } = shouldAutoDetect
     ? useFetch<{
-        connectors: Array<{
-          name: string
-          label: string
-          icon: string
-          logo: string
-          logoDark?: string
-          platform: string
-        }>
-      }>('/api/auth-ui/connectors', {
+      connectors: Array<{
+        name: string
+        label: string
+        icon: string
+        logo: string
+        logoDark?: string
+        platform: string
+      }>
+    }>('/api/auth-ui/connectors', {
         lazy: true,
         default: () => ({ connectors: [] }),
       })
@@ -123,7 +123,7 @@ export function useAuthUI() {
   const signUpWithSocial = async (provider: string) => {
     // Similar to sign-in but with registration intent
     const directSignIn = `social:${provider}`
-    
+
     // Navigate to Logto's sign-in route with registration screen
     await navigateTo(`/sign-in?direct_sign_in=${encodeURIComponent(directSignIn)}&first_screen=register`)
   }
@@ -132,7 +132,7 @@ export function useAuthUI() {
     // TODO: Implement email verification via Experience API
     // For now, this is a placeholder
     console.log('Verifying email:', { email, code })
-    
+
     // Will call Experience API endpoint for verification
     const result = await $fetch('/api/auth-ui/verify-email', {
       method: 'POST',
@@ -141,14 +141,14 @@ export function useAuthUI() {
         code,
       },
     })
-    
+
     return result
   }
 
   const resendVerificationEmail = async (email: string) => {
     // TODO: Implement resend verification via Experience API
     console.log('Resending verification to:', email)
-    
+
     // Will call Experience API endpoint for resending
     const result = await $fetch('/api/auth-ui/resend-verification', {
       method: 'POST',
@@ -156,7 +156,7 @@ export function useAuthUI() {
         email,
       },
     })
-    
+
     return result
   }
 
