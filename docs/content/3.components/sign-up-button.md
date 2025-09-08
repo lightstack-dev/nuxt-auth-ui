@@ -8,7 +8,7 @@ The SignUpButton component provides a simple, pre-configured registration entry 
 ## Basic Usage and Defaults
 
 ::code-preview
-::a-sign-up-button{:to="undefined"}
+::a-sign-up-button{mock}
 ::
 
 #code
@@ -51,7 +51,7 @@ To keep the button visible regardless of authentication state, use the `persiste
 Use the `label` prop or `default` slot to override the button's text:
 
 ::code-preview
-::a-sign-up-button{label="Create Account" :to="undefined"}
+::a-sign-up-button{label="Create Account" mock}
 ::
 
 #code
@@ -86,7 +86,7 @@ export default defineAppConfig({
 Remove or change the leading icon _for a single SignInButton_:
 
 ::code-preview
-::a-sign-up-button{:leading-icon="undefined" :to="undefined"}
+::a-sign-up-button{:leading-icon="undefined" mock}
 ::
 
 #code
@@ -99,7 +99,7 @@ Remove or change the leading icon _for a single SignInButton_:
 ::
 
 ::code-preview
-::a-sign-up-button{leading-icon="i-lucide-user-plus-2" :to="undefined"}
+::a-sign-up-button{leading-icon="i-lucide-user-plus-2" mock}
 ::
 
 #code
@@ -116,7 +116,7 @@ Remove or change the leading icon _for a single SignInButton_:
 The SignUpButton is based on [Nuxt UI's `UButton`](https://ui4.nuxt.com/docs/components/button), so you can use any of its style props, for example:
 
 ::code-preview
-::a-sign-up-button{color="success" label="Get Started Free" size="xl" :to="undefined" variant="subtle"}
+::a-sign-up-button{color="success" label="Get Started Free" size="xl" mock variant="subtle"}
 ::
 
 #code
@@ -129,6 +129,16 @@ The SignUpButton is based on [Nuxt UI's `UButton`](https://ui4.nuxt.com/docs/com
 
 ::
 
+### Mock Mode
+
+Enable mock mode for documentation, testing, or demos:
+
+```vue
+<ASignUpButton mock />
+```
+
+In mock mode, clicking the button doesn't trigger navigation (like all buttons on this page).
+
 ## API
 
 The component extends [Nuxt UI's `UButton`](https://ui4.nuxt.com/docs/components/button) with the following settings:
@@ -139,6 +149,7 @@ The component extends [Nuxt UI's `UButton`](https://ui4.nuxt.com/docs/components
 | -------------- | --------------------- | -------------------- | ----------------------------------------------------------------------------------- |
 | `label`        | `string`              | `Sign Up`            | Button text label, configurable via [`messages.signUp`](/configuration#messages)    |
 | `leading-icon` | `string \| undefined` | `i-lucide-user-plus` | Icon shown before text, configurable via [`icons.authSignUp`](/configuration#icons) |
+| `mock`         | `boolean`             | `false`              | Enable mock mode for documentation/testing                                          |
 | `persistent`   | `boolean`             | `false`              | Keep button visible when user is authenticated                                      |
 | `to`           | `string`              | `/auth/sign-up`      | Navigation destination, configurable via [`routes.signUp`](/configuration#routes)   |
 

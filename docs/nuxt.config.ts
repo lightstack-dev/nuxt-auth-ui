@@ -26,6 +26,11 @@ export default defineNuxtConfig({
         enabled: true,
       },
     ],
+    legal: {
+      termsOfService: '/terms',
+      privacyPolicy: '/privacy',
+      cookiePolicy: '/cookies',
+    },
   },
   icon: {
     cssLayer: 'components',

@@ -3,7 +3,7 @@
     v-if="persistent || !auth.isAuthenticated.value"
     :label="locale.t('signIn')"
     :leading-icon="signInIcon"
-    :to="auth.getAuthUrl('sign-in')"
+    :to="mock ? undefined : auth.getAuthUrl('sign-in')"
   >
     <slot />
   </UButton>
@@ -13,6 +13,7 @@
 import { useAuthUI, useAuthUILocale, useAppConfig, computed } from '#imports'
 
 defineProps<{
+  mock?: boolean
   persistent?: boolean
 }>()
 

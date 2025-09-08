@@ -30,6 +30,13 @@ export interface AuthUIConfig {
   appName?: string
   logo?: string
 
+  // Legal documents configuration
+  legal?: {
+    termsOfService?: string
+    privacyPolicy?: string
+    cookiePolicy?: string
+  }
+
   // Middleware
   middleware?: {
     global?: boolean
@@ -100,6 +107,7 @@ export default defineNuxtModule<AuthUIConfig>({
       },
       appName: options.appName,
       logo: options.logo,
+      legal: options.legal,
       socialProviders: options.socialProviders,
       messages: {
         signIn: 'Sign In',
@@ -149,18 +157,39 @@ export default defineNuxtModule<AuthUIConfig>({
       filePath: resolver.resolve('./runtime/components/SignInForm.vue'),
     })
 
+    addComponent({
+      name: `${resolvedOptions.componentPrefix}SignUpForm`,
+      filePath: resolver.resolve('./runtime/components/SignUpForm.vue'),
+    })
+
+    addComponent({
+      name: `${resolvedOptions.componentPrefix}SocialProviderButtons`,
+      filePath: resolver.resolve('./runtime/components/SocialProviderButtons.vue'),
+    })
+
     // Add server API routes
     addServerHandler({
       route: '/api/auth-ui/connectors',
       handler: resolver.resolve('./runtime/server/api/auth-ui/connectors.get'),
     })
 
-    // Add the sign-in route
+    addServerHandler({
+      route: '/api/auth-ui/register',
+      handler: resolver.resolve('./runtime/server/api/auth-ui/register.post'),
+    })
+
+    // Add auth pages
     extendPages((pages) => {
       pages.push({
         name: 'auth-sign-in',
         path: resolvedOptions.routes.signIn,
         file: resolver.resolve('./runtime/pages/sign-in.vue'),
+      })
+
+      pages.push({
+        name: 'auth-sign-up',
+        path: resolvedOptions.routes.signUp,
+        file: resolver.resolve('./runtime/pages/sign-up.vue'),
       })
     })
 

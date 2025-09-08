@@ -8,7 +8,7 @@ The SignInButton component provides a simple, pre-configured authentication entr
 ## Basic Usage and Defaults
 
 ::code-preview
-::a-sign-in-button{:to="undefined"}
+::a-sign-in-button{mock}
 ::
 
 #code
@@ -51,7 +51,7 @@ To keep the button visible regardless of authentication state, use the `persiste
 Use the `label` prop or `default` slot to override the button's text:
 
 ::code-preview
-::a-sign-in-button{label="Get Started" :to="undefined"}
+::a-sign-in-button{label="Get Started" mock}
 ::
 
 #code
@@ -86,7 +86,7 @@ export default defineAppConfig({
 Remove or change the leading icon _for a single SignInButton_:
 
 ::code-preview
-::a-sign-in-button{:leading-icon="undefined" :to="undefined"}
+::a-sign-in-button{:leading-icon="undefined" mock}
 ::
 
 #code
@@ -99,7 +99,7 @@ Remove or change the leading icon _for a single SignInButton_:
 ::
 
 ::code-preview
-::a-sign-in-button{leading-icon="i-lucide-arrow-right-circle" :to="undefined"}
+::a-sign-in-button{leading-icon="i-lucide-arrow-right-circle" mock}
 ::
 
 #code
@@ -116,7 +116,7 @@ Remove or change the leading icon _for a single SignInButton_:
 The SignInButton is based on [Nuxt UI's `UButton`](https://ui4.nuxt.com/docs/components/button), so you can use any of its style props, for example:
 
 ::code-preview
-::a-sign-in-button{color="success" label="Join Now" size="xl" :to="undefined" variant="subtle"}
+::a-sign-in-button{color="success" label="Join Now" size="xl" mock variant="subtle"}
 ::
 
 #code
@@ -129,6 +129,16 @@ The SignInButton is based on [Nuxt UI's `UButton`](https://ui4.nuxt.com/docs/com
 
 ::
 
+### Mock Mode
+
+Enable mock mode for documentation, testing, or demos:
+
+```vue
+<ASignInButton mock />
+```
+
+In mock mode, clicking the button doesn't trigger navigation (like all buttons on this page).
+
 ## API
 
 The component extends [Nuxt UI's `UButton`](https://ui4.nuxt.com/docs/components/button) with the following settings:
@@ -139,6 +149,7 @@ The component extends [Nuxt UI's `UButton`](https://ui4.nuxt.com/docs/components
 | -------------- | --------------------- | -------------------- | ----------------------------------------------------------------------------------- |
 | `label`        | `string`              | `Sign In`            | Button text label, configurable via [`messages.signIn`](/configuration#messages)    |
 | `leading-icon` | `string \| undefined` | `i-lucide-log-in`    | Icon shown before text, configurable via [`icons.authSignIn`](/configuration#icons) |
+| `mock`         | `boolean`             | `false`              | Enable mock mode for documentation/testing                                          |
 | `persistent`   | `boolean`             | `false`              | Keep button visible when user is authenticated                                      |
 | `to`           | `string`              | `/auth/sign-in`      | Navigation destination, configurable via [`routes.signIn`](/configuration#routes)   |
 

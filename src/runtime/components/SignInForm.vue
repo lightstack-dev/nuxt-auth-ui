@@ -6,24 +6,15 @@
     :validate-on="mock ? [] : undefined"
     @submit="onSubmit"
   >
-    <div
-      v-if="!basic && socialProviders.length > 0"
-      class="space-y-3"
-    >
-      <UButton
-        v-for="provider in socialProviders"
-        :key="provider.name"
-        block
-        :icon="provider.icon"
-        :label="provider.label"
-        :loading="loadingProvider === provider.name"
-        :disabled="loading || loadingProvider !== null"
-        @click="handleSocialSignIn(provider)"
-      />
-    </div>
+    <SocialProviderButtons
+      v-if="social"
+      :mock="mock"
+      :loading="loading"
+      @click="handleSocialSignIn"
+    />
 
     <USeparator
-      v-if="!basic && socialProviders.length > 0"
+      v-if="social && socialProviders.length > 0"
       :label="locale.t('or')"
     />
 
@@ -37,7 +28,7 @@
         type="email"
         placeholder="email@example.com"
         autocomplete="email"
-        :autofocus="mock ? false : true"
+        :autofocus="!mock"
         :disabled="loading"
         size="lg"
       />
@@ -48,10 +39,7 @@
       :label="locale.t('password')"
     >
       <template #help>
-        <ULink
-          :to="mock ? undefined : forgotPasswordUrl"
-          class="text-xs"
-        >
+        <ULink :to="mock ? undefined : forgotPasswordUrl">
           {{ locale.t('forgotPassword') }}
         </ULink>
       </template>
@@ -82,10 +70,12 @@
       @close="error = null"
     />
 
-    <div :class="$slots.default ? 'flex gap-x-4' : undefined">
-      <slot
-        :loading="loading"
-        :disabled="loadingProvider !== null"
+    <div :class="$slots.default || secondary ? 'flex gap-x-4' : undefined">
+      <SignUpButton
+        v-if="secondary"
+        block
+        :mock="mock"
+        variant="ghost"
       />
       <UButton
         block
@@ -104,12 +94,19 @@ import { ref, computed } from 'vue'
 import { useAuthUILocale, useAuthUI } from '#imports'
 import { signInSchema, type SignInFormData } from '../utils/validation'
 import type { SocialProvider } from '../types/config'
+import SocialProviderButtons from './SocialProviderButtons.vue'
+import SignUpButton from './SignUpButton.vue'
 
 // Define props
-const props = defineProps<{
-  basic?: boolean
+const props = withDefaults(defineProps<{
   mock?: boolean
-}>()
+  social?: boolean
+  secondary?: boolean
+}>(), {
+  mock: false,
+  social: true,
+  secondary: true,
+})
 
 // Define emits
 const emit = defineEmits<{
@@ -123,8 +120,8 @@ const auth = useAuthUI()
 
 // Reactive state
 const loading = ref(false)
-const loadingProvider = ref<string | null>(null)
 const error = ref<string | null>(null)
+const loadingProvider = ref<string | null>(null)
 
 const state = ref<SignInFormData>({
   email: '',
@@ -137,16 +134,9 @@ const forgotPasswordUrl = computed(() => {
   return auth.getAuthUrl('password-reset')
 })
 
-// Get social providers - will use configured or auto-detected
+// Get social providers for separator display
 const socialProviders = computed<SocialProvider[]>(() => {
-  const providers = auth.getSocialProviders()
-
-  return providers.map(provider => ({
-    ...provider,
-    // Use explicitly configured label, or fall back to localized label
-    label: provider.label || locale.getProviderLabel(provider.name),
-    icon: provider.icon || `i-simple-icons-${provider.name}`,
-  }))
+  return auth.getSocialProviders()
 })
 
 // Methods
@@ -180,37 +170,18 @@ const onSubmit = async (data: SignInFormData) => {
   }
 }
 
-const handleSocialSignIn = async (provider: SocialProvider) => {
-  loadingProvider.value = provider.name
+const handleSocialSignIn = (provider: SocialProvider) => {
   error.value = null
 
-  if (props.mock) {
-    // In mock mode, just show a loading state briefly
-    setTimeout(() => {
-      loadingProvider.value = null
-      console.log('[Mock] Social sign in with:', provider.name)
-    }, 1000)
-    return
-  }
+  // Emit the event for parent components to handle if needed
+  emit('submit', {
+    email: '',
+    password: '',
+    provider: provider.name,
+    rememberMe: false,
+  })
 
-  try {
-    // Emit the event for parent components to handle if needed
-    emit('submit', {
-      email: '',
-      password: '',
-      provider: provider.name,
-      rememberMe: false,
-    })
-
-    // Perform the actual social sign-in
-    await auth.signInWithSocial(provider.name)
-
-    // Note: success event not emitted here as social sign-in redirects
-  }
-  catch (err) {
-    error.value = err instanceof Error ? err.message : 'An error occurred'
-    loadingProvider.value = null
-  }
+  // The SocialProviderButtons component handles the actual sign-in
 }
 
 // Expose methods for parent components
@@ -228,7 +199,6 @@ defineExpose({
       rememberMe: false,
     }
     error.value = null
-    loadingProvider.value = null
   },
 })
 </script>
