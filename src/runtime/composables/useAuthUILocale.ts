@@ -11,71 +11,96 @@ interface I18nInstance {
 const defaultMessages = {
   en: {
     // Auth actions
-    signIn: 'Sign In',
-    signOut: 'Sign Out',
-    signUp: 'Sign Up',
+    'signIn': 'Sign In',
+    'signOut': 'Sign Out',
+    'signUp': 'Sign Up',
 
     // Page titles and descriptions
-    signInTitle: 'Welcome Back',
-    signInDescription: 'Sign in to your account to continue',
-    signUpTitle: 'Create Account',
-    signUpDescription: 'Create your account to get started',
+    'signInTitle': 'Welcome Back',
+    'signInDescription': 'Sign in to your account to continue',
+    'signUpTitle': 'Create Account',
+    'signUpDescription': 'Create your account to get started',
 
     // Form fields
-    email: 'Email',
-    password: 'Password',
-    confirmPassword: 'Confirm Password',
-    name: 'Name',
-    username: 'Username',
+    'email': 'Email',
+    'password': 'Password',
+    'confirmPassword': 'Confirm Password',
+    'name': 'Name',
+    'username': 'Username',
 
     // Form actions
-    rememberMe: 'Remember me',
-    forgotPassword: 'Forgot password?',
-    acceptTerms: 'I agree to the terms and conditions',
+    'rememberMe': 'Remember me',
+    'forgotPassword': 'Forgot password?',
+    'acceptTerms': 'I agree to the terms and conditions',
 
     // Social providers (key = provider name from Logto)
-    google: 'With Google',
-    github: 'With GitHub',
-    microsoft: 'With Microsoft',
-    facebook: 'With Facebook',
-    apple: 'With Apple',
-    twitter: 'With Twitter',
-    linkedin: 'With LinkedIn',
-    discord: 'With Discord',
-    gitlab: 'With GitLab',
-    slack: 'With Slack',
-    azure: 'With Azure AD',
-    okta: 'With Okta',
-    auth0: 'With Auth0',
+    'google': 'With Google',
+    'github': 'With GitHub',
+    'microsoft': 'With Microsoft',
+    'facebook': 'With Facebook',
+    'apple': 'With Apple',
+    'twitter': 'With Twitter',
+    'linkedin': 'With LinkedIn',
+    'discord': 'With Discord',
+    'gitlab': 'With GitLab',
+    'slack': 'With Slack',
+    'azure': 'With Azure AD',
+    'okta': 'With Okta',
+    'auth0': 'With Auth0',
 
     // Authentication options
-    withEmail: 'With Email',
-    or: 'OR',
+    'withEmail': 'With Email',
+    'or': 'OR',
 
     // Navigation messages
-    alreadyHaveAccount: 'Already have an account?',
-    dontHaveAccount: 'Don\'t have an account?',
+    'alreadyHaveAccount': 'Already have an account?',
+    'dontHaveAccount': 'Don\'t have an account?',
 
     // Success messages
-    signInSuccess: 'Signed in successfully!',
-    signUpSuccess: 'Account created successfully!',
+    'signInSuccess': 'Signed in successfully!',
+    'signUpSuccess': 'Account created successfully!',
 
     // Error messages
-    signInFailed: 'Sign in failed',
-    signUpFailed: 'Sign up failed',
-    invalidCredentials: 'Invalid email or password',
-    accountNotFound: 'Account not found',
-    accountExists: 'An account with this email already exists',
+    'signInFailed': 'Sign in failed',
+    'signUpFailed': 'Sign up failed',
+    'invalidCredentials': 'Invalid email or password',
+    'accountNotFound': 'Account not found',
+    'accountExists': 'An account with this email already exists',
 
     // General UI
-    save: 'Save',
-    cancel: 'Cancel',
-    back: 'Back',
-    continue: 'Continue',
-    welcome: 'Welcome',
-    profile: 'Profile',
-    settings: 'Settings',
-    security: 'Security',
+    'save': 'Save',
+    'cancel': 'Cancel',
+    'back': 'Back',
+    'continue': 'Continue',
+    'welcome': 'Welcome',
+    'profile': 'Profile',
+    'settings': 'Settings',
+    'security': 'Security',
+
+    // Verification
+    'verificationCode': 'Verification Code',
+    'enterVerificationCode': 'Enter 6-digit code',
+    'verificationEmailSent': 'Verification Email Sent',
+    'checkEmailForCode': 'Please check your email for the verification code sent to',
+    'checkEmailForVerification': 'Please check your email to verify your account',
+    'resendCode': 'Resend Code',
+    'verify': 'Verify',
+    'verificationRequired': 'Email Verification Required',
+    'emailVerified': 'Email Verified',
+    'accountActivated': 'Your account has been activated successfully',
+    'welcomeMessage': 'Welcome! Your account has been created successfully.',
+    'termsAndConditions': 'Terms and Conditions',
+
+    // Consent messages
+    'signUpConsent': 'By signing up, you agree to our',
+    'consent.termsOfService': 'I agree to the',
+    'consent.privacyPolicy': 'I have read and agree to the',
+    'consent.cookiePolicy': 'I accept the use of cookies as described in the',
+
+    // Legal document names
+    'legal.termsOfService': 'Terms of Service',
+    'legal.privacyPolicy': 'Privacy Policy',
+    'legal.cookiePolicy': 'Cookie Policy',
   },
 }
 

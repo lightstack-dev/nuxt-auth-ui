@@ -14,7 +14,7 @@ The SignInForm component provides a complete authentication form with social pro
 #code
 
 ```vue
-<!-- Renders social buttons based on Nuxt/Logto configuration -->
+<!-- Renders social buttons based on your Nuxt/Logto configuration -->
 <ASignInForm />
 ```
 
@@ -22,11 +22,12 @@ The SignInForm component provides a complete authentication form with social pro
 
 By default, the form:
 
-- Displays configured social provider buttons
+- Displays buttons for configured/detected social provider
 - Includes email and password fields with validation
 - Shows a remember me checkbox to pre-fill email on next sign-in
 - Provides a forgot password link for account recovery
 - Labels the submit button "With Email" to match social provider button pattern
+- Shows a sign-up button for new users (in the same row as sign-in)
 
 See the component's [API](#api) for how to override these defaults.
 
@@ -34,102 +35,44 @@ See the component's [API](#api) for how to override these defaults.
 
 The SignInForm component is unaware of authentication state. It always renders when mounted. (However, navigating to the sign-in _route_ when already authenticated will trigger a redirect at the middleware/route level.)
 
-## Form State Management
-
-The component manages its own internal state and exposes methods for external control:
-
-- **Loading states** are automatically shown during authentication
-- **Errors are displayed inline** within the form, not as toast notifications
-- **Form validation** happens on submit
-
-The exposed methods enable integration with different authentication backends. Instead of being locked to Logto, you can handle the `submit` event and use the exposed methods to control the form's state while integrating with Supabase, Firebase, or any other auth provider.
-
-For programmatic control, use template refs:
-
-```vue
-<template>
-  <ASignInForm ref="signInForm" @submit="handleSignIn" />
-</template>
-
-<script setup lang="ts">
-const signInForm = ref()
-
-const handleSignIn = async (data) => {
-  try {
-    await auth.signIn(data.email, data.password)
-  } catch (error) {
-    // Display error inline in the form
-    signInForm.value?.setError(error.message)
-  }
-}
-</script>
-```
-
 ## Customization
 
 ### Social Providers
 
-Social provider buttons follow this precedence:
+By default, the sign-in form includes the [SocialProviderButtons component](/components/social-provider-buttons). These buttons only render when social providers have been configured or auto-detected.
 
-1. **Primary:** Providers explicitly [configured in `nuxt.config.ts`](/configuration#social-providers)
-2. **Fallback:** Auto-detected from enabled Logto social connectors
-3. **Default:** No social buttons shown if neither configured
-
-Configure providers _for all SignInForms_:
-
-```typescript [nuxt.config.ts]
-export default defineNuxtConfig({
-  authUi: {
-    socialProviders: [
-      {
-        name: 'google',
-        enabled: true
-      },
-      {
-        name: 'microsoft',
-        enabled: true
-      }
-    ]
-  }
-})
-```
-
-Hide social providers _for a single SignInForm_ (even though some might be configured in Nuxt or Logto):
+With the `:social="false"` prop, you can remove social providers from a SignInForm (even though some might be configured in Nuxt or Logto):
 
 ::code-preview
-  ::a-sign-in-form{mock basic}
+  ::a-sign-in-form{mock :social="false"}
   ::
 
 #code
 
 ```vue
-<ASignInForm basic />
+<ASignInForm :social="false" />
 ```
 
 ::
 
-### Secondary Actions
+### Secondary Action
 
-Add secondary actions (like the [SignUpButton](/components/sign-up-button)) to the form using the `default` slot:
+By default, the form includes a [SignUpButton](/components/sign-up-button) for new users, displayed in the same row as the sign-in button. This secondary action button can be removed with the `:secondary="false"` prop:
 
 ::code-preview
-  ::a-sign-in-form{mock basic}
-    ::a-sign-up-button{block :to="undefined" variant="ghost"}
-    ::
+  ::a-sign-in-form{mock :social="false" :secondary="false"}
   ::
 
 #code
 
-```html
-<!-- Add the sign-up button -->
-<ASignInForm>
-  <ASignInButton block variant="ghost" />
-</ASignInForm>
+```vue
+<!-- Only show the primary action button -->
+<ASignInForm :secondary="false" />
 ```
 
 ::
 
-### Button Labels
+### Button Labels and Icons
 
 The form uses consistent labeling for all sign-in methods:
 - Social providers: "With Google", "With Microsoft", etc.
@@ -141,31 +84,26 @@ All button labels are configurable via [`messages` in your config](/configuratio
 
 This creates a uniform pattern across all authentication options.
 
+Icons for these buttons can be customized via [`ui.icons` key in `app.config.ts`](/configuration#theming).
+
 ### Mock Mode
 
 Enable mock mode for documentation, testing, or demos:
-
-::code-preview
-::a-sign-in-form{mock}
-::
-
-#code
 
 ```vue
 <ASignInForm mock />
 ```
 
-::
-
 In mock mode:
 - Form submissions show loading states without API calls
 - Social buttons animate without redirecting
 - Console logs display submitted data
-- Perfect for showcasing UI without backend setup
 
-### Remember Me
+Perfect for showcasing UI without backend setup (like for all forms on this page)!
 
-The "Remember Me" checkbox pre-fills the user's email on their next visit, making sign-in faster even after signing out. This is a client-side convenience feature -- session management is handled by Logto.
+### Hackability
+
+While not intended for typical use, the component exposes methods and events (documented in the [API section](#api)) that enable programmatic control. This is primarily for edge cases where you might need to manually control loading states or display custom error messages.
 
 ## API
 
@@ -173,16 +111,12 @@ The component extends [Nuxt UI's `UForm`](https://ui4.nuxt.com/docs/components/f
 
 ### Props
 
-| Prop    | Type      | Default | Description                                                           |
-| ------- | --------- | ------- | --------------------------------------------------------------------- |
-| `basic` | `boolean` | `false` | Only render basic email sign-in form, without social provider buttons |
-| `mock`  | `boolean` | `false` | Enable mock mode for documentation/testing                            |
-
-### Slots
-
-| Slot      | Slot Props                                              | Description                                                               |
-| --------- | ------------------------------------------------------- | ------------------------------------------------------------------------- |
-| `default` | `{ loading: boolean, disabled: boolean }`               | Add secondary actions like sign-up button or help links. Empty by default |
+| Prop        | Type                  | Default                     | Description                                   |
+| ----------- | --------------------- | --------------------------- | --------------------------------------------- |
+| `class`     | `string \| undefined` | `max-w-md space-y-6 w-full` | Basic spacing and width for the sign-in form  |
+| `mock`      | `boolean`             | `false`                     | Enable mock mode for documentation/testing    |
+| `secondary` | `boolean`             | `true`                      | Show sign-up button for new users             |
+| `social`    | `boolean`             | `true`                      | Show social provider buttons                  |
 
 ### Events
 

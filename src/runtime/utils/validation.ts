@@ -28,10 +28,6 @@ export const signUpSchema = z.object({
   confirmPassword: z
     .string()
     .min(1, 'Please confirm your password'),
-  name: z.string().min(1, 'Name is required').optional(),
-  acceptTerms: z.boolean().refine(val => val === true, {
-    message: 'You must accept the terms and conditions',
-  }).optional(),
 }).refine(data => data.password === data.confirmPassword, {
   message: 'Passwords do not match',
   path: ['confirmPassword'],
