@@ -1,7 +1,7 @@
 <template>
   <UForm
     class="max-w-md space-y-6 w-full"
-    :schema="signUpSchema"
+    :schema="dynamicSignUpSchema"
     :state="state"
     :validate-on="mock ? [] : undefined"
     @submit="onSubmit"
@@ -11,8 +11,9 @@
       <!-- Social providers -->
       <SocialProviderButtons
         v-if="social"
-        :mock="!!mock"
         :loading="loading"
+        :mock="!!mock"
+        :size="size"
         @click="handleSocialSignUp"
       />
 
@@ -23,48 +24,46 @@
 
       <!-- Email field -->
       <UFormField
-        name="email"
         :label="t('auth.email')"
+        name="email"
       >
         <UInput
           v-model="state.email"
-          class="w-full"
-          type="email"
-          placeholder="email@example.com"
           autocomplete="email"
           :autofocus="!props.mock && autofocus"
           :disabled="loading"
-          size="lg"
+          placeholder="email@example.com"
+          :size="size"
+          type="email"
+          @focus="fetchPasswordPolicy"
         />
       </UFormField>
 
       <!-- Password field -->
       <UFormField
-        name="password"
         :label="t('auth.password')"
+        name="password"
       >
         <UInput
           v-model="state.password"
-          class="w-full"
-          type="password"
           autocomplete="new-password"
           :disabled="loading"
-          size="lg"
+          :size="size"
+          type="password"
         />
       </UFormField>
 
       <!-- Confirm password field -->
       <UFormField
-        name="confirmPassword"
-        :label="t('auth.confirmPassword')"
+        :label="t('auth.passwordConfirmation')"
+        name="passwordConfirmation"
       >
         <UInput
-          v-model="state.confirmPassword"
-          class="w-full"
-          type="password"
+          v-model="state.passwordConfirmation"
           autocomplete="new-password"
           :disabled="loading"
-          size="lg"
+          :size="size"
+          type="password"
         />
       </UFormField>
 
@@ -72,11 +71,9 @@
       <UAlert
         v-if="error"
         color="error"
-        variant="solid"
-        :title="t('auth.signUpFailed')"
         :description="error"
-        :close-button="{ variant: 'link', color: 'white', size: 'xs' }"
-        @close="error = null"
+        :title="t('auth.signUpFailed')"
+        variant="solid"
       />
 
       <!-- Action buttons -->
@@ -85,23 +82,26 @@
           v-if="secondary"
           block
           :mock="!!mock"
+          :size="size"
           variant="ghost"
         />
         <UButton
           block
-          icon="i-lucide-mail"
-          type="submit"
-          :loading="loading"
           :disabled="loadingProvider !== null"
+          icon="i-lucide-mail"
           :label="t('auth.withEmail')"
+          :loading="loading"
+          :size="size"
+          type="submit"
         />
       </div>
 
       <!-- Legal consent -->
       <LegalConsent
+        context="sign-up"
         :legal="legal"
         :mock="!!mock"
-        context="sign-up"
+        :size="size"
       />
     </template>
 
@@ -109,32 +109,25 @@
     <template v-if="verificationStep">
       <!-- Verification alert -->
       <UAlert
-        color="primary"
-        variant="soft"
+        :description="t('auth.checkEmailForCode', {
+          email: state.email || 'email@example.com',
+        })"
         :title="t('auth.verificationEmailSent')"
-        :description="
-          t('auth.checkEmailForCode', {
-            email: state.email || 'email@example.com',
-          })
-        "
+        variant="soft"
       />
 
       <!-- Verification code input -->
       <UFormField
-        name="verificationCode"
         :label="t('auth.verificationCode')"
+        name="verificationCode"
       >
         <UPinInput
           v-model="verificationCode"
-          :length="6"
-          type="number"
+          :autofocus="!(props.mock === true || props.mock === 'verification') && verificationStep && autofocus"
           :disabled="loading"
+          :length="6"
           size="xl"
-          :autofocus="
-            !(props.mock === true || props.mock === 'verification')
-              && verificationStep
-              && autofocus
-          "
+          type="number"
           @complete="verifyCode"
         />
       </UFormField>
@@ -143,16 +136,18 @@
       <div class="flex gap-x-4">
         <UButton
           block
-          variant="ghost"
           :disabled="loading"
+          :size="size"
+          variant="ghost"
           @click="resendVerification"
         >
           {{ t("auth.resendCode") }}
         </UButton>
         <UButton
           block
-          type="button"
           :loading="loading"
+          :size="size"
+          type="button"
           @click="verifyCode"
         >
           {{ t("auth.verify") }}
@@ -164,8 +159,9 @@
 
 <script setup lang="ts">
 import { computed, ref, useAuthUI, useI18n } from '#imports'
+import { z } from 'zod'
 
-import { signUpSchema, type SignUpFormData } from '../utils/validation'
+import type { SignUpFormData } from '../utils/validation'
 
 import type { SocialProvider } from '../types/config'
 import SignInButton from './SignInButton.vue'
@@ -180,6 +176,7 @@ const props = withDefaults(
     secondary?: boolean
     legal?: boolean | string[]
     autofocus?: boolean
+    size?: 'xs' | 'sm' | 'md' | 'lg' | 'xl'
   }>(),
   {
     mock: false,
@@ -187,6 +184,7 @@ const props = withDefaults(
     secondary: true,
     legal: true,
     autofocus: true,
+    size: 'md',
   },
 )
 
@@ -213,11 +211,87 @@ const error = ref<string | null>(null)
 const loadingProvider = ref<string | null>(null)
 const verificationStep = ref(props.mock === 'verification')
 const verificationCode = ref('')
+const passwordPolicyFetched = ref(false)
 
 const state = ref<SignUpFormData>({
   email: '',
   password: '',
-  confirmPassword: '',
+  passwordConfirmation: '',
+})
+
+// Password policy state
+const passwordPolicy = ref<{
+  length: { min: number, max: number }
+  characterTypes?: { min: number }
+  rejects?: {
+    pwned?: boolean
+    repetitionAndSequence?: boolean
+    userInfo?: boolean
+    words?: string[]
+  }
+}>({
+  length: { min: 8, max: 256 },
+})
+
+// Fetch password policy on email field focus
+const fetchPasswordPolicy = async () => {
+  if (passwordPolicyFetched.value || props.mock) return
+
+  try {
+    const policy = await auth.getPasswordPolicy()
+    if (policy && 'length' in policy) {
+      passwordPolicy.value = policy
+      passwordPolicyFetched.value = true
+    }
+  }
+  catch (error) {
+    console.warn('Failed to fetch password policy, using defaults', error)
+  }
+}
+
+// Dynamic schema based on password policy
+const dynamicSignUpSchema = computed(() => {
+  const minLength = passwordPolicy.value.length.min
+  const maxLength = passwordPolicy.value.length.max
+  const minCharTypes = passwordPolicy.value.characterTypes?.min || 0
+
+  let passwordValidation: z.ZodString | z.ZodEffects<z.ZodString> = z
+    .string()
+    .min(1, t('auth.passwordRequired'))
+    .min(minLength, t('auth.passwordMinLength', { min: minLength }))
+    .max(maxLength, t('auth.passwordMaxLength', { max: maxLength }))
+
+  // Only add character type validation if the policy requires it
+  if (minCharTypes >= 2) {
+    // Add basic character type requirements
+    // Note: This is still simplified - full validation happens server-side
+    passwordValidation = passwordValidation
+      .refine(
+        (val: string) => {
+          let types = 0
+          if (/[a-z]/.test(val)) types++
+          if (/[A-Z]/.test(val)) types++
+          if (/\d/.test(val)) types++
+          if (/[^a-z\d]/i.test(val)) types++
+          return types >= minCharTypes
+        },
+        t('auth.passwordCharacterTypes', { min: minCharTypes }),
+      )
+  }
+
+  return z.object({
+    email: z
+      .string()
+      .min(1, t('auth.emailRequired'))
+      .email(t('auth.emailInvalid')),
+    password: passwordValidation,
+    passwordConfirmation: z
+      .string()
+      .min(1, t('auth.passwordConfirmationRequired')),
+  }).refine(data => data.password === data.passwordConfirmation, {
+    message: t('auth.passwordMismatch'),
+    path: ['passwordConfirmation'],
+  })
 })
 
 const onSubmit = async (data: SignUpFormData) => {
@@ -260,7 +334,7 @@ const handleSocialSignUp = (provider: SocialProvider) => {
   emit('submit', {
     email: '',
     password: '',
-    confirmPassword: '',
+    passwordConfirmation: '',
     provider: provider.name,
   })
 
@@ -332,7 +406,7 @@ defineExpose({
     state.value = {
       email: '',
       password: '',
-      confirmPassword: '',
+      passwordConfirmation: '',
     }
     error.value = null
     verificationStep.value = false

@@ -41,11 +41,21 @@ export function useAuthUI() {
         logoDark?: string
         platform: string
       }>
+      passwordPolicy?: {
+        length: { min: number, max: number }
+        characterTypes?: { min: number }
+        rejects?: {
+          pwned?: boolean
+          repetitionAndSequence?: boolean
+          userInfo?: boolean
+          words?: string[]
+        }
+      }
     }>('/api/auth-ui/connectors', {
         lazy: true,
-        default: () => ({ connectors: [] }),
+        default: () => ({ connectors: [], passwordPolicy: undefined }),
       })
-    : { data: ref({ connectors: [] }) }
+    : { data: ref({ connectors: [], passwordPolicy: undefined }) }
 
   const autoDetectedProviders = computed<SocialProvider[]>(() => {
     if (!connectorsData.value?.connectors) return []
@@ -201,6 +211,55 @@ export function useAuthUI() {
     return autoDetectedProviders.value || []
   }
 
+  // Lazy fetch password policy when needed
+  const passwordPolicyFetched = ref(false)
+  const passwordPolicy = ref<{
+    length: { min: number, max: number }
+    characterTypes?: { min: number }
+    rejects?: {
+      pwned?: boolean
+      repetitionAndSequence?: boolean
+      userInfo?: boolean
+      words?: string[]
+    }
+  } | undefined>(undefined)
+
+  const getPasswordPolicy = async () => {
+    // If we already have it from connectors data, use that
+    if (connectorsData.value?.passwordPolicy) {
+      return connectorsData.value.passwordPolicy
+    }
+
+    // If we've already fetched it separately, return cached
+    if (passwordPolicyFetched.value && passwordPolicy.value) {
+      return passwordPolicy.value
+    }
+
+    // Otherwise, fetch it separately (for when social providers are configured)
+    try {
+      const data = await $fetch<{
+        length: { min: number, max: number }
+        characterTypes?: { min: number }
+        rejects?: {
+          pwned?: boolean
+          repetitionAndSequence?: boolean
+          userInfo?: boolean
+          words?: string[]
+        }
+      }>('/api/auth-ui/password-policy')
+      passwordPolicy.value = data
+      passwordPolicyFetched.value = true
+      return data
+    }
+    catch (error) {
+      console.warn('Failed to fetch password policy, using defaults', error)
+      // Return sensible defaults
+      return {
+        length: { min: 8, max: 256 },
+      }
+    }
+  }
+
   return {
     // State
     isAuthenticated,
@@ -218,6 +277,7 @@ export function useAuthUI() {
     // Utilities
     getAuthUrl,
     getSocialProviders,
+    getPasswordPolicy,
 
     // Raw data (for debugging/advanced use)
     autoDetectedProviders,

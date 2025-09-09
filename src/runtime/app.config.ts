@@ -28,5 +28,10 @@ export default defineAppConfig({
       authOkta: 'i-simple-icons-okta',
       authAuth0: 'i-simple-icons-auth0',
     },
+    input: {
+      slots: {
+        root: 'w-full',
+      },
+    },
   },
 })

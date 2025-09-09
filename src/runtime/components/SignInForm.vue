@@ -8,8 +8,9 @@
   >
     <SocialProviderButtons
       v-if="social"
-      :mock="mock"
       :loading="loading"
+      :mock="mock"
+      :size="size"
       @click="handleSocialSignIn"
     />
 
@@ -19,24 +20,23 @@
     />
 
     <UFormField
-      name="email"
       :label="t('auth.email')"
+      name="email"
     >
       <UInput
         v-model="state.email"
-        class="w-full"
-        type="email"
-        placeholder="email@example.com"
         autocomplete="email"
         :autofocus="!mock && autofocus"
         :disabled="loading"
-        size="lg"
+        placeholder="email@example.com"
+        :size="size"
+        type="email"
       />
     </UFormField>
 
     <UFormField
-      name="password"
       :label="t('auth.password')"
+      name="password"
     >
       <template #help>
         <ULink :to="mock ? undefined : forgotPasswordUrl">
@@ -45,29 +45,27 @@
       </template>
       <UInput
         v-model="state.password"
-        class="w-full"
-        type="password"
         autocomplete="current-password"
         :disabled="loading"
-        size="lg"
+        :size="size"
+        type="password"
       />
     </UFormField>
 
     <UCheckbox
       v-model="state.rememberMe"
-      :label="t('auth.rememberMe')"
       :disabled="loading"
+      :label="t('auth.rememberMe')"
+      :size="size"
     />
 
     <!-- Inline error display for general form errors -->
     <UAlert
       v-if="error"
       color="error"
-      variant="solid"
-      :title="t('auth.signInFailed')"
       :description="error"
-      :close-button="{ variant: 'link', color: 'white', size: 'xs' }"
-      @close="error = null"
+      :title="t('auth.signInFailed')"
+      variant="solid"
     />
 
     <div :class="$slots.default || secondary ? 'flex gap-x-4' : undefined">
@@ -75,23 +73,26 @@
         v-if="secondary"
         block
         :mock="mock"
+        :size="size"
         variant="ghost"
       />
       <UButton
         block
-        icon="i-lucide-mail"
-        type="submit"
-        :loading="loading"
         :disabled="loadingProvider !== null"
+        icon="i-lucide-mail"
         :label="t('auth.withEmail')"
+        :loading="loading"
+        :size="size"
+        type="submit"
       />
     </div>
 
     <!-- Legal consent -->
     <LegalConsent
+      context="sign-in"
       :legal="legal"
       :mock="mock"
-      context="sign-in"
+      :size="size"
     />
   </UForm>
 </template>
@@ -114,6 +115,7 @@ const props = withDefaults(
     secondary?: boolean
     legal?: boolean | string[]
     autofocus?: boolean
+    size?: 'xs' | 'sm' | 'md' | 'lg' | 'xl'
   }>(),
   {
     mock: false,
@@ -121,6 +123,7 @@ const props = withDefaults(
     social: true,
     legal: true,
     autofocus: true,
+    size: 'md',
   },
 )
 

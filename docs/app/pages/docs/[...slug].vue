@@ -10,6 +10,8 @@
           v-if="page"
           :value="page"
         />
+        <USeparator />
+        <UContentSurround :surround="(surround as any)" />
       </UPageBody>
       <template #left>
         <UPageAside>
@@ -25,25 +27,30 @@
 
 <script setup lang="ts">
 const route = useRoute()
+const { t } = useI18n({ useScope: 'local' })
 
-// Build path from slug array (catch-all always returns an array)
-const slugArray = route.params.slug as string[]
-const path = `/${slugArray.join('/')}`
-
-const { data: page } = await useAsyncData(path, () => {
-  return queryCollection('content')
-    .path(path)
+const { data: page } = await useAsyncData(route.path, () => {
+  return queryCollection('docs')
+    .path(route.path)
     .first()
 })
 
 if (!page.value) {
-  throw createError({
-    statusCode: 404,
-    statusMessage: 'Page not found',
-  })
+  throw createError({ statusCode: 404, statusMessage: t('404') })
 }
+
+const { data: surround } = await useAsyncData(`${route.path}-surround`, () => {
+  return queryCollectionItemSurroundings('docs', route.path, {
+    fields: ['description'],
+  })
+})
 
 useHead({
   title: page.value?.title,
 })
 </script>
+
+<i18n lang="yaml">
+en:
+  404: Page Not Found
+</i18n>

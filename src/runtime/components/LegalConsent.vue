@@ -10,12 +10,14 @@
         :key="item.key"
       >
         <ULink
-          :to="mock ? undefined : item.url"
           target="_blank"
+          :to="mock ? undefined : item.url"
         >
-          {{ t(`auth.${item.key}`) }}
+          {{ t(`auth.legal.${item.key}`) }}
         </ULink>
-        <span v-if="index < consentItems.length - 1">·</span>
+        <template v-if="index < consentItems.length - 1">
+          ·
+        </template>
       </template>
     </div>
   </div>

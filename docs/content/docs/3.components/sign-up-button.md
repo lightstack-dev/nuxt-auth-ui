@@ -21,7 +21,7 @@ The SignUpButton component provides a simple, pre-configured registration entry 
 
 By default, the button:
 
-- Comes in default color, size, and variant as defined by [Nuxt UI](<(https://ui4.nuxt.com/docs/components/button)>)
+- Comes in default color, size, and variant as defined by [Nuxt UI](https://ui4.nuxt.com/docs/components/button)
 - Displays `Sign Up` message
 - Shows the `i-lucide-user-plus` icon
 - Navigates to `/auth/sign-up`
@@ -31,7 +31,7 @@ See the component's [API](#api) for how to override these defaults.
 
 ## Authentication State Behavior
 
-The component checks `useAuthUI().isAuthenticated` and will:
+The component checks `useAuthUI().isAuthenticated`{lang="ts"} and will:
 
 - **Render** when no user is signed in
 - **Remove itself from DOM** when a user is authenticated (not just hidden with CSS)
@@ -145,13 +145,13 @@ The component extends [Nuxt UI's `UButton`](https://ui4.nuxt.com/docs/components
 
 ### Props
 
-| Prop           | Type                  | Default              | Description                                                                         |
-| -------------- | --------------------- | -------------------- | ----------------------------------------------------------------------------------- |
-| `label`        | `string`              | `Sign Up`            | Button text label, configurable via [`messages.signUp`](/configuration#messages)    |
-| `leading-icon` | `string \| undefined` | `i-lucide-user-plus` | Icon shown before text, configurable via [`icons.authSignUp`](/configuration#icons) |
-| `mock`         | `boolean`             | `false`              | Enable mock mode for documentation/testing                                          |
-| `persistent`   | `boolean`             | `false`              | Keep button visible when user is authenticated                                      |
-| `to`           | `string`              | `/auth/sign-up`      | Navigation destination, configurable via [`routes.signUp`](/configuration#routes)   |
+| Prop           | Type                                  | Default                                 | Description                                                                                         |
+| -------------- | ------------------------------------- | --------------------------------------- | --------------------------------------------------------------------------------------------------- |
+| `label`        | `string`{lang="ts-type"}              | `'Sign Up'`{lang="vue-html"}            | Button text label, configurable via [`messages.signUp`{lang="ts"}](/docs/configuration#messages)    |
+| `leading-icon` | `string \| undefined`{lang="ts-type"} | `'i-lucide-user-plus'`{lang="vue-html"} | Icon shown before text, configurable via [`icons.authSignUp`{lang="ts"}](/docs/configuration#icons) |
+| `mock`         | `boolean`{lang="ts-type"}             | `'false'`{lang="vue-html"}              | Enable mock mode for documentation/testing                                                          |
+| `persistent`   | `boolean`{lang="ts-type"}             | `'false'`{lang="vue-html"}              | Keep button visible when user is authenticated                                                      |
+| `to`           | `string`{lang="ts-type"}              | `'/auth/sign-up'`{lang="vue-html"}      | Navigation destination, configurable via [`routes.signUp`{lang="ts"}](/docs/configuration#routes)   |
 
 ### Slots
 

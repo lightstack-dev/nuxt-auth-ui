@@ -11,6 +11,7 @@
       :label="provider.label"
       :loading="loadingProvider === provider.name"
       :disabled="loading || loadingProvider !== null"
+      :size="size"
       @click="handleSocialAction(provider)"
     />
   </div>
@@ -25,9 +26,11 @@ import type { SocialProvider } from '../types/config'
 const props = withDefaults(defineProps<{
   mock?: boolean
   loading?: boolean
+  size?: 'xs' | 'sm' | 'md' | 'lg' | 'xl'
 }>(), {
   mock: false,
   loading: false,
+  size: 'md',
 })
 
 // Define emits
@@ -54,7 +57,7 @@ const providers = computed<SocialProvider[]>(() => {
 
     return {
       ...provider,
-      label: provider.label || t(`auth.${provider.name}`),
+      label: t(`auth.${provider.name}`),
       icon: provider.icon || appConfigIcon || `i-simple-icons-${provider.name}`,
     }
   })
