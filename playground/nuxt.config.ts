@@ -1,8 +1,8 @@
 export default defineNuxtConfig({
-
   modules: [
     '@nuxt/ui',
     '@logto/nuxt',
+    '@nuxtjs/i18n',
     '../src/module',
   ],
 
@@ -34,5 +34,11 @@ export default defineNuxtConfig({
         enabled: false, // Disabled for demo
       },
     ],
+  },
+
+  i18n: {
+    locales: ['en'],
+    defaultLocale: 'en',
+    vueI18n: './i18n.config.ts',
   },
 })

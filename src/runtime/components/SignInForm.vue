@@ -8,66 +8,64 @@
   >
     <SocialProviderButtons
       v-if="social"
-      :mock="mock"
       :loading="loading"
+      :mock="mock"
+      :size="size"
       @click="handleSocialSignIn"
     />
 
     <USeparator
       v-if="social && socialProviders.length > 0"
-      :label="locale.t('or')"
+      :label="t('auth.or')"
     />
 
     <UFormField
+      :label="t('auth.email')"
       name="email"
-      :label="locale.t('email')"
     >
       <UInput
         v-model="state.email"
-        class="w-full"
-        type="email"
-        placeholder="email@example.com"
         autocomplete="email"
-        :autofocus="!mock"
+        :autofocus="!mock && autofocus"
         :disabled="loading"
-        size="lg"
+        placeholder="email@example.com"
+        :size="size"
+        type="email"
       />
     </UFormField>
 
     <UFormField
+      :label="t('auth.password')"
       name="password"
-      :label="locale.t('password')"
     >
       <template #help>
         <ULink :to="mock ? undefined : forgotPasswordUrl">
-          {{ locale.t('forgotPassword') }}
+          {{ t("auth.forgotPassword") }}
         </ULink>
       </template>
       <UInput
         v-model="state.password"
-        class="w-full"
-        type="password"
         autocomplete="current-password"
         :disabled="loading"
-        size="lg"
+        :size="size"
+        type="password"
       />
     </UFormField>
 
     <UCheckbox
       v-model="state.rememberMe"
-      :label="locale.t('rememberMe')"
       :disabled="loading"
+      :label="t('auth.rememberMe')"
+      :size="size"
     />
 
     <!-- Inline error display for general form errors -->
     <UAlert
       v-if="error"
       color="error"
-      variant="solid"
-      :title="locale.t('signInFailed')"
       :description="error"
-      :close-button="{ variant: 'link', color: 'white', size: 'xs' }"
-      @close="error = null"
+      :title="t('auth.signInFailed')"
+      variant="solid"
     />
 
     <div :class="$slots.default || secondary ? 'flex gap-x-4' : undefined">
@@ -75,38 +73,59 @@
         v-if="secondary"
         block
         :mock="mock"
+        :size="size"
         variant="ghost"
       />
       <UButton
         block
-        icon="i-lucide-mail"
-        type="submit"
-        :loading="loading"
         :disabled="loadingProvider !== null"
-        :label="locale.t('withEmail')"
+        icon="i-lucide-mail"
+        :label="t('auth.withEmail')"
+        :loading="loading"
+        :size="size"
+        type="submit"
       />
     </div>
+
+    <!-- Legal consent -->
+    <LegalConsent
+      context="sign-in"
+      :legal="legal"
+      :mock="mock"
+      :size="size"
+    />
   </UForm>
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue'
-import { useAuthUILocale, useAuthUI } from '#imports'
+import { computed, ref, useI18n, useAuthUI } from '#imports'
+
 import { signInSchema, type SignInFormData } from '../utils/validation'
+
 import type { SocialProvider } from '../types/config'
-import SocialProviderButtons from './SocialProviderButtons.vue'
 import SignUpButton from './SignUpButton.vue'
+import SocialProviderButtons from './SocialProviderButtons.vue'
+import LegalConsent from './LegalConsent.vue'
 
 // Define props
-const props = withDefaults(defineProps<{
-  mock?: boolean
-  social?: boolean
-  secondary?: boolean
-}>(), {
-  mock: false,
-  social: true,
-  secondary: true,
-})
+const props = withDefaults(
+  defineProps<{
+    mock?: boolean
+    social?: boolean
+    secondary?: boolean
+    legal?: boolean | string[]
+    autofocus?: boolean
+    size?: 'xs' | 'sm' | 'md' | 'lg' | 'xl'
+  }>(),
+  {
+    mock: false,
+    secondary: true,
+    social: true,
+    legal: true,
+    autofocus: true,
+    size: 'md',
+  },
+)
 
 // Define emits
 const emit = defineEmits<{
@@ -115,7 +134,7 @@ const emit = defineEmits<{
 }>()
 
 // Composables
-const locale = useAuthUILocale()
+const { t } = useI18n()
 const auth = useAuthUI()
 
 // Reactive state

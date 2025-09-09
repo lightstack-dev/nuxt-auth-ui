@@ -11,6 +11,7 @@
       :label="provider.label"
       :loading="loadingProvider === provider.name"
       :disabled="loading || loadingProvider !== null"
+      :size="size"
       @click="handleSocialAction(provider)"
     />
   </div>
@@ -18,16 +19,18 @@
 
 <script setup lang="ts">
 import { ref, computed } from 'vue'
-import { useAuthUILocale, useAuthUI } from '#imports'
+import { useI18n, useAuthUI, useAppConfig } from '#imports'
 import type { SocialProvider } from '../types/config'
 
 // Define props
 const props = withDefaults(defineProps<{
   mock?: boolean
   loading?: boolean
+  size?: 'xs' | 'sm' | 'md' | 'lg' | 'xl'
 }>(), {
   mock: false,
   loading: false,
+  size: 'md',
 })
 
 // Define emits
@@ -36,8 +39,9 @@ const emit = defineEmits<{
 }>()
 
 // Composables
-const locale = useAuthUILocale()
+const { t } = useI18n()
 const auth = useAuthUI()
+const appConfig = useAppConfig()
 
 // Reactive state
 const loadingProvider = ref<string | null>(null)
@@ -46,11 +50,17 @@ const loadingProvider = ref<string | null>(null)
 const providers = computed<SocialProvider[]>(() => {
   const socialProviders = auth.getSocialProviders()
 
-  return socialProviders.map(provider => ({
-    ...provider,
-    label: provider.label || locale.getProviderLabel(provider.name),
-    icon: provider.icon || `i-simple-icons-${provider.name}`,
-  }))
+  return socialProviders.map((provider) => {
+    // Get icon from app.config, fallback to simple-icons pattern
+    const iconKey = `auth${provider.name.charAt(0).toUpperCase()}${provider.name.slice(1)}`
+    const appConfigIcon = (appConfig.ui as Record<string, Record<string, string>>)?.icons?.[iconKey]
+
+    return {
+      ...provider,
+      label: t(`auth.${provider.name}`),
+      icon: provider.icon || appConfigIcon || `i-simple-icons-${provider.name}`,
+    }
+  })
 })
 
 // Methods

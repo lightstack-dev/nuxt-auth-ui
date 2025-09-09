@@ -54,8 +54,26 @@ export default defineEventHandler(async (event) => {
       platform: connector.platform,
     }))
 
+    // Extract password policy if available
+    const passwordPolicy = data.passwordPolicy || {
+      length: {
+        min: 8,
+        max: 256,
+      },
+      characterTypes: {
+        min: 1,
+      },
+      rejects: {
+        pwned: true,
+        repetitionAndSequence: true,
+        userInfo: true,
+        words: [],
+      },
+    }
+
     return {
       connectors,
+      passwordPolicy,
       fromCache: false,
     }
   }

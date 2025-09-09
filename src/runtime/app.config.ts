@@ -13,9 +13,25 @@ export default defineAppConfig({
       authEmail: 'i-lucide-mail',
       authSocial: 'i-lucide-globe',
       authProvider: 'i-lucide-log-in',
+      // Social provider icons
       authGoogle: 'i-simple-icons-google',
-      authGitHub: 'i-simple-icons-github',
+      authGithub: 'i-simple-icons-github',
       authMicrosoft: 'i-simple-icons-microsoft',
+      authFacebook: 'i-simple-icons-facebook',
+      authApple: 'i-simple-icons-apple',
+      authTwitter: 'i-simple-icons-twitter',
+      authLinkedin: 'i-simple-icons-linkedin',
+      authDiscord: 'i-simple-icons-discord',
+      authGitlab: 'i-simple-icons-gitlab',
+      authSlack: 'i-simple-icons-slack',
+      authAzure: 'i-simple-icons-microsoftazure',
+      authOkta: 'i-simple-icons-okta',
+      authAuth0: 'i-simple-icons-auth0',
+    },
+    input: {
+      slots: {
+        root: 'w-full',
+      },
     },
   },
 })

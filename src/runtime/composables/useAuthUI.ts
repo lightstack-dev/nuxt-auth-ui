@@ -41,11 +41,21 @@ export function useAuthUI() {
         logoDark?: string
         platform: string
       }>
+      passwordPolicy?: {
+        length: { min: number, max: number }
+        characterTypes?: { min: number }
+        rejects?: {
+          pwned?: boolean
+          repetitionAndSequence?: boolean
+          userInfo?: boolean
+          words?: string[]
+        }
+      }
     }>('/api/auth-ui/connectors', {
         lazy: true,
-        default: () => ({ connectors: [] }),
+        default: () => ({ connectors: [], passwordPolicy: undefined }),
       })
-    : { data: ref({ connectors: [] }) }
+    : { data: ref({ connectors: [], passwordPolicy: undefined }) }
 
   const autoDetectedProviders = computed<SocialProvider[]>(() => {
     if (!connectorsData.value?.connectors) return []
@@ -54,7 +64,6 @@ export function useAuthUI() {
       name: connector.name,
       label: connector.label,
       icon: connector.icon,
-      enabled: true,
     }))
   })
 
@@ -101,7 +110,7 @@ export function useAuthUI() {
     }
 
     // Call our server API to handle registration
-    const { data, error } = await $fetch('/api/auth-ui/register', {
+    const result = await $fetch('/api/auth-ui/register', {
       method: 'POST',
       body: {
         email,
@@ -109,14 +118,14 @@ export function useAuthUI() {
       },
     }).catch(err => ({ data: null, error: err }))
 
-    if (error) {
-      throw error
+    if ('error' in result && result.error) {
+      throw result.error
     }
 
     // For now, redirect to Logto's registration flow
     // In future, we'll handle this with Experience API
-    if (data?.redirectUrl) {
-      await navigateTo(data.redirectUrl, { external: true })
+    if ('redirectUrl' in result && result.redirectUrl) {
+      await navigateTo(result.redirectUrl, { external: true })
     }
   }
 
@@ -188,14 +197,67 @@ export function useAuthUI() {
   }
 
   // Get social providers - prefer configured, fallback to auto-detected
-  const getSocialProviders = () => {
+  const getSocialProviders = (): SocialProvider[] => {
     // If providers are explicitly configured, use those
     if (config.socialProviders && config.socialProviders.length > 0) {
-      return config.socialProviders.filter(p => p.enabled !== false)
+      return config.socialProviders.map(name => ({
+        name,
+        // Labels and icons will be resolved by the consuming component
+        // from i18n and app.config respectively
+      }))
     }
 
     // Otherwise use auto-detected providers
     return autoDetectedProviders.value || []
+  }
+
+  // Lazy fetch password policy when needed
+  const passwordPolicyFetched = ref(false)
+  const passwordPolicy = ref<{
+    length: { min: number, max: number }
+    characterTypes?: { min: number }
+    rejects?: {
+      pwned?: boolean
+      repetitionAndSequence?: boolean
+      userInfo?: boolean
+      words?: string[]
+    }
+  } | undefined>(undefined)
+
+  const getPasswordPolicy = async () => {
+    // If we already have it from connectors data, use that
+    if (connectorsData.value?.passwordPolicy) {
+      return connectorsData.value.passwordPolicy
+    }
+
+    // If we've already fetched it separately, return cached
+    if (passwordPolicyFetched.value && passwordPolicy.value) {
+      return passwordPolicy.value
+    }
+
+    // Otherwise, fetch it separately (for when social providers are configured)
+    try {
+      const data = await $fetch<{
+        length: { min: number, max: number }
+        characterTypes?: { min: number }
+        rejects?: {
+          pwned?: boolean
+          repetitionAndSequence?: boolean
+          userInfo?: boolean
+          words?: string[]
+        }
+      }>('/api/auth-ui/password-policy')
+      passwordPolicy.value = data
+      passwordPolicyFetched.value = true
+      return data
+    }
+    catch (error) {
+      console.warn('Failed to fetch password policy, using defaults', error)
+      // Return sensible defaults
+      return {
+        length: { min: 8, max: 256 },
+      }
+    }
   }
 
   return {
@@ -215,6 +277,7 @@ export function useAuthUI() {
     // Utilities
     getAuthUrl,
     getSocialProviders,
+    getPasswordPolicy,
 
     // Raw data (for debugging/advanced use)
     autoDetectedProviders,

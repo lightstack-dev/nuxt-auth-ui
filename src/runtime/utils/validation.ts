@@ -25,12 +25,12 @@ export const signUpSchema = z.object({
     .regex(/[A-Z]/, 'Password must contain at least one uppercase letter')
     .regex(/[a-z]/, 'Password must contain at least one lowercase letter')
     .regex(/\d/, 'Password must contain at least one number'),
-  confirmPassword: z
+  passwordConfirmation: z
     .string()
     .min(1, 'Please confirm your password'),
-}).refine(data => data.password === data.confirmPassword, {
+}).refine(data => data.password === data.passwordConfirmation, {
   message: 'Passwords do not match',
-  path: ['confirmPassword'],
+  path: ['passwordConfirmation'],
 })
 
 // Password reset schema
