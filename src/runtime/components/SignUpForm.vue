@@ -11,20 +11,20 @@
       <!-- Social providers -->
       <SocialProviderButtons
         v-if="social"
-        :mock="mock"
+        :mock="!!mock"
         :loading="loading"
         @click="handleSocialSignUp"
       />
 
       <USeparator
         v-if="social && socialProviders.length > 0"
-        :label="locale.t('or')"
+        :label="t('auth.or')"
       />
 
       <!-- Email field -->
       <UFormField
         name="email"
-        :label="locale.t('email')"
+        :label="t('auth.email')"
       >
         <UInput
           v-model="state.email"
@@ -32,7 +32,7 @@
           type="email"
           placeholder="email@example.com"
           autocomplete="email"
-          :autofocus="!mock"
+          :autofocus="!props.mock && autofocus"
           :disabled="loading"
           size="lg"
         />
@@ -41,7 +41,7 @@
       <!-- Password field -->
       <UFormField
         name="password"
-        :label="locale.t('password')"
+        :label="t('auth.password')"
       >
         <UInput
           v-model="state.password"
@@ -56,7 +56,7 @@
       <!-- Confirm password field -->
       <UFormField
         name="confirmPassword"
-        :label="locale.t('confirmPassword')"
+        :label="t('auth.confirmPassword')"
       >
         <UInput
           v-model="state.confirmPassword"
@@ -73,7 +73,7 @@
         v-if="error"
         color="error"
         variant="solid"
-        :title="locale.t('signUpFailed')"
+        :title="t('auth.signUpFailed')"
         :description="error"
         :close-button="{ variant: 'link', color: 'white', size: 'xs' }"
         @close="error = null"
@@ -84,7 +84,7 @@
         <SignInButton
           v-if="secondary"
           block
-          :mock="mock"
+          :mock="!!mock"
           variant="ghost"
         />
         <UButton
@@ -93,33 +93,16 @@
           type="submit"
           :loading="loading"
           :disabled="loadingProvider !== null"
-          :label="locale.t('withEmail')"
+          :label="t('auth.withEmail')"
         />
       </div>
 
       <!-- Legal consent -->
-      <div
-        v-if="showConsent && consentItems.length > 0"
-        class="mt-12 text-center text-xs text-muted"
-      >
-        <p>{{ locale.t('signUpConsent') }}</p>
-        <div class="flex flex-wrap justify-center gap-x-2">
-          <template
-            v-for="(item, index) in consentItems"
-            :key="item.key"
-          >
-            <ULink
-              :to="mock ? undefined : item.url"
-              target="_blank"
-            >
-              {{ locale.t(`legal.${item.key}`) }}
-            </ULink>
-            <span
-              v-if="index < consentItems.length - 1"
-            >·</span>
-          </template>
-        </div>
-      </div>
+      <LegalConsent
+        :legal="legal"
+        :mock="!!mock"
+        context="sign-up"
+      />
     </template>
 
     <!-- Verification Step -->
@@ -128,14 +111,18 @@
       <UAlert
         color="primary"
         variant="soft"
-        :title="locale.t('verificationEmailSent')"
-        :description="`${locale.t('checkEmailForCode')} ${state.email || 'email@example.com'}`"
+        :title="t('auth.verificationEmailSent')"
+        :description="
+          t('auth.checkEmailForCode', {
+            email: state.email || 'email@example.com',
+          })
+        "
       />
 
       <!-- Verification code input -->
       <UFormField
         name="verificationCode"
-        :label="locale.t('verificationCode')"
+        :label="t('auth.verificationCode')"
       >
         <UPinInput
           v-model="verificationCode"
@@ -143,7 +130,11 @@
           type="number"
           :disabled="loading"
           size="xl"
-          :autofocus="!mock"
+          :autofocus="
+            !(props.mock === true || props.mock === 'verification')
+              && verificationStep
+              && autofocus
+          "
           @complete="verifyCode"
         />
       </UFormField>
@@ -156,7 +147,7 @@
           :disabled="loading"
           @click="resendVerification"
         >
-          {{ locale.t('resendCode') }}
+          {{ t("auth.resendCode") }}
         </UButton>
         <UButton
           block
@@ -164,7 +155,7 @@
           :loading="loading"
           @click="verifyCode"
         >
-          {{ locale.t('verify') }}
+          {{ t("auth.verify") }}
         </UButton>
       </div>
     </template>
@@ -172,27 +163,32 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue'
-import { useAuthUILocale, useAuthUI, useRuntimeConfig } from '#imports'
+import { computed, ref, useAuthUI, useI18n } from '#imports'
+
 import { signUpSchema, type SignUpFormData } from '../utils/validation'
-import SocialProviderButtons from './SocialProviderButtons.vue'
-import SignInButton from './SignInButton.vue'
+
 import type { SocialProvider } from '../types/config'
+import SignInButton from './SignInButton.vue'
+import SocialProviderButtons from './SocialProviderButtons.vue'
+import LegalConsent from './LegalConsent.vue'
 
 // Define props
-const props = withDefaults(defineProps<{
-  mock?: boolean
-  social?: boolean
-  secondary?: boolean
-  legal?: boolean | string[]
-  verification?: boolean
-}>(), {
-  mock: false,
-  social: true,
-  secondary: true,
-  legal: true,
-  verification: false,
-})
+const props = withDefaults(
+  defineProps<{
+    mock?: boolean | 'verification'
+    social?: boolean
+    secondary?: boolean
+    legal?: boolean | string[]
+    autofocus?: boolean
+  }>(),
+  {
+    mock: false,
+    social: true,
+    secondary: true,
+    legal: true,
+    autofocus: true,
+  },
+)
 
 // Define emits - simplified to just what's needed
 const emit = defineEmits<{
@@ -201,38 +197,10 @@ const emit = defineEmits<{
 }>()
 
 // Composables
-const locale = useAuthUILocale()
+const { t } = useI18n()
 const auth = useAuthUI()
 
 // Computed properties
-const showConsent = computed(() => {
-  return props.legal !== false
-})
-
-const consentItems = computed(() => {
-  if (!props.legal) return []
-
-  // Get legal config from runtime config (nuxt.config.ts authUi.legal)
-  const runtimeConfig = useRuntimeConfig()
-  const moduleConfig = (runtimeConfig.public.authUi || {}) as Record<string, unknown>
-  const legal = moduleConfig.legal || {}
-  const items = []
-
-  // If legal is true, use all configured legal documents
-  if (props.legal === true) {
-    Object.entries(legal).forEach(([key, url]) => {
-      if (url) items.push({ key, url })
-    })
-  }
-  else if (Array.isArray(props.legal)) {
-    // If legal is an array, use only specified items
-    props.legal.forEach((key) => {
-      if (legal[key]) items.push({ key, url: legal[key] })
-    })
-  }
-
-  return items
-})
 
 // Get social providers for separator display
 const socialProviders = computed<SocialProvider[]>(() => {
@@ -243,7 +211,7 @@ const socialProviders = computed<SocialProvider[]>(() => {
 const loading = ref(false)
 const error = ref<string | null>(null)
 const loadingProvider = ref<string | null>(null)
-const verificationStep = ref(props.verification)
+const verificationStep = ref(props.mock === 'verification')
 const verificationCode = ref('')
 
 const state = ref<SignUpFormData>({
@@ -320,7 +288,8 @@ const verifyCode = async () => {
     emit('success')
   }
   catch (err) {
-    error.value = err instanceof Error ? err.message : 'Invalid verification code'
+    error.value
+      = err instanceof Error ? err.message : 'Invalid verification code'
   }
   finally {
     loading.value = false

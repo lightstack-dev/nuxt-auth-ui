@@ -15,12 +15,12 @@
 
     <USeparator
       v-if="social && socialProviders.length > 0"
-      :label="locale.t('or')"
+      :label="t('auth.or')"
     />
 
     <UFormField
       name="email"
-      :label="locale.t('email')"
+      :label="t('auth.email')"
     >
       <UInput
         v-model="state.email"
@@ -28,7 +28,7 @@
         type="email"
         placeholder="email@example.com"
         autocomplete="email"
-        :autofocus="!mock"
+        :autofocus="!mock && autofocus"
         :disabled="loading"
         size="lg"
       />
@@ -36,11 +36,11 @@
 
     <UFormField
       name="password"
-      :label="locale.t('password')"
+      :label="t('auth.password')"
     >
       <template #help>
         <ULink :to="mock ? undefined : forgotPasswordUrl">
-          {{ locale.t('forgotPassword') }}
+          {{ t("auth.forgotPassword") }}
         </ULink>
       </template>
       <UInput
@@ -55,7 +55,7 @@
 
     <UCheckbox
       v-model="state.rememberMe"
-      :label="locale.t('rememberMe')"
+      :label="t('auth.rememberMe')"
       :disabled="loading"
     />
 
@@ -64,7 +64,7 @@
       v-if="error"
       color="error"
       variant="solid"
-      :title="locale.t('signInFailed')"
+      :title="t('auth.signInFailed')"
       :description="error"
       :close-button="{ variant: 'link', color: 'white', size: 'xs' }"
       @close="error = null"
@@ -83,30 +83,46 @@
         type="submit"
         :loading="loading"
         :disabled="loadingProvider !== null"
-        :label="locale.t('withEmail')"
+        :label="t('auth.withEmail')"
       />
     </div>
+
+    <!-- Legal consent -->
+    <LegalConsent
+      :legal="legal"
+      :mock="mock"
+      context="sign-in"
+    />
   </UForm>
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue'
-import { useAuthUILocale, useAuthUI } from '#imports'
+import { computed, ref, useI18n, useAuthUI } from '#imports'
+
 import { signInSchema, type SignInFormData } from '../utils/validation'
+
 import type { SocialProvider } from '../types/config'
-import SocialProviderButtons from './SocialProviderButtons.vue'
 import SignUpButton from './SignUpButton.vue'
+import SocialProviderButtons from './SocialProviderButtons.vue'
+import LegalConsent from './LegalConsent.vue'
 
 // Define props
-const props = withDefaults(defineProps<{
-  mock?: boolean
-  social?: boolean
-  secondary?: boolean
-}>(), {
-  mock: false,
-  social: true,
-  secondary: true,
-})
+const props = withDefaults(
+  defineProps<{
+    mock?: boolean
+    social?: boolean
+    secondary?: boolean
+    legal?: boolean | string[]
+    autofocus?: boolean
+  }>(),
+  {
+    mock: false,
+    secondary: true,
+    social: true,
+    legal: true,
+    autofocus: true,
+  },
+)
 
 // Define emits
 const emit = defineEmits<{
@@ -115,7 +131,7 @@ const emit = defineEmits<{
 }>()
 
 // Composables
-const locale = useAuthUILocale()
+const { t } = useI18n()
 const auth = useAuthUI()
 
 // Reactive state

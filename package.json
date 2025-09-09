@@ -41,7 +41,7 @@
     "lint:playground": "eslint playground/",
     "test": "vitest run",
     "test:watch": "vitest watch",
-    "test:types": "vue-tsc --noEmit && cd playground && vue-tsc --noEmit"
+    "typecheck": "vue-tsc --noEmit && cd playground && vue-tsc --noEmit"
   },
   "dependencies": {
     "@iconify-json/lucide": "^1.2.66",
@@ -53,6 +53,7 @@
   },
   "peerDependencies": {
     "@logto/nuxt": "^1.2.6",
+    "@nuxtjs/i18n": "^10.1.0",
     "nuxt": "^4.0.0"
   },
   "devDependencies": {

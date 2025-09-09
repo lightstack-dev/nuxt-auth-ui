@@ -1,54 +1,5 @@
-import { defineNuxtModule, addPlugin, addImports, addComponent, addTemplate, createResolver, extendPages, addServerHandler } from '@nuxt/kit'
-
-// Module options TypeScript interface definition
-export interface SocialProvider {
-  name: string
-  label?: string
-  icon?: string
-  enabled?: boolean
-}
-
-export interface AuthUIConfig {
-  // Routes - individually configurable for maximum control
-  routes?: {
-    signIn?: string
-    signUp?: string
-    signOut?: string
-    profile?: string
-  }
-
-  // Component naming
-  componentPrefix?: string
-
-  // Redirects
-  redirects?: {
-    afterSignIn?: string
-    afterSignOut?: string
-  }
-
-  // Branding
-  appName?: string
-  logo?: string
-
-  // Legal documents configuration
-  legal?: {
-    termsOfService?: string
-    privacyPolicy?: string
-    cookiePolicy?: string
-  }
-
-  // Middleware
-  middleware?: {
-    global?: boolean
-    name?: string
-  }
-
-  // Messages - simple text overrides
-  messages?: Record<string, string>
-
-  // Social providers configuration
-  socialProviders?: SocialProvider[]
-}
+import { defineNuxtModule, addPlugin, addImports, addComponent, addTemplate, createResolver, extendPages, addServerHandler, installModule } from '@nuxt/kit'
+import type { AuthUIConfig } from './runtime/types/config'
 
 export default defineNuxtModule<AuthUIConfig>({
   meta: {
@@ -71,12 +22,6 @@ export default defineNuxtModule<AuthUIConfig>({
     middleware: {
       global: false,
       name: 'auth',
-    },
-    messages: {
-      signIn: 'Sign In',
-      signOut: 'Sign Out',
-      signInTitle: 'Welcome Back',
-      signInDescription: 'Sign in to your account to continue',
     },
   },
   async setup(options, nuxt) {
@@ -109,13 +54,6 @@ export default defineNuxtModule<AuthUIConfig>({
       logo: options.logo,
       legal: options.legal,
       socialProviders: options.socialProviders,
-      messages: {
-        signIn: 'Sign In',
-        signOut: 'Sign Out',
-        signInTitle: 'Welcome Back',
-        signInDescription: 'Sign in to your account to continue',
-        ...options.messages,
-      },
     }
 
     // Add runtime config
@@ -123,15 +61,23 @@ export default defineNuxtModule<AuthUIConfig>({
     nuxt.options.runtimeConfig.public = nuxt.options.runtimeConfig.public || {}
     nuxt.options.runtimeConfig.public.authUi = resolvedOptions
 
+    // Install @nuxtjs/i18n module dependency
+    await installModule('@nuxtjs/i18n', {
+      locales: [
+        {
+          code: 'en',
+          file: resolver.resolve('./runtime/locales/en.json'),
+        },
+      ],
+      defaultLocale: 'en',
+      langDir: resolver.resolve('./runtime/locales'),
+    })
+
     // Auto-import composables
     addImports([
       {
         name: 'useAuthUI',
         from: resolver.resolve('./runtime/composables/useAuthUI'),
-      },
-      {
-        name: 'useAuthUILocale',
-        from: resolver.resolve('./runtime/composables/useAuthUILocale'),
       },
     ])
 

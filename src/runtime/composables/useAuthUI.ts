@@ -54,7 +54,6 @@ export function useAuthUI() {
       name: connector.name,
       label: connector.label,
       icon: connector.icon,
-      enabled: true,
     }))
   })
 
@@ -101,7 +100,7 @@ export function useAuthUI() {
     }
 
     // Call our server API to handle registration
-    const { data, error } = await $fetch('/api/auth-ui/register', {
+    const result = await $fetch('/api/auth-ui/register', {
       method: 'POST',
       body: {
         email,
@@ -109,14 +108,14 @@ export function useAuthUI() {
       },
     }).catch(err => ({ data: null, error: err }))
 
-    if (error) {
-      throw error
+    if ('error' in result && result.error) {
+      throw result.error
     }
 
     // For now, redirect to Logto's registration flow
     // In future, we'll handle this with Experience API
-    if (data?.redirectUrl) {
-      await navigateTo(data.redirectUrl, { external: true })
+    if ('redirectUrl' in result && result.redirectUrl) {
+      await navigateTo(result.redirectUrl, { external: true })
     }
   }
 
@@ -188,10 +187,14 @@ export function useAuthUI() {
   }
 
   // Get social providers - prefer configured, fallback to auto-detected
-  const getSocialProviders = () => {
+  const getSocialProviders = (): SocialProvider[] => {
     // If providers are explicitly configured, use those
     if (config.socialProviders && config.socialProviders.length > 0) {
-      return config.socialProviders.filter(p => p.enabled !== false)
+      return config.socialProviders.map(name => ({
+        name,
+        // Labels and icons will be resolved by the consuming component
+        // from i18n and app.config respectively
+      }))
     }
 
     // Otherwise use auto-detected providers

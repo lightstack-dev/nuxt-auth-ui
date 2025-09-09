@@ -16,16 +16,7 @@ export default defineNuxtConfig({
 
   authUi: {
     appName: 'Auth UI Docs',
-    socialProviders: [
-      {
-        name: 'google',
-        enabled: true,
-      },
-      {
-        name: 'microsoft',
-        enabled: true,
-      },
-    ],
+    socialProviders: ['google', 'microsoft'],
     legal: {
       termsOfService: '/terms',
       privacyPolicy: '/privacy',

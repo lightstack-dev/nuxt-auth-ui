@@ -59,8 +59,8 @@ By default, the sign-up form includes the [SocialProviderButtons component](/com
 With the `:social="false"` prop, you can remove social providers from a SignUpForm (even though some might be configured in Nuxt or Logto):
 
 ::code-preview
-  ::a-sign-up-form{mock :social="false"}
-  ::
+::a-sign-up-form{mock :social="false"}
+::
 
 #code
 
@@ -75,8 +75,8 @@ With the `:social="false"` prop, you can remove social providers from a SignUpFo
 By default, the form shows links to all configured legal documents with text indicating that sign-up implies consent. Control which documents to show with the `:legal` prop:
 
 ::code-preview
-  ::a-sign-up-form{mock :legal="false"}
-  ::
+::a-sign-up-form{mock :legal="false"}
+::
 
 #code
 
@@ -88,8 +88,8 @@ By default, the form shows links to all configured legal documents with text ind
 ::
 
 ::code-preview
-  ::a-sign-up-form{mock :legal='["termsOfService"]'}
-  ::
+::a-sign-up-form{mock :legal='["termsOfService"]'}
+::
 
 #code
 
@@ -105,8 +105,8 @@ By default, the form shows links to all configured legal documents with text ind
 By default, the form includes a [SignInButton](/components/sign-up-button) for new users, displayed in the same row as the sign-up button. This secondary action button can be removed with the `:secondary="false"` prop:
 
 ::code-preview
-  ::a-sign-up-form{mock :social="false" :secondary="false"}
-  ::
+::a-sign-up-form{mock :social="false" :secondary="false"}
+::
 
 #code
 
@@ -122,42 +122,111 @@ By default, the form includes a [SignInButton](/components/sign-up-button) for n
 After successful registration, the form automatically shows a verification code input:
 
 ::code-preview
-::a-sign-up-form{mock verification}
+::a-sign-up-form{mock="verification"}
 ::
 
 #code
 
 ```vue
-<!-- Verification step (shown automatically after registration) -->
-<ASignUpForm verification />
+<!-- Start directly in verification step (for demos/documentation) -->
+<ASignUpForm mock="verification" />
 ```
 
 ::
 
 Features of the verification step:
+
 - **6-digit PIN input** - Uses Nuxt UI's PinInput component
 - **Auto-verification** - Automatically verifies when all 6 digits are entered
 - **Resend code** - Button to request a new verification code
 - **Clear messaging** - Shows which email address the code was sent to
 - **Loading states** - During verification and resend operations
 
-The verification step can be controlled programmatically using the exposed `showVerification` method.
+The verification step can be controlled programmatically using the exposed `showVerification` method. This is useful for error recovery or custom flow control within the same registration session (Logto sessions expire after 1 hour).
+
+### Focus Management
+
+By default, the email field receives focus when the form mounts, making it ready for immediate typing:
+
+```vue
+<!-- Default: auto-focus enabled -->
+<ASignInForm />
+```
+
+Disable autofocus to prevent unwanted scrolling or conflicts between multiple forms:
+
+```vue
+<!-- Multiple forms - control which gives up focus -->
+<ASignInForm />
+<ASignUpForm :autofocus="false" />
+```
+
+During the verification step, the PIN input automatically receives focus for immediate code entry.
+
+Autofocus is automatically disabled in mock mode to prevent unwanted focus during demos.
 
 ### Mock Mode
 
 Enable mock mode for documentation, testing, or demos:
 
 ```vue
+<!-- Basic mock mode -->
 <ASignUpForm mock />
+
+<!-- Start directly in verification step -->
+<ASignUpForm mock="verification" />
 ```
 
 In mock mode:
+
 - Form submissions simulate registration without API calls
 - Verification flow shows without sending emails
 - Social buttons animate without redirecting
 - Console logs display submitted data
+- Autofocus is disabled to prevent unwanted focus during demos
+
+The `mock="verification"` variant starts the form directly in the verification step, useful for showcasing the verification UI without going through registration first.
 
 Perfect for showcasing UI without backend setup (like for all forms on this page)!
+
+### Real-World Use Cases
+
+#### Error Recovery & Flow Control
+
+The `showVerification()` method is useful for edge cases within the same registration session:
+
+```vue
+<script setup>
+const signUpForm = ref()
+const registrationError = ref(false)
+
+// Example: Recovery after accidental navigation
+const handleRetryVerification = () => {
+  if (registrationError.value) {
+    signUpForm.value.showVerification()
+    registrationError.value = false
+  }
+}
+</script>
+
+<template>
+  <ASignUpForm 
+    ref="signUpForm"
+    @submit="handleSubmit"
+    @error="registrationError = true"
+  />
+  
+  <!-- Recovery option -->
+  <UButton 
+    v-if="registrationError"
+    @click="handleRetryVerification"
+  >
+    Return to verification
+  </UButton>
+</template>
+```
+
+**Note:** Logto registration sessions are short-lived (1 hour expiration) and follow a sequential flow. Users cannot resume registration from email links or deep link directly to verification steps.
 
 ### Hackability
 
@@ -169,21 +238,21 @@ The component extends [Nuxt UI's `UForm`](https://ui4.nuxt.com/docs/components/f
 
 ### Props
 
-| Prop               | Type                   | Default                     | Description                                                    |
-| ------------------ | ---------------------- | --------------------------- | -------------------------------------------------------------- |
-| `class`            | `string \| undefined`  | `max-w-md space-y-6 w-full` | Basic spacing and width for the sign-up form                   |
-| `legal`            | `boolean \| string[]`  | `true`                      | Show legal document links. Use array to specify which ones     |
-| `mock`             | `boolean`              | `false`                     | Enable mock mode for documentation/testing                     |
-| `secondary`        | `boolean`              | `true`                      | Show sign-in button for existing users                         |
-| `social`           | `boolean`              | `true`                      | Show social provider buttons                                   |
-| `verification`     | `boolean`              | `false`                     | Start directly in verification mode (for documentation)        |
+| Prop        | Type                          | Default                     | Description                                                |
+| ----------- | ----------------------------- | --------------------------- | ---------------------------------------------------------- |
+| `autofocus` | `boolean`                     | `true`                      | Auto-focus the email field on mount                        |
+| `class`     | `string \| undefined`         | `max-w-md space-y-6 w-full` | Basic spacing and width for the sign-up form               |
+| `legal`     | `boolean \| string[]`         | `true`                      | Show legal document links. Use array to specify which ones |
+| `mock`      | `boolean \| 'verification'`   | `false`                     | Enable mock mode. Use `'verification'` to start in verify step |
+| `secondary` | `boolean`                     | `true`                      | Show sign-in button for existing users                     |
+| `social`    | `boolean`                     | `true`                      | Show social provider buttons                               |
 
 ### Events
 
-| Event    | Payload                                  | Description                        |
-| -------- | ---------------------------------------- | ---------------------------------- |
-| `submit` | `SignUpFormData & { provider?: string }` | Emitted when form is submitted     |
-| `success`| `void`                                   | Emitted on successful registration |
+| Event     | Payload                                  | Description                        |
+| --------- | ---------------------------------------- | ---------------------------------- |
+| `submit`  | `SignUpFormData & { provider?: string }` | Emitted when form is submitted     |
+| `success` | `void`                                   | Emitted on successful registration |
 
 ### Exposed Methods
 
@@ -193,27 +262,27 @@ Access these methods using template refs:
 <ASignUpForm ref="signUpForm" />
 ```
 
-| Method            | Parameters           | Description                        |
-| ----------------- | -------------------- | ---------------------------------- |
-| `setLoading`      | `(value: boolean)`   | Control the form's loading state  |
-| `setError`        | `(message: string)`  | Display an inline error message   |
-| `clearForm`       | `()`                 | Reset form to initial state       |
-| `showVerification`| `()`                 | Show the verification step         |
+| Method             | Parameters          | Description                      |
+| ------------------ | ------------------- | -------------------------------- |
+| `setLoading`       | `(value: boolean)`  | Control the form's loading state |
+| `setError`         | `(message: string)` | Display an inline error message  |
+| `clearForm`        | `()`                | Reset form to initial state      |
+| `showVerification` | `()`                | Programmatically show the verification step |
 
 ### Type Definitions
 
 ```typescript
 interface SignUpFormData {
-  email: string
-  password: string
-  confirmPassword: string
+  email: string;
+  password: string;
+  confirmPassword: string;
 }
 
 interface SocialProvider {
-  name: string
-  label?: string
-  icon?: string
-  enabled?: boolean
+  name: string;
+  label?: string;
+  icon?: string;
+  enabled?: boolean;
 }
 ```
 
@@ -221,11 +290,11 @@ interface SocialProvider {
 
 The form enforces comprehensive client-side validation:
 
-| Field             | Client-side Validation                                          |
-| ----------------- | --------------------------------------------------------------- |
-| `email`           | Required, valid email format                                   |
-| `password`        | Required, min 8 chars, 1 uppercase, 1 lowercase, 1 number      |
-| `confirmPassword` | Required, must match password                                  |
-| `acceptTerms`     | Required when `showTerms` is true                              |
+| Field             | Client-side Validation                                    |
+| ----------------- | --------------------------------------------------------- |
+| `email`           | Required, valid email format                              |
+| `password`        | Required, min 8 chars, 1 uppercase, 1 lowercase, 1 number |
+| `confirmPassword` | Required, must match password                             |
+| `acceptTerms`     | Required when `showTerms` is true                         |
 
 Note: Server-side validation and additional password policies are determined by your authentication provider's configuration.

@@ -44,8 +44,8 @@ By default, the sign-in form includes the [SocialProviderButtons component](/com
 With the `:social="false"` prop, you can remove social providers from a SignInForm (even though some might be configured in Nuxt or Logto):
 
 ::code-preview
-  ::a-sign-in-form{mock :social="false"}
-  ::
+::a-sign-in-form{mock :social="false"}
+::
 
 #code
 
@@ -60,8 +60,8 @@ With the `:social="false"` prop, you can remove social providers from a SignInFo
 By default, the form includes a [SignUpButton](/components/sign-up-button) for new users, displayed in the same row as the sign-in button. This secondary action button can be removed with the `:secondary="false"` prop:
 
 ::code-preview
-  ::a-sign-in-form{mock :social="false" :secondary="false"}
-  ::
+::a-sign-in-form{mock :social="false" :secondary="false"}
+::
 
 #code
 
@@ -75,16 +75,69 @@ By default, the form includes a [SignUpButton](/components/sign-up-button) for n
 ### Button Labels and Icons
 
 The form uses consistent labeling for all sign-in methods:
+
 - Social providers: "With Google", "With Microsoft", etc.
 - Email sign-in: "With Email"
 
 All button labels are configurable via [`messages` in your config](/configuration#messages):
+
 - `messages.withEmail` - Email sign-in button
 - `messages.withGoogle`, `messages.withGithub`, etc. - Social provider buttons
 
 This creates a uniform pattern across all authentication options.
 
 Icons for these buttons can be customized via [`ui.icons` key in `app.config.ts`](/configuration#theming).
+
+### Focus Management
+
+By default, the email field receives focus when the form mounts, making it ready for immediate typing:
+
+```vue
+<!-- Default: auto-focus enabled -->
+<ASignInForm />
+```
+
+Disable autofocus to prevent unwanted scrolling or conflicts between multiple forms:
+
+```vue
+<!-- Multiple forms - control which gives up focus -->
+<ASignInForm />
+<ASignUpForm :autofocus="false" />
+```
+
+Autofocus is automatically disabled in mock mode to prevent unwanted focus during demos.
+
+### Legal Documents
+
+By default, the sign-in form displays links to configured legal documents, following the best practice that users should be reminded of current terms when accessing your service (since terms can change after they originally signed up):
+
+::code-preview
+::a-sign-in-form{mock}
+::
+
+#code
+
+```vue
+<!-- Default: shows all configured legal documents -->
+<ASignInForm />
+```
+
+::
+
+Hide legal document links entirely:
+
+```vue
+<ASignInForm :legal="false" />
+```
+
+Show only specific legal documents:
+
+```vue
+<!-- Only show terms and privacy policy -->
+<ASignInForm :legal="['termsOfService', 'privacyPolicy']" />
+```
+
+The legal document links are configured in your `nuxt.config.ts` under `authUi.legal`.
 
 ### Mock Mode
 
@@ -95,6 +148,7 @@ Enable mock mode for documentation, testing, or demos:
 ```
 
 In mock mode:
+
 - Form submissions show loading states without API calls
 - Social buttons animate without redirecting
 - Console logs display submitted data
@@ -111,12 +165,14 @@ The component extends [Nuxt UI's `UForm`](https://ui4.nuxt.com/docs/components/f
 
 ### Props
 
-| Prop        | Type                  | Default                     | Description                                   |
-| ----------- | --------------------- | --------------------------- | --------------------------------------------- |
-| `class`     | `string \| undefined` | `max-w-md space-y-6 w-full` | Basic spacing and width for the sign-in form  |
-| `mock`      | `boolean`             | `false`                     | Enable mock mode for documentation/testing    |
-| `secondary` | `boolean`             | `true`                      | Show sign-up button for new users             |
-| `social`    | `boolean`             | `true`                      | Show social provider buttons                  |
+| Prop        | Type                  | Default                     | Description                                  |
+| ----------- | --------------------- | --------------------------- | -------------------------------------------- |
+| `autofocus` | `boolean`             | `true`                      | Auto-focus the email field on mount          |
+| `class`     | `string \| undefined` | `max-w-md space-y-6 w-full` | Basic spacing and width for the sign-in form |
+| `legal`     | `boolean \| string[]` | `true`                      | Show legal document links. Use array to specify which ones |
+| `mock`      | `boolean`             | `false`                     | Enable mock mode for documentation/testing   |
+| `secondary` | `boolean`             | `true`                      | Show sign-up button for new users            |
+| `social`    | `boolean`             | `true`                      | Show social provider buttons                 |
 
 ### Events
 
@@ -133,26 +189,26 @@ Access these methods using template refs:
 <ASignInForm ref="signInForm" />
 ```
 
-| Method       | Parameters           | Description                      |
-| ------------ | -------------------- | -------------------------------- |
-| `setLoading` | `(value: boolean)`   | Control the form's loading state |
-| `setError`   | `(message: string)`  | Display an inline error message  |
-| `clearForm`  | `()`                 | Reset form to initial state      |
+| Method       | Parameters          | Description                      |
+| ------------ | ------------------- | -------------------------------- |
+| `setLoading` | `(value: boolean)`  | Control the form's loading state |
+| `setError`   | `(message: string)` | Display an inline error message  |
+| `clearForm`  | `()`                | Reset form to initial state      |
 
 ### Type Definitions
 
 ```typescript
 interface SignInFormData {
-  email: string
-  password: string
-  rememberMe?: boolean
+  email: string;
+  password: string;
+  rememberMe?: boolean;
 }
 
 interface SocialProvider {
-  name: string
-  label?: string
-  icon?: string
-  enabled?: boolean
+  name: string;
+  label?: string;
+  icon?: string;
+  enabled?: boolean;
 }
 ```
 
@@ -160,10 +216,10 @@ interface SocialProvider {
 
 The form validates input on the client side:
 
-| Field        | Client-side Validation                    |
-| ------------ | ----------------------------------------- |
-| `email`      | Required, valid email format             |
-| `password`   | Required                                  |
-| `rememberMe` | Optional boolean                          |
+| Field        | Client-side Validation       |
+| ------------ | ---------------------------- |
+| `email`      | Required, valid email format |
+| `password`   | Required                     |
+| `rememberMe` | Optional boolean             |
 
 Note: Actual password policies are determined by your authentication provider's configuration.

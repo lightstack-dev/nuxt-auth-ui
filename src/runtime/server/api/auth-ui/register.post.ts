@@ -1,4 +1,5 @@
 import { defineEventHandler, readBody, createError } from 'h3'
+import { useRuntimeConfig } from '#imports'
 import { z } from 'zod'
 
 const registerSchema = z.object({
@@ -15,7 +16,7 @@ export default defineEventHandler(async (event) => {
     registerSchema.parse(body)
 
     // Get Logto endpoint from runtime config
-    const runtimeConfig = useRuntimeConfig()
+    const runtimeConfig = useRuntimeConfig(event) as { logto?: { endpoint?: string } }
     const logtoEndpoint = runtimeConfig.logto?.endpoint || process.env.NUXT_LOGTO_ENDPOINT
 
     if (!logtoEndpoint) {

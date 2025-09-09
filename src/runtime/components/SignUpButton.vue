@@ -1,7 +1,7 @@
 <template>
   <UButton
     v-if="persistent || !auth.isAuthenticated.value"
-    :label="locale.t('signUp')"
+    :label="t('auth.signUp')"
     :leading-icon="signUpIcon"
     :to="mock ? undefined : auth.getAuthUrl('sign-up')"
   >
@@ -10,7 +10,7 @@
 </template>
 
 <script setup lang="ts">
-import { useAuthUI, useAuthUILocale, useAppConfig, computed } from '#imports'
+import { computed, useAppConfig, useAuthUI, useI18n } from '#imports'
 
 defineProps<{
   mock?: boolean
@@ -18,11 +18,12 @@ defineProps<{
 }>()
 
 const auth = useAuthUI()
-const locale = useAuthUILocale()
+const { t } = useI18n()
 const appConfig = useAppConfig()
 
 // Get icon with proper typing
 const signUpIcon = computed(() => {
-  return appConfig.ui?.icons?.authSignUp
+  return (appConfig.ui as Record<string, Record<string, string>>)?.icons
+    ?.authSignUp
 })
 </script>

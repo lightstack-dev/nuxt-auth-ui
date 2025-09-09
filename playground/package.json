@@ -13,5 +13,8 @@
     "@logto/nuxt": "latest",
     "@nuxt/ui": "^4.0.0-alpha.1",
     "nuxt": "^4.1.0"
+  },
+  "devDependencies": {
+    "@nuxtjs/i18n": "^10.1.0"
   }
 }
