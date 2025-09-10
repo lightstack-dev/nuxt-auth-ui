@@ -8,37 +8,28 @@ export default defineNuxtConfig({
 
   devtools: { enabled: true },
 
+  app: {
+    head: {
+      titleTemplate: '%s · nuxt-auth-ui Playground',
+    },
+  },
+
   css: ['~/assets/css/main.css'],
   compatibilityDate: '2025-08-30',
 
   authUi: {
-    appName: 'nuxt-auth-ui',
-    prefix: '/auth',
-    socialProviders: [
-      {
-        name: 'google',
-        label: 'Continue with Google',
-        icon: 'i-simple-icons-google',
-        enabled: true,
-      },
-      {
-        name: 'github',
-        label: 'Continue with GitHub',
-        icon: 'i-simple-icons-github',
-        enabled: true,
-      },
-      {
-        name: 'microsoft',
-        label: 'Continue with Microsoft',
-        icon: 'i-simple-icons-microsoft',
-        enabled: false, // Disabled for demo
-      },
-    ],
   },
 
   i18n: {
     locales: ['en'],
     defaultLocale: 'en',
     vueI18n: './i18n.config.ts',
+  },
+
+  logto: {
+    cookieSecure: false, // Set to true in production with HTTPS
+    // cookieEncryptionKey is set via NUXT_LOGTO_COOKIE_ENCRYPTION_KEY in .env
+    resources: [], // Add your API resources here if needed
+    scopes: ['profile', 'email', 'phone'], // Request these scopes
   },
 })

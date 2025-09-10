@@ -3,7 +3,7 @@
     class="max-w-md space-y-6 w-full"
     :schema="signInSchema"
     :state="state"
-    :validate-on="mock ? [] : undefined"
+    :validate-on="['change', 'input']"
     @submit="onSubmit"
   >
     <SocialProviderButtons

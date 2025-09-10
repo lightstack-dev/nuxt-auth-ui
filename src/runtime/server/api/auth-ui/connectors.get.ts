@@ -24,18 +24,29 @@ export default defineEventHandler(async (event) => {
     // Note: In a production environment, you might want to cache this response
     // or fetch it server-side only during build/startup to avoid repeated API calls
 
-    // For now, we'll fetch the sign-in experience which includes enabled connectors
-    // This endpoint is public and doesn't require authentication
-    const signInExpUrl = `${logtoEndpoint}/api/sign-in-exp`
-
-    const response = await fetch(signInExpUrl, {
+    // Try the well-known endpoint first (no auth required)
+    const wellKnownUrl = `${logtoEndpoint}/api/.well-known/sign-in-exp`
+    
+    let response = await fetch(wellKnownUrl, {
       headers: {
         'Content-Type': 'application/json',
       },
     })
+    
+    // If well-known fails, try the regular endpoint as fallback
+    if (!response.ok) {
+      const signInExpUrl = `${logtoEndpoint}/api/sign-in-exp`
+      response = await fetch(signInExpUrl, {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      })
+    }
 
     if (!response.ok) {
-      console.warn('Failed to fetch sign-in experience from Logto')
+      // Sign-in experience endpoint may require auth in newer Logto versions
+      // Fall back to empty connectors - users can configure manually
+      console.warn('Failed to fetch sign-in experience from Logto - endpoint may require authentication')
       return { connectors: [] }
     }
 

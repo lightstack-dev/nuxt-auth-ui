@@ -3,7 +3,7 @@
     class="max-w-md space-y-6 w-full"
     :schema="dynamicSignUpSchema"
     :state="state"
-    :validate-on="mock ? [] : undefined"
+    :validate-on="['change', 'input']"
     @submit="onSubmit"
   >
     <!-- Registration Step -->
@@ -32,7 +32,7 @@
           autocomplete="email"
           :autofocus="!props.mock && autofocus"
           :disabled="loading"
-          placeholder="email@example.com"
+          :placeholder="t('auth.emailPlaceholder')"
           :size="size"
           type="email"
           @focus="fetchPasswordPolicy"
@@ -110,7 +110,7 @@
       <!-- Verification alert -->
       <UAlert
         :description="t('auth.checkEmailForCode', {
-          email: state.email || 'email@example.com',
+          email: state.email || t('auth.emailPlaceholder'),
         })"
         :title="t('auth.verificationEmailSent')"
         variant="soft"

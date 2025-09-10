@@ -17,7 +17,6 @@ The SocialProviderButtons component provides a set of social authentication butt
 <!-- Automatically shows configured/detected social providers -->
 <ASocialProviderButtons />
 ```
-
 ::
 
 By default, the component:
@@ -49,7 +48,6 @@ Control the size of social provider buttons using the `size` prop:
 <!-- Large social provider buttons -->
 <ASocialProviderButtons size="xl" />
 ```
-
 ::
 
 Available sizes: `'xs'`{lang="vue-html"}, `'sm'`{lang="vue-html"}, `'md'`{lang="vue-html"} (default), `'lg'`{lang="vue-html"}, `'xl'`{lang="vue-html"}.
@@ -93,7 +91,6 @@ const handleProviderClick = (provider) => {
 };
 </script>
 ```
-
 ::
 
 ## API

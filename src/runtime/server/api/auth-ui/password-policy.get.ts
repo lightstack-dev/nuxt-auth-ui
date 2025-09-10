@@ -24,21 +24,42 @@ export default defineEventHandler(async (event) => {
   }
 
   try {
-    // Fetch the sign-in experience which includes password policy
-    const signInExpUrl = `${logtoEndpoint}/api/sign-in-exp`
-
-    const response = await fetch(signInExpUrl, {
+    // Try the well-known endpoint first (no auth required)
+    const wellKnownUrl = `${logtoEndpoint}/api/.well-known/sign-in-exp`
+    
+    let response = await fetch(wellKnownUrl, {
       headers: {
         'Content-Type': 'application/json',
       },
     })
+    
+    // If well-known fails, try the regular endpoint as fallback
+    if (!response.ok) {
+      const signInExpUrl = `${logtoEndpoint}/api/sign-in-exp`
+      response = await fetch(signInExpUrl, {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      })
+    }
 
     if (!response.ok) {
-      console.warn('Failed to fetch password policy from Logto')
+      // Sign-in experience endpoint may require auth in newer Logto versions
+      // Return sensible defaults
+      console.info('[nuxt-auth-ui] Using default password policy (Logto sign-in-exp endpoint requires auth)')
       return {
         length: {
           min: 8,
           max: 256,
+        },
+        characterTypes: {
+          min: 1,
+        },
+        rejects: {
+          pwned: true,
+          repetitionAndSequence: true,
+          userInfo: true,
+          words: [],
         },
       }
     }

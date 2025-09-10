@@ -8,6 +8,7 @@
     "signUpTitle": "Create Account",
     "signUpDescription": "Create your account to get started",
     "email": "Email",
+    "emailPlaceholder": "email{'@'}example.com",
     "password": "Password",
     "passwordConfirmation": "Password Confirmation",
     "rememberMe": "Remember me",

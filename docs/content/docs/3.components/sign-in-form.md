@@ -17,7 +17,6 @@ The SignInForm component provides a complete authentication form with social pro
 <!-- Renders social buttons and legal links based on your configuration -->
 <ASignInForm />
 ```
-
 ::
 
 By default, the form:
@@ -53,7 +52,6 @@ With the `:social="false"`{lang="vue-html"} prop, you can remove social provider
 ```vue
 <ASignInForm :social="false" />
 ```
-
 ::
 
 ::tip
@@ -74,7 +72,38 @@ By default, the form includes a [SignUpButton](/docs/components/sign-up-button) 
 <!-- Only show the primary action button -->
 <ASignInForm :secondary="false" />
 ```
+::
 
+### Legal Documents
+
+By default, the form shows links to all configured legal documents with text indicating that sign-in implies consent. Control which documents to show with the `:legal`{lang="vue-html"} prop:
+
+::code-preview
+::a-sign-up-form{mock :legal="false"}
+::
+
+#code
+
+```vue
+<!-- Hide legal document links -->
+<ASignUpForm :legal="false" />
+```
+::
+
+::code-preview
+::a-sign-up-form{mock :legal='["termsOfService"]'}
+::
+
+#code
+
+```vue
+<!-- Show only terms of service link -->
+<ASignUpForm :legal="['termsOfService']" />
+```
+::
+
+::tip
+Learn how to configure the links to your legal documents in the [Legal Documents Configuration](/docs/configuration/legal-documents).
 ::
 
 ### Button Labels and Icons
@@ -97,7 +126,6 @@ Control the size of form inputs and buttons using the `size` prop. This cascades
 <!-- Extra large form elements -->
 <ASignInForm size="xl" />
 ```
-
 ::
 
 Available sizes: `'xs'`{lang="vue-html"}, `'sm'`{lang="vue-html"}, `'md'`{lang="vue-html"} (default), `'lg'`{lang="vue-html"}, `'xl'`{lang="vue-html"}.
@@ -116,40 +144,6 @@ By default, the email field receives focus when the form mounts, making it ready
 
 ::note
 Autofocus is automatically disabled in mock mode to prevent unwanted focus during demos.
-::
-
-### Legal Documents
-
-By default, the sign-in form displays links to configured legal documents, following the best practice that users should be reminded of current terms when accessing your service (since terms can change after they originally signed up):
-
-::code-preview
-::a-sign-in-form{mock}
-::
-
-#code
-
-```vue
-<!-- Default: shows all configured legal documents -->
-<ASignInForm />
-```
-
-::
-
-Hide legal document links entirely:
-
-```vue
-<ASignInForm :legal="false" />
-```
-
-Show only specific legal documents:
-
-```vue
-<!-- Only show terms and privacy policy -->
-<ASignInForm :legal="['termsOfService', 'privacyPolicy']" />
-```
-
-::tip
-Learn how to configure the links to your legal documents in the [Legal Documents Configuration](/docs/configuration/legal-documents).
 ::
 
 ### Mock Mode

@@ -17,7 +17,6 @@ The SignUpForm component provides a complete registration flow with social provi
 <!-- Renders social buttons and legal links based on your configuration -->
 <ASignUpForm />
 ```
-
 ::
 
 By default, the form:
@@ -79,7 +78,6 @@ With the `:social="false"`{lang="vue-html"} prop, you can remove social provider
 ```vue
 <ASignUpForm :social="false" />
 ```
-
 ::
 
 ::tip
@@ -100,7 +98,6 @@ By default, the form includes a [SignInButton](/docs/components/sign-up-button) 
 <!-- Only show the primary action button -->
 <ASignUpForm :secondary="false" />
 ```
-
 ::
 
 ### Legal Documents
@@ -117,7 +114,6 @@ By default, the form shows links to all configured legal documents with text ind
 <!-- Hide legal document links -->
 <ASignUpForm :legal="false" />
 ```
-
 ::
 
 ::code-preview
@@ -130,7 +126,6 @@ By default, the form shows links to all configured legal documents with text ind
 <!-- Show only terms of service link -->
 <ASignUpForm :legal="['termsOfService']" />
 ```
-
 ::
 
 ::tip
@@ -151,7 +146,6 @@ After successful registration, the form automatically shows a verification code 
 <!-- Start directly in verification step (for demos/documentation) -->
 <ASignUpForm mock="verification" />
 ```
-
 ::
 
 Features of the verification step:
@@ -178,7 +172,6 @@ Control the size of form inputs and buttons using the `size` prop. This cascades
 <!-- Large form elements -->
 <ASignUpForm size="xl" />
 ```
-
 ::
 
 Available sizes: `'xs'`{lang="vue-html"}, `'sm'`{lang="vue-html"}, `'md'`{lang="vue-html"} (default), `'lg'`{lang="vue-html"}, `'xl'`{lang="vue-html"}.

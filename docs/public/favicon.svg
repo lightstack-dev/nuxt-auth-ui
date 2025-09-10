@@ -1,0 +1,44 @@
+<svg
+  width="100%"
+  height="100%"
+  viewBox="0 0 256 256"
+  version="1.1"
+  xmlns="http://www.w3.org/2000/svg"
+  xmlns:xlink="http://www.w3.org/1999/xlink"
+  xml:space="preserve"
+  xmlns:serif="http://www.serif.com/"
+  style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:2;"
+>
+  <rect
+    id="lightstack-logogram-2025-08"
+    x="0"
+    y="0"
+    width="256"
+    height="256"
+    style="fill:none;"
+  />
+  <clipPath id="_clip1">
+    <rect
+      x="0"
+      y="0"
+      width="256"
+      height="256"
+    />
+  </clipPath>
+  <g clip-path="url(#_clip1)">
+    <g>
+      <path
+        d="M61.224,234.868l-61.224,-81.641l101.744,-87.863l27.604,-0l-104.439,88.012l62.435,81.492l-26.12,-0Z"
+        style="fill:#615fff;fill-rule:nonzero;"
+      />
+      <path
+        d="M98.843,234.868l-61.45,-81.944l117.873,-101.216l27.605,0l-120.342,101.668l62.435,81.492l-26.121,-0Z"
+        style="fill:#7c86ff;fill-rule:nonzero;"
+      />
+      <path
+        d="M136.365,234.868l-61.451,-81.944l153.482,-131.792l27.604,0l-155.95,132.244l62.435,81.492l-26.12,-0Z"
+        style="fill:#a3b3ff;fill-rule:nonzero;"
+      />
+    </g>
+  </g>
+</svg>

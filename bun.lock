@@ -60,7 +60,7 @@
         "@iconify-json/simple-icons": "^1.2.50",
         "@logto/nuxt": "latest",
         "@nuxt/ui": "^4.0.0-alpha.1",
-        "nuxt": "^4.1.0",
+        "nuxt": "^4.1.1",
       },
       "devDependencies": {
         "@nuxtjs/i18n": "^10.1.0",

@@ -7,11 +7,21 @@ export default defineNuxtConfig({
     '@nuxt/eslint',
     '@nuxt/image',
     '@nuxt/test-utils',
+    '@nuxtjs/i18n',
     '../src/module',
   ],
 
-  devtools: { enabled: true },
+  devtools: { enabled: true }, app: {
+    head: {
+      link: [
+        { rel: 'icon', type: 'image/svg+xml', href: '/favicon.svg' },
+      ],
+      titleTemplate: '%s · nuxt-auth-ui · Lightstack',
+    },
+  },
+
   css: ['~/assets/css/main.css'],
+
   compatibilityDate: '2025-08-30',
 
   authUi: {
@@ -23,7 +33,13 @@ export default defineNuxtConfig({
       cookiePolicy: '/cookies',
     },
   },
+
   icon: {
     cssLayer: 'components',
+  },
+
+  i18n: {
+    locales: ['en'],
+    defaultLocale: 'en',
   },
 })

@@ -1,4 +1,4 @@
-import { defineNuxtModule, addPlugin, addImports, addComponent, addTemplate, createResolver, extendPages, addServerHandler, installModule } from '@nuxt/kit'
+import { defineNuxtModule, addPlugin, addImports, addComponent, addTemplate, createResolver, extendPages, addServerHandler } from '@nuxt/kit'
 import type { AuthUIConfig } from './runtime/types/config'
 
 export default defineNuxtModule<AuthUIConfig>({
@@ -61,16 +61,30 @@ export default defineNuxtModule<AuthUIConfig>({
     nuxt.options.runtimeConfig.public = nuxt.options.runtimeConfig.public || {}
     nuxt.options.runtimeConfig.public.authUi = resolvedOptions
 
-    // Install @nuxtjs/i18n module dependency
-    await installModule('@nuxtjs/i18n', {
-      locales: [
-        {
-          code: 'en',
-          file: resolver.resolve('./runtime/locales/en.json'),
-        },
-      ],
-      defaultLocale: 'en',
-      langDir: resolver.resolve('./runtime/locales'),
+    // Check if i18n is configured (it's a required peer dependency)
+    const hasI18n = nuxt.options.modules?.some((m) => {
+      if (!m) return false
+      const moduleName = typeof m === 'string' ? m : Array.isArray(m) ? m[0] : null
+      return typeof moduleName === 'string' && (moduleName === '@nuxtjs/i18n' || moduleName.includes('i18n'))
+    })
+
+    if (!hasI18n) {
+      console.warn('[nuxt-auth-ui] @nuxtjs/i18n module is required but not found. Please add it to your nuxt.config.ts modules.')
+    }
+
+    // Use i18n:registerModule hook to provide our translations
+    // This is the official way for modules to provide translations in i18n v8+
+    nuxt.hook('i18n:registerModule', (register) => {
+      register({
+        // langDir path needs to be resolved
+        langDir: resolver.resolve('./runtime/locales'),
+        locales: [
+          {
+            code: 'en',
+            file: 'en.json',
+          },
+        ],
+      })
     })
 
     // Auto-import composables
@@ -117,6 +131,11 @@ export default defineNuxtModule<AuthUIConfig>({
     addServerHandler({
       route: '/api/auth-ui/connectors',
       handler: resolver.resolve('./runtime/server/api/auth-ui/connectors.get'),
+    })
+
+    addServerHandler({
+      route: '/api/auth-ui/password-policy',
+      handler: resolver.resolve('./runtime/server/api/auth-ui/password-policy.get'),
     })
 
     addServerHandler({

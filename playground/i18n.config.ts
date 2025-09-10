@@ -3,12 +3,7 @@ export default defineI18nConfig(() => ({
   locale: 'en',
   messages: {
     en: {
-      // You can override any auth translations here
-      // For example:
-      // auth: {
-      //   signIn: 'Log In',
-      //   signUp: 'Register',
-      // },
+      // Custom overrides can go here - module defaults will be merged
     },
   },
 }))
