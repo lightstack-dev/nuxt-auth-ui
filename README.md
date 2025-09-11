@@ -52,6 +52,7 @@ That's it! You now have:
 - Beautiful sign-in & sign-up pages at `/auth/sign-in` and `/auth/sign-up`
 - Complete authentication forms with social providers
 - Intelligent password validation that adapts to your Logto instance
+- Built-in route protection middleware
 - Full internationalization support
 - Ready-to-use authentication components
 
@@ -59,6 +60,7 @@ That's it! You now have:
 
 ✅ **Complete Auth Forms** - SignInForm & SignUpForm with email verification  
 ✅ **Smart Components** - SignInButton, SignUpButton, SocialProviderButtons  
+✅ **Route Protection** - Built-in middleware for global or per-route authentication  
 ✅ **Dynamic Password Validation** - Automatically adapts to your Logto instance's password policy  
 ✅ **Flexible Sizing** - Configurable size prop (xs/sm/md/lg/xl) that cascades through all components  
 ✅ **Full i18n Support** - Built on @nuxtjs/i18n with comprehensive translations  
@@ -129,6 +131,16 @@ export default defineNuxtConfig({
     
     // Component prefix (default: 'A')
     componentPrefix: "A",
+    
+    // Route protection middleware
+    middleware: {
+      global: true,  // Protect all routes
+      exceptionRoutes: [  // Except these public routes
+        "/",
+        "/about",
+        "/pricing"
+      ]
+    },
   },
   
   // i18n configuration (optional)

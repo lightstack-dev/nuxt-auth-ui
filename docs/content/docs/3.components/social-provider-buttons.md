@@ -133,3 +133,27 @@ interface SocialProvider {
   enabled?: boolean;
 }
 ```
+
+### Localization Keys
+
+The component uses these i18n keys under the `auth` namespace for social provider labels:
+
+| Key                | Default Value      | Description                           |
+| ------------------ | ------------------ | ------------------------------------- |
+| `auth.google`      | "With Google"      | Google sign-in button label          |
+| `auth.github`      | "With GitHub"      | GitHub sign-in button label          |
+| `auth.microsoft`   | "With Microsoft"   | Microsoft sign-in button label       |
+| `auth.facebook`    | "With Facebook"    | Facebook sign-in button label        |
+| `auth.apple`       | "With Apple"       | Apple sign-in button label           |
+| `auth.twitter`     | "With Twitter"     | Twitter sign-in button label         |
+| `auth.linkedin`    | "With LinkedIn"    | LinkedIn sign-in button label        |
+| `auth.discord`     | "With Discord"     | Discord sign-in button label         |
+| `auth.gitlab`      | "With GitLab"      | GitLab sign-in button label          |
+| `auth.slack`       | "With Slack"       | Slack sign-in button label           |
+| `auth.azure`       | "With Azure AD"    | Azure AD sign-in button label        |
+| `auth.okta`        | "With Okta"        | Okta sign-in button label            |
+| `auth.auth0`       | "With Auth0"       | Auth0 sign-in button label           |
+
+::note
+Custom social providers require corresponding translations in your i18n configuration.
+::

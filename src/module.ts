@@ -1,4 +1,4 @@
-import { defineNuxtModule, addPlugin, addImports, addComponent, addTemplate, createResolver, extendPages, addServerHandler } from '@nuxt/kit'
+import { defineNuxtModule, addPlugin, addImports, addComponent, addTemplate, createResolver, extendPages, addServerHandler, addRouteMiddleware } from '@nuxt/kit'
 import type { AuthUIConfig } from './runtime/types/config'
 
 export default defineNuxtModule<AuthUIConfig>({
@@ -20,8 +20,9 @@ export default defineNuxtModule<AuthUIConfig>({
       afterSignOut: '/',
     },
     middleware: {
-      global: false,
+      protectByDefault: true,
       name: 'auth',
+      exceptionRoutes: [],
     },
   },
   async setup(options, nuxt) {
@@ -47,11 +48,10 @@ export default defineNuxtModule<AuthUIConfig>({
         afterSignOut: options.redirects?.afterSignOut || '/',
       },
       middleware: {
-        global: options.middleware?.global ?? false,
+        protectByDefault: options.middleware?.protectByDefault ?? true,
         name: options.middleware?.name || 'auth',
+        exceptionRoutes: options.middleware?.exceptionRoutes || [],
       },
-      appName: options.appName,
-      logo: options.logo,
       legal: options.legal,
       socialProviders: options.socialProviders,
     }
@@ -101,6 +101,16 @@ export default defineNuxtModule<AuthUIConfig>({
       src: resolver.resolve('./runtime/types/app-config.d.ts'),
     })
 
+    addComponent({
+      name: `${resolvedOptions.componentPrefix}FormSection`,
+      filePath: resolver.resolve('./runtime/components/FormSection.vue'),
+    })
+
+    addComponent({
+      name: `${resolvedOptions.componentPrefix}LegalConsent`,
+      filePath: resolver.resolve('./runtime/components/LegalConsent.vue'),
+    })
+
     // Register components with configurable prefix
     addComponent({
       name: `${resolvedOptions.componentPrefix}SignInButton`,
@@ -108,13 +118,13 @@ export default defineNuxtModule<AuthUIConfig>({
     })
 
     addComponent({
-      name: `${resolvedOptions.componentPrefix}SignUpButton`,
-      filePath: resolver.resolve('./runtime/components/SignUpButton.vue'),
+      name: `${resolvedOptions.componentPrefix}SignInForm`,
+      filePath: resolver.resolve('./runtime/components/SignInForm.vue'),
     })
 
     addComponent({
-      name: `${resolvedOptions.componentPrefix}SignInForm`,
-      filePath: resolver.resolve('./runtime/components/SignInForm.vue'),
+      name: `${resolvedOptions.componentPrefix}SignUpButton`,
+      filePath: resolver.resolve('./runtime/components/SignUpButton.vue'),
     })
 
     addComponent({
@@ -156,6 +166,13 @@ export default defineNuxtModule<AuthUIConfig>({
         path: resolvedOptions.routes.signUp,
         file: resolver.resolve('./runtime/pages/sign-up.vue'),
       })
+    })
+
+    // Add route middleware (always global, behavior controlled by config)
+    addRouteMiddleware({
+      name: 'auth',
+      path: resolver.resolve('./runtime/middleware/auth.global.ts'),
+      global: true,
     })
 
     // Do not add the extension since the `.ts` will be transpiled to `.mjs` after `npm run prepack`

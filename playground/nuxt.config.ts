@@ -18,6 +18,14 @@ export default defineNuxtConfig({
   compatibilityDate: '2025-08-30',
 
   authUi: {
+    legal: {
+      termsOfService: '/terms',
+      privacyPolicy: '/privacy',
+      cookiePolicy: '/cookies',
+    },
+    middleware: {
+      global: true,
+    },
   },
 
   i18n: {

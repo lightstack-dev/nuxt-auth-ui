@@ -153,3 +153,11 @@ The component extends [Nuxt UI's `UButton`](https://ui4.nuxt.com/docs/components
 | Slot      | Description                                                    |
 | --------- | -------------------------------------------------------------- |
 | `default` | Overrides the button text (takes precedence over `label` prop) |
+
+### Localization Keys
+
+The component uses these i18n keys under the `auth` namespace:
+
+| Key           | Default Value | Description              |
+| ------------- | ------------- | ------------------------ |
+| `auth.signUp` | "Sign Up"     | Button label text        |

@@ -14,7 +14,7 @@ The SignInForm component provides a complete authentication form with social pro
 #code
 
 ```vue
-<!-- Renders social buttons and legal links based on your configuration -->
+<!-- Renders social buttons based on your configuration -->
 <ASignInForm />
 ```
 ::
@@ -72,38 +72,6 @@ By default, the form includes a [SignUpButton](/docs/components/sign-up-button) 
 <!-- Only show the primary action button -->
 <ASignInForm :secondary="false" />
 ```
-::
-
-### Legal Documents
-
-By default, the form shows links to all configured legal documents with text indicating that sign-in implies consent. Control which documents to show with the `:legal`{lang="vue-html"} prop:
-
-::code-preview
-::a-sign-up-form{mock :legal="false"}
-::
-
-#code
-
-```vue
-<!-- Hide legal document links -->
-<ASignUpForm :legal="false" />
-```
-::
-
-::code-preview
-::a-sign-up-form{mock :legal='["termsOfService"]'}
-::
-
-#code
-
-```vue
-<!-- Show only terms of service link -->
-<ASignUpForm :legal="['termsOfService']" />
-```
-::
-
-::tip
-Learn how to configure the links to your legal documents in the [Legal Documents Configuration](/docs/configuration/legal-documents).
 ::
 
 ### Button Labels and Icons
@@ -174,11 +142,10 @@ The component extends [Nuxt UI's `UForm`](https://ui4.nuxt.com/docs/components/f
 
 | Prop        | Type                                                   | Default                                        | Description                                                |
 | ----------- | ------------------------------------------------------ | ---------------------------------------------- | ---------------------------------------------------------- |
-| `autofocus` | `boolean`{lang="ts-type"}                              | `'true'`{lang="vue-html"}                      | Auto-focus the email field on mount                        |
-| `class`     | `string \| undefined`{lang="ts-type"}                  | `'max-w-md space-y-6 w-full'`{lang="vue-html"} | Basic spacing and width for the sign-in form               |
-| `legal`     | `boolean \| string[]`{lang="ts-type"}                  | `'true'`{lang="vue-html"}                      | Show legal document links. Use array to specify which ones |
-| `mock`      | `boolean`{lang="ts-type"}                              | `'false'`{lang="vue-html"}                     | Enable mock mode for documentation/testing                 |
-| `secondary` | `boolean`{lang="ts-type"}                              | `'true'`{lang="vue-html"}                      | Show sign-up button for new users                          |
+| `autofocus` | `boolean`{lang="ts-type"}                              | `'true'`{lang="vue-html"}                      | Auto-focus the email field on mount         |
+| `class`     | `string \| undefined`{lang="ts-type"}                  | `'max-w-md space-y-6 w-full'`{lang="vue-html"} | Basic spacing and width for the sign-in form |
+| `mock`      | `boolean`{lang="ts-type"}                              | `'false'`{lang="vue-html"}                     | Enable mock mode for documentation/testing  |
+| `secondary` | `boolean`{lang="ts-type"}                              | `'true'`{lang="vue-html"}                      | Show sign-up button for new users           |
 | `size`      | `'xs' \| 'sm' \| 'md' \| 'lg' \| 'xl'`{lang="ts-type"} | `'md'`{lang="vue-html"}                        | Size of form inputs and buttons                            |
 | `social`    | `boolean`{lang="ts-type"}                              | `'true'`{lang="vue-html"}                      | Show social provider buttons                               |
 
@@ -231,3 +198,29 @@ The form validates input on the client side:
 | `rememberMe` | Optional boolean             |
 
 Note: Actual password policies are determined by your authentication provider's configuration.
+
+### Localization Keys
+
+The component uses these i18n keys under the `auth` namespace:
+
+| Key                      | Default Value                              | Description                           |
+| ------------------------ | ------------------------------------------ | ------------------------------------- |
+| `auth.signInTitle`       | "Welcome Back"                             | Card title                           |
+| `auth.signInDescription` | "Sign in to your account to continue"      | Card description                     |
+| `auth.email`             | "Email"                                    | Email field label                    |
+| `auth.password`          | "Password"                                 | Password field label                 |
+| `auth.rememberMe`        | "Remember me"                              | Remember me checkbox label          |
+| `auth.forgotPassword`    | "Forgot password?"                         | Forgot password link text           |
+| `auth.withEmail`         | "With Email"                               | Email sign-in button label          |
+| `auth.signUp`            | "Sign Up"                                  | Sign-up button label                |
+| `auth.or`                | "OR"                                        | Separator text between options      |
+| `auth.signInSuccess`     | "Signed in successfully!"                  | Success notification message        |
+| `auth.signInFailed`      | "Sign in failed"                           | Error notification title            |
+| `auth.invalidCredentials`| "Invalid email or password"                | Invalid credentials error message   |
+| `auth.emailRequired`     | "Email is required"                        | Email validation message            |
+| `auth.emailInvalid`      | "Please enter a valid email address"       | Invalid email validation message    |
+| `auth.passwordRequired`  | "Password is required"                     | Password validation message         |
+
+::note
+Social provider labels are also localized. See [SocialProviderButtons](/docs/components/social-provider-buttons#localization-keys) for details.
+::

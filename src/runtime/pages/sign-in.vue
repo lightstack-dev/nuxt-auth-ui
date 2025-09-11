@@ -1,13 +1,16 @@
 <template>
-  <UContainer>
+  <AFormSection
+    context="signIn"
+  >
     <ASignInForm />
-  </UContainer>
+  </AFormSection>
 </template>
 
 <script setup lang="ts">
 const { t } = useI18n()
+const title = t('auth.signIn')
 
 useHead({
-  title: t('auth.signIn'),
+  title: title,
 })
 </script>

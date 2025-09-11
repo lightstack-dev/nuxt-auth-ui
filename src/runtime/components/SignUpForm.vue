@@ -95,14 +95,6 @@
           type="submit"
         />
       </div>
-
-      <!-- Legal consent -->
-      <LegalConsent
-        context="sign-up"
-        :legal="legal"
-        :mock="!!mock"
-        :size="size"
-      />
     </template>
 
     <!-- Verification Step -->
@@ -166,7 +158,6 @@ import type { SignUpFormData } from '../utils/validation'
 import type { SocialProvider } from '../types/config'
 import SignInButton from './SignInButton.vue'
 import SocialProviderButtons from './SocialProviderButtons.vue'
-import LegalConsent from './LegalConsent.vue'
 
 // Define props
 const props = withDefaults(
@@ -174,7 +165,6 @@ const props = withDefaults(
     mock?: boolean | 'verification'
     social?: boolean
     secondary?: boolean
-    legal?: boolean | string[]
     autofocus?: boolean
     size?: 'xs' | 'sm' | 'md' | 'lg' | 'xl'
   }>(),
@@ -182,7 +172,6 @@ const props = withDefaults(
     mock: false,
     social: true,
     secondary: true,
-    legal: true,
     autofocus: true,
     size: 'md',
   },

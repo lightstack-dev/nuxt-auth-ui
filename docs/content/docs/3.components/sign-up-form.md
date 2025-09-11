@@ -14,7 +14,7 @@ The SignUpForm component provides a complete registration flow with social provi
 #code
 
 ```vue
-<!-- Renders social buttons and legal links based on your configuration -->
+<!-- Renders social buttons based on your configuration -->
 <ASignUpForm />
 ```
 ::
@@ -23,8 +23,7 @@ By default, the form:
 
 - Displays configured social provider buttons for quick registration
 - Includes only email, password, and confirm password fields (minimal by design)
-- Enforces password strength requirements (8+ chars, uppercase, lowercase, number)
-- Shows legal document links when configured (sign-up implies consent)
+- Enforces password strength requirements according to your Logto instance's policy
 - Provides email verification flow after registration
 - Shows a sign-in button for existing users (in the same row as sign-up)
 - Renders form elements in `size="md"`{lang="vue-html"}
@@ -98,38 +97,6 @@ By default, the form includes a [SignInButton](/docs/components/sign-up-button) 
 <!-- Only show the primary action button -->
 <ASignUpForm :secondary="false" />
 ```
-::
-
-### Legal Documents
-
-By default, the form shows links to all configured legal documents with text indicating that sign-up implies consent. Control which documents to show with the `:legal`{lang="vue-html"} prop:
-
-::code-preview
-::a-sign-up-form{mock :legal="false"}
-::
-
-#code
-
-```vue
-<!-- Hide legal document links -->
-<ASignUpForm :legal="false" />
-```
-::
-
-::code-preview
-::a-sign-up-form{mock :legal='["termsOfService"]'}
-::
-
-#code
-
-```vue
-<!-- Show only terms of service link -->
-<ASignUpForm :legal="['termsOfService']" />
-```
-::
-
-::tip
-Learn how to configure the links to your legal documents in the [Legal Documents Configuration](/docs/configuration/legal-documents).
 ::
 
 ### Email Verification
@@ -271,7 +238,6 @@ The component extends [Nuxt UI's `UForm`](https://ui4.nuxt.com/docs/components/f
 | ----------- | ------------------------------------------------------ | ---------------------------------------------- | ------------------------------------------------------------------------------- |
 | `autofocus` | `boolean`{lang="ts-type"}                              | `'true'`{lang="vue-html"}                      | Auto-focus the email field on mount                                             |
 | `class`     | `string \| undefined`{lang="ts-type"}                  | `'max-w-md space-y-6 w-full'`{lang="vue-html"} | Basic spacing and width for the sign-up form                                    |
-| `legal`     | `boolean \| string[]`{lang="ts-type"}                  | `'true'`{lang="vue-html"}                      | Show legal document links. Use array to specify which ones                      |
 | `mock`      | `boolean \| 'verification'`{lang="ts-type"}            | `'false'`{lang="vue-html"}                     | Enable mock mode. Use `'verification'`{lang="vue-html"} to start in verify step |
 | `secondary` | `boolean`{lang="ts-type"}                              | `'true'`{lang="vue-html"}                      | Show sign-in button for existing users                                          |
 | `size`      | `'xs' \| 'sm' \| 'md' \| 'lg' \| 'xl'`{lang="ts-type"} | `''md''`{lang="vue-html"}                      | Size of form inputs and buttons                                                 |
@@ -332,3 +298,39 @@ The password validation automatically adapts to your server's configuration:
 - **Fallback**: Uses sensible defaults (8+ characters) if policy fetch fails
 
 Note: Full password validation including pwned password checks and custom word rejection happens server-side.
+
+### Localization Keys
+
+The component uses these i18n keys under the `auth` namespace:
+
+| Key                              | Default Value                                              | Description                           |
+| -------------------------------- | ---------------------------------------------------------- | ------------------------------------- |
+| `auth.signUpTitle`               | "Let's Get You Signed Up"                                 | Card title                           |
+| `auth.signUpDescription`         | "Create your account to get started"                      | Card description                     |
+| `auth.email`                     | "Email"                                                    | Email field label                    |
+| `auth.password`                  | "Password"                                                 | Password field label                 |
+| `auth.passwordConfirmation`      | "Password Confirmation"                                    | Password confirmation field label    |
+| `auth.withEmail`                 | "With Email"                                               | Email sign-up button label          |
+| `auth.signIn`                    | "Sign In"                                                  | Sign-in button label                |
+| `auth.or`                        | "OR"                                                        | Separator text between options      |
+| `auth.verificationCode`          | "Verification Code"                                        | Verification code field label       |
+| `auth.enterVerificationCode`     | "Enter 6-digit code"                                       | Verification code placeholder       |
+| `auth.verificationEmailSent`     | "Verification Email Sent"                                  | Verification step title             |
+| `auth.checkEmailForCode`         | "Please check your email for the verification code sent to {email}." | Verification instructions |
+| `auth.resendCode`                | "Resend Code"                                              | Resend code button label           |
+| `auth.verify`                    | "Verify"                                                    | Verify button label                 |
+| `auth.signUpSuccess`             | "Account created successfully!"                            | Success notification message        |
+| `auth.signUpFailed`              | "Sign up failed"                                           | Error notification title            |
+| `auth.accountExists`             | "An account with this email already exists"               | Account exists error message       |
+| `auth.emailRequired`             | "Email is required"                                        | Email validation message            |
+| `auth.emailInvalid`              | "Please enter a valid email address"                       | Invalid email validation message    |
+| `auth.passwordRequired`          | "Password is required"                                     | Password validation message         |
+| `auth.passwordMinLength`         | "Password must be at least {min} characters"              | Min length validation message       |
+| `auth.passwordMaxLength`         | "Password must be at most {max} characters"               | Max length validation message       |
+| `auth.passwordCharacterTypes`    | "Password must contain at least {min} different character types (lowercase, uppercase, numbers, symbols)" | Character types validation |
+| `auth.passwordConfirmationRequired` | "Please confirm your password"                          | Confirmation required message       |
+| `auth.passwordMismatch`          | "Passwords do not match"                                   | Passwords don't match message      |
+
+::note
+Social provider labels are also localized. See [SocialProviderButtons](/docs/components/social-provider-buttons#localization-keys) for details.
+::

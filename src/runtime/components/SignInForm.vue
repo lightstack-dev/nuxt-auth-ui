@@ -86,14 +86,6 @@
         type="submit"
       />
     </div>
-
-    <!-- Legal consent -->
-    <LegalConsent
-      context="sign-in"
-      :legal="legal"
-      :mock="mock"
-      :size="size"
-    />
   </UForm>
 </template>
 
@@ -105,7 +97,6 @@ import { signInSchema, type SignInFormData } from '../utils/validation'
 import type { SocialProvider } from '../types/config'
 import SignUpButton from './SignUpButton.vue'
 import SocialProviderButtons from './SocialProviderButtons.vue'
-import LegalConsent from './LegalConsent.vue'
 
 // Define props
 const props = withDefaults(
@@ -113,7 +104,6 @@ const props = withDefaults(
     mock?: boolean
     social?: boolean
     secondary?: boolean
-    legal?: boolean | string[]
     autofocus?: boolean
     size?: 'xs' | 'sm' | 'md' | 'lg' | 'xl'
   }>(),
@@ -121,7 +111,6 @@ const props = withDefaults(
     mock: false,
     secondary: true,
     social: true,
-    legal: true,
     autofocus: true,
     size: 'md',
   },

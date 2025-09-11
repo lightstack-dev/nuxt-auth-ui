@@ -1,5 +1,13 @@
 <template>
   <UContainer>
-    <UPageHeader title="Home" />
+    <UPageHeader :title="title" />
   </UContainer>
 </template>
+
+<script setup lang="ts">
+const title = 'Home'
+
+useHead({
+  title: title,
+})
+</script>

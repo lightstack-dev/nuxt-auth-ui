@@ -1,16 +1,14 @@
 <template>
-  <UPageSection
-    :title="t('auth.signUp')"
-    orientation="horizontal"
-  >
+  <AFormSection context="signUp">
     <ASignUpForm />
-  </UPageSection>
+  </AFormSection>
 </template>
 
 <script setup lang="ts">
 const { t } = useI18n()
+const title = t('auth.signUp')
 
 useHead({
-  title: t('auth.signUp'),
+  title: title,
 })
 </script>
