@@ -17,12 +17,11 @@ export interface AuthUIConfig {
     afterSignIn?: string
     afterSignOut?: string
   }
-  middleware?: {
-    global?: boolean
+  middleware?: false | {
+    protectByDefault?: boolean
     name?: string
+    exceptionRoutes?: string[]
   }
-  appName?: string
-  logo?: string
   legal?: {
     termsOfService?: string
     privacyPolicy?: string

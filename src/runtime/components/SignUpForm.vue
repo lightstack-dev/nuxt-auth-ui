@@ -3,7 +3,7 @@
     class="max-w-md space-y-6 w-full"
     :schema="dynamicSignUpSchema"
     :state="state"
-    :validate-on="mock ? [] : undefined"
+    :validate-on="['change', 'input']"
     @submit="onSubmit"
   >
     <!-- Registration Step -->
@@ -32,7 +32,7 @@
           autocomplete="email"
           :autofocus="!props.mock && autofocus"
           :disabled="loading"
-          placeholder="email@example.com"
+          :placeholder="t('auth.emailPlaceholder')"
           :size="size"
           type="email"
           @focus="fetchPasswordPolicy"
@@ -95,14 +95,6 @@
           type="submit"
         />
       </div>
-
-      <!-- Legal consent -->
-      <LegalConsent
-        context="sign-up"
-        :legal="legal"
-        :mock="!!mock"
-        :size="size"
-      />
     </template>
 
     <!-- Verification Step -->
@@ -110,7 +102,7 @@
       <!-- Verification alert -->
       <UAlert
         :description="t('auth.checkEmailForCode', {
-          email: state.email || 'email@example.com',
+          email: state.email || t('auth.emailPlaceholder'),
         })"
         :title="t('auth.verificationEmailSent')"
         variant="soft"
@@ -166,7 +158,6 @@ import type { SignUpFormData } from '../utils/validation'
 import type { SocialProvider } from '../types/config'
 import SignInButton from './SignInButton.vue'
 import SocialProviderButtons from './SocialProviderButtons.vue'
-import LegalConsent from './LegalConsent.vue'
 
 // Define props
 const props = withDefaults(
@@ -174,7 +165,6 @@ const props = withDefaults(
     mock?: boolean | 'verification'
     social?: boolean
     secondary?: boolean
-    legal?: boolean | string[]
     autofocus?: boolean
     size?: 'xs' | 'sm' | 'md' | 'lg' | 'xl'
   }>(),
@@ -182,7 +172,6 @@ const props = withDefaults(
     mock: false,
     social: true,
     secondary: true,
-    legal: true,
     autofocus: true,
     size: 'md',
   },

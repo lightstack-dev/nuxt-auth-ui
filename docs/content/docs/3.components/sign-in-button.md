@@ -16,7 +16,6 @@ The SignInButton component provides a simple, pre-configured authentication entr
 ```vue
 <ASignInButton />
 ```
-
 ::
 
 By default, the button:
@@ -63,7 +62,6 @@ Use the `label` prop or `default` slot to override the button's text:
 <!-- Using `default` slot, takes precedence over `label` prop -->
 <ASignInButton>Get Started</ASignInButton>
 ```
-
 ::
 
 ### Icon
@@ -95,7 +93,6 @@ Remove or change the leading icon _for a single SignInButton_:
 <!-- No icon -->
 <ASignInButton :leading-icon="undefined" />
 ```
-
 ::
 
 ::code-preview
@@ -108,7 +105,6 @@ Remove or change the leading icon _for a single SignInButton_:
 <!-- Custom icon -->
 <ASignInButton leading-icon="i-lucide-arrow-right-circle" />
 ```
-
 ::
 
 ### Styling
@@ -126,7 +122,6 @@ The SignInButton is based on [Nuxt UI's `UButton`](https://ui4.nuxt.com/docs/com
   Join Now
 </ASignInButton>
 ```
-
 ::
 
 ### Mock Mode
@@ -158,3 +153,11 @@ The component extends [Nuxt UI's `UButton`](https://ui4.nuxt.com/docs/components
 | Slot      | Description                                                    |
 | --------- | -------------------------------------------------------------- |
 | `default` | Overrides the button text (takes precedence over `label` prop) |
+
+### Localization Keys
+
+The component uses these i18n keys under the `auth` namespace:
+
+| Key           | Default Value | Description              |
+| ------------- | ------------- | ------------------------ |
+| `auth.signIn` | "Sign In"     | Button label text        |

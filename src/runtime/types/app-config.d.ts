@@ -43,8 +43,6 @@ declare module '@nuxt/schema' {
           global?: boolean
           name?: string
         }
-        appName?: string
-        logo?: string
         messages?: Record<string, string>
         [key: string]: unknown
       }

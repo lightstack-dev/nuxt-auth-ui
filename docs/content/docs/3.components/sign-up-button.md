@@ -16,7 +16,6 @@ The SignUpButton component provides a simple, pre-configured registration entry 
 ```vue
 <ASignUpButton />
 ```
-
 ::
 
 By default, the button:
@@ -63,7 +62,6 @@ Use the `label` prop or `default` slot to override the button's text:
 <!-- Using `default` slot, takes precedence over `label` prop -->
 <ASignUpButton>Create Account</ASignUpButton>
 ```
-
 ::
 
 ### Icon
@@ -95,7 +93,6 @@ Remove or change the leading icon _for a single SignInButton_:
 <!-- No icon -->
 <ASignUpButton :leading-icon="undefined" />
 ```
-
 ::
 
 ::code-preview
@@ -108,7 +105,6 @@ Remove or change the leading icon _for a single SignInButton_:
 <!-- Custom icon -->
 <ASignUpButton leading-icon="i-lucide-user-plus-2" />
 ```
-
 ::
 
 ### Styling
@@ -126,7 +122,6 @@ The SignUpButton is based on [Nuxt UI's `UButton`](https://ui4.nuxt.com/docs/com
   Get Started Free
 </ASignUpButton>
 ```
-
 ::
 
 ### Mock Mode
@@ -158,3 +153,11 @@ The component extends [Nuxt UI's `UButton`](https://ui4.nuxt.com/docs/components
 | Slot      | Description                                                    |
 | --------- | -------------------------------------------------------------- |
 | `default` | Overrides the button text (takes precedence over `label` prop) |
+
+### Localization Keys
+
+The component uses these i18n keys under the `auth` namespace:
+
+| Key           | Default Value | Description              |
+| ------------- | ------------- | ------------------------ |
+| `auth.signUp` | "Sign Up"     | Button label text        |
