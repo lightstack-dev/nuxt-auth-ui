@@ -25,7 +25,6 @@ export default defineNuxtConfig({
   compatibilityDate: '2025-08-30',
 
   authUi: {
-    appName: 'Auth UI Docs',
     socialProviders: ['google', 'microsoft'],
     legal: {
       termsOfService: '/terms',
@@ -34,12 +33,12 @@ export default defineNuxtConfig({
     },
   },
 
-  icon: {
-    cssLayer: 'components',
-  },
-
   i18n: {
     locales: ['en'],
     defaultLocale: 'en',
+  },
+
+  icon: {
+    cssLayer: 'components',
   },
 })

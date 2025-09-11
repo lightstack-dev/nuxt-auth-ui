@@ -71,10 +71,10 @@ const consentItems = computed(() => {
       if (url) {
         items.push({ key, url: url as string })
       }
-      else if (process.dev) {
+      else if (import.meta.dev) {
         // Warn in development about missing legal document configuration
         console.warn(
-          `[nuxt-auth-ui] LegalConsent: Document key "${key}" was requested but not configured in nuxt.config.ts authUi.legal`
+          `[nuxt-auth-ui] LegalConsent: Document key "${key}" was requested but not configured in nuxt.config.ts authUi.legal`,
         )
       }
     })

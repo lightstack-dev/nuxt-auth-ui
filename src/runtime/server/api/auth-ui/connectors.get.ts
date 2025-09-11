@@ -26,13 +26,13 @@ export default defineEventHandler(async (event) => {
 
     // Try the well-known endpoint first (no auth required)
     const wellKnownUrl = `${logtoEndpoint}/api/.well-known/sign-in-exp`
-    
+
     let response = await fetch(wellKnownUrl, {
       headers: {
         'Content-Type': 'application/json',
       },
     })
-    
+
     // If well-known fails, try the regular endpoint as fallback
     if (!response.ok) {
       const signInExpUrl = `${logtoEndpoint}/api/sign-in-exp`

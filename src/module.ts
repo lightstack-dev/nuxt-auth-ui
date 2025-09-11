@@ -47,11 +47,13 @@ export default defineNuxtModule<AuthUIConfig>({
         afterSignIn: options.redirects?.afterSignIn || '/',
         afterSignOut: options.redirects?.afterSignOut || '/',
       },
-      middleware: {
-        protectByDefault: options.middleware?.protectByDefault ?? true,
-        name: options.middleware?.name || 'auth',
-        exceptionRoutes: options.middleware?.exceptionRoutes || [],
-      },
+      middleware: options.middleware === false
+        ? false
+        : {
+            protectByDefault: options.middleware?.protectByDefault ?? true,
+            name: options.middleware?.name || 'auth',
+            exceptionRoutes: options.middleware?.exceptionRoutes || [],
+          },
       legal: options.legal,
       socialProviders: options.socialProviders,
     }

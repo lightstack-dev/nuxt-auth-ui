@@ -2,7 +2,7 @@ import { useRuntimeConfig, navigateTo, useNuxtApp, ref } from '#imports'
 
 export default defineNuxtRouteMiddleware((to) => {
   // Skip middleware on server-side rendering during build/generation
-  if (process.server) return
+  if (import.meta.server) return
 
   const config = useRuntimeConfig()
   const authUiConfig = config.public.authUi
@@ -20,7 +20,7 @@ export default defineNuxtRouteMiddleware((to) => {
   const publicAuthRoutes = [
     authUiConfig.routes?.signIn || '/auth/sign-in',
     authUiConfig.routes?.signUp || '/auth/sign-up',
-    authUiConfig.routes?.passwordReset
+    authUiConfig.routes?.passwordReset,
   ].filter(Boolean) // Remove undefined routes
 
   const currentPath = to.path
@@ -43,7 +43,8 @@ export default defineNuxtRouteMiddleware((to) => {
   if (middlewareConfig.protectByDefault !== false) {
     // Protect by default: protect everything except auth routes and exceptions
     isProtectedRoute = !isAuthRoute && !isException
-  } else {
+  }
+  else {
     // Don't protect by default: only protect exception routes (not auth routes)
     isProtectedRoute = !isAuthRoute && isException
   }
@@ -57,7 +58,8 @@ export default defineNuxtRouteMiddleware((to) => {
         return navigateTo(redirectTo, { replace: true })
       }
     }
-  } else {
+  }
+  else {
     // User is not authenticated
     if (isProtectedRoute) {
       // Redirect unauthenticated users to sign-in
