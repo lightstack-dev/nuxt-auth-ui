@@ -7,9 +7,13 @@
     <UNavigationMenu
       class="justify-center w-full"
       :items="items"
-      :ui="{ list: 'gap-x-2' }"
+      :ui="{ list: 'gap-x-1' }"
     />
     <template #right>
+      <ASignInButton
+        variant="outline"
+      />
+      <ASignUpButton />
       <UColorModeButton />
     </template>
   </UHeader>

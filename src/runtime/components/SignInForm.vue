@@ -28,7 +28,7 @@
         autocomplete="email"
         :autofocus="!mock && autofocus"
         :disabled="loading"
-        placeholder="email@example.com"
+        :placeholder="t('auth.emailPlaceholder')"
         :size="size"
         type="email"
       />

@@ -1,3 +1,5 @@
+![Lighstack logo](https://raw.githubusercontent.com/lightstack-dev/.github/refs/heads/main/assets/lighstack-logo-2025-08-protected.svg)
+
 # Lightstack nuxt-auth-ui
 
 [![npm version][npm-version-src]][npm-version-href]

@@ -25,12 +25,13 @@ export default defineNuxtConfig({
   compatibilityDate: '2025-08-30',
 
   authUi: {
-    socialProviders: ['google', 'microsoft'],
     legal: {
       termsOfService: '/terms',
       privacyPolicy: '/privacy',
       cookiePolicy: '/cookies',
     },
+    middleware: false,
+    socialProviders: ['google', 'microsoft'],
   },
 
   i18n: {
