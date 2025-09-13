@@ -22,7 +22,9 @@ export function useFinalAuth() {
   // useLogtoUser is auto-imported by Logto module in the consuming app
   let logtoUser: LogtoUser | null = null
   try {
-    // @ts-ignore - useLogtoUser is provided by @logto/nuxt at runtime
+    // Check if useLogtoUser exists (it's provided by @logto/nuxt at runtime)
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
     logtoUser = typeof useLogtoUser !== 'undefined' ? useLogtoUser() : null
   }
   catch {

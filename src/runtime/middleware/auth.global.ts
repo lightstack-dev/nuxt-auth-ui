@@ -8,7 +8,7 @@ export default defineNuxtRouteMiddleware((to) => {
   const authConfig = config.public.auth
 
   // Skip if middleware is completely disabled
-  if (!authConfig?.middleware || authConfig.middleware === false) return
+  if (!authConfig?.middleware || typeof authConfig.middleware === 'boolean') return
 
   // Get middleware config (defaults to protect by default)
   const middlewareConfig = typeof authConfig.middleware === 'object' ? authConfig.middleware : { protectByDefault: true, exceptionRoutes: [] }

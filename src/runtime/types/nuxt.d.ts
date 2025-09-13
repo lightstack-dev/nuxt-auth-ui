@@ -13,7 +13,7 @@ declare module 'nuxt/schema' {
         afterSignIn: string
         afterSignOut: string
       }
-      middleware: false | {
+      middleware: boolean | {
         protectByDefault: boolean
         name: string
         exceptionRoutes: string[]
