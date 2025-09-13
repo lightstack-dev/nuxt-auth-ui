@@ -150,7 +150,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref, useAuthUI, useI18n } from '#imports'
+import { computed, ref, useFinalAuth, useI18n } from '#imports'
 import { z } from 'zod'
 
 import type { SignUpFormData } from '../utils/validation'
@@ -185,7 +185,7 @@ const emit = defineEmits<{
 
 // Composables
 const { t } = useI18n()
-const auth = useAuthUI()
+const auth = useFinalAuth()
 
 // Computed properties
 
@@ -199,7 +199,7 @@ const loading = ref(false)
 const error = ref<string | null>(null)
 const loadingProvider = ref<string | null>(null)
 const verificationStep = ref(props.mock === 'verification')
-const verificationCode = ref('')
+const verificationCode = ref<number[]>([])
 const passwordPolicyFetched = ref(false)
 
 const state = ref<SignUpFormData>({
@@ -283,7 +283,8 @@ const dynamicSignUpSchema = computed(() => {
   })
 })
 
-const onSubmit = async (data: SignUpFormData) => {
+const onSubmit = async (event: { data: SignUpFormData }) => {
+  const data = event.data
   if (props.mock) {
     // In mock mode, simulate registration and verification
     loading.value = true
@@ -335,7 +336,7 @@ const verifyCode = async () => {
     loading.value = true
     setTimeout(() => {
       loading.value = false
-      console.log('[Mock] Verification code:', verificationCode.value)
+      console.log('[Mock] Verification code:', verificationCode.value.join(''))
       emit('success')
     }, 1000)
     return
@@ -346,7 +347,7 @@ const verifyCode = async () => {
 
   try {
     // TODO: Implement actual verification via API
-    await auth.verifyEmail(state.value.email, verificationCode.value)
+    await auth.verifyEmail(state.value.email, verificationCode.value.join(''))
 
     emit('success')
   }
@@ -399,7 +400,7 @@ defineExpose({
     }
     error.value = null
     verificationStep.value = false
-    verificationCode.value = ''
+    verificationCode.value = []
   },
   showVerification: () => {
     verificationStep.value = true

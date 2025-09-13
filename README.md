@@ -1,31 +1,36 @@
 ![Lighstack logo](https://raw.githubusercontent.com/lightstack-dev/.github/refs/heads/main/assets/lighstack-logo-2025-08-protected.svg)
 
-# Lightstack nuxt-auth-ui
+# Lightstack nuxt-final-auth
 
 [![npm version][npm-version-src]][npm-version-href]
 [![npm downloads][npm-downloads-src]][npm-downloads-href]
 [![License][license-src]][license-href]
 [![Nuxt][nuxt-src]][nuxt-href]
 
-**Your users, aboard and accounted for.**
+**The final auth solution for Nuxt. Stop building auth. Start shipping features.**
 
-Beautiful, production-ready authentication UI for [Nuxt](https://nuxt.com/), powered by [Logto](https://logto.io/).
+Production-ready authentication with beautiful UI and complete profile management for [Nuxt](https://nuxt.com/), powered by [Logto](https://logto.io/).
 
-## Why nuxt-auth-ui?
+## Why nuxt-final-auth?
 
-Building auth sucks. You either spend weeks building forms and flows, or you get a hosted solution that doesn't match your app's design or costs a ton of money.
+Every auth solution has critical gaps. Logto has great admin UI but no user profile SDK. Supabase is complex to self-host. Auth0 isn't self-hostable. You always end up building half the solution yourself.
 
-`nuxt-auth-ui` gives you complete end-user auth UI for Logto that feels native to your app. Built with Nuxt UI components that you can deeply configure and integrate with your app.
+nuxt-final-auth is the **complete** auth solution for Nuxt:
+- ✅ Everything Logto's SDK is missing (password changes, email updates, avatar uploads)
+- ✅ Beautiful, native-feeling UI built with Nuxt UI v4
+- ✅ Zero gaps - sign up, sign in, profile management, MFA, social auth - it's all there
+- ✅ Self-hostable with Logto
+- ✅ Production-ready from day one
 
 ## Quick Start
 
-Install the required modules:
+Install the module with a single command:
 
 ```bash
-npm install @lightstack-dev/nuxt-auth-ui @logto/nuxt @nuxtjs/i18n
+npm install @lightstack-dev/nuxt-final-auth
 ```
 
-> **Note:** `@nuxt/ui` gets installed automatically as part of nuxt-auth-ui.
+> **Note:** All required dependencies (`@logto/nuxt`, `@nuxtjs/i18n`, and `@nuxt/ui`) are automatically installed.
 
 First, set up your Logto instance following their [official Nuxt guide](https://docs.logto.io/quick-starts/nuxt).
 
@@ -34,16 +39,16 @@ Then add the modules to your Nuxt configuration:
 ```typescript
 // nuxt.config.ts
 export default defineNuxtConfig({
-  modules: ["@lightstack-dev/nuxt-auth-ui", "@logto/nuxt", "@nuxtjs/i18n"],
+  modules: ["@lightstack-dev/nuxt-final-auth"],
   
-  // Configure i18n (required)
+  // Configure i18n (required - the module is auto-installed but needs your locale config)
   i18n: {
     locales: ["en"],
     defaultLocale: "en",
   },
   
-  // Optional: Configure Auth UI
-  authUi: {
+  // Optional: Configure auth module
+  auth: {
     // See configuration docs for all options
   },
 });
@@ -60,6 +65,7 @@ That's it! You now have:
 
 ## Features
 
+### What You Get Today
 ✅ **Complete Auth Forms** - SignInForm & SignUpForm with email verification  
 ✅ **Smart Components** - SignInButton, SignUpButton, SocialProviderButtons  
 ✅ **Route Protection** - Built-in middleware for global or per-route authentication  
@@ -70,8 +76,13 @@ That's it! You now have:
 ✅ **Legal Compliance** - Built-in consent components for terms, privacy, and cookies  
 ✅ **Built with Nuxt UI v4** - Automatically themed with your app's design system  
 ✅ **TypeScript** - Fully typed with excellent DX  
-✅ **Self-hostable** - Works with any Logto instance  
-🚧 **More components coming soon** - User menu, profile pages, etc.
+✅ **Self-hostable** - Works with any Logto instance
+
+### Coming Soon (The Complete SDK)
+🚧 **Profile Management** - Change passwords, update emails, upload avatars  
+🚧 **Account Security** - MFA setup, backup codes, session management  
+🚧 **Social Accounts** - Link/unlink social providers  
+🚧 **User Components** - User menu, profile pages, account settings
 
 ## Components
 
@@ -108,10 +119,10 @@ export default defineNuxtConfig({
   modules: [
     "@logto/nuxt",
     "@nuxtjs/i18n", // Optional but recommended
-    "@lightstack-dev/nuxt-auth-ui"
+    "@lightstack-dev/nuxt-final-auth"
   ],
   
-  authUi: {
+  auth: {
     // Routes (customizable)
     routes: {
       signIn: "/auth/sign-in",
@@ -247,11 +258,11 @@ MIT License - see [LICENSE](LICENSE) for details.
 
 <!-- Badges -->
 
-[npm-version-src]: https://img.shields.io/npm/v/@lightstack-dev/nuxt-auth-ui/latest.svg?style=flat&colorA=020420&colorB=00DC82
-[npm-version-href]: https://npmjs.com/package/@lightstack-dev/nuxt-auth-ui
-[npm-downloads-src]: https://img.shields.io/npm/dm/@lightstack-dev/nuxt-auth-ui.svg?style=flat&colorA=020420&colorB=00DC82
-[npm-downloads-href]: https://npm.chart.dev/@lightstack-dev/nuxt-auth-ui
-[license-src]: https://img.shields.io/npm/l/@lightstack-dev/nuxt-auth-ui.svg?style=flat&colorA=020420&colorB=00DC82
-[license-href]: https://npmjs.com/package/@lightstack-dev/nuxt-auth-ui
+[npm-version-src]: https://img.shields.io/npm/v/@lightstack-dev/nuxt-final-auth/latest.svg?style=flat&colorA=020420&colorB=00DC82
+[npm-version-href]: https://npmjs.com/package/@lightstack-dev/nuxt-final-auth
+[npm-downloads-src]: https://img.shields.io/npm/dm/@lightstack-dev/nuxt-final-auth.svg?style=flat&colorA=020420&colorB=00DC82
+[npm-downloads-href]: https://npm.chart.dev/@lightstack-dev/nuxt-final-auth
+[license-src]: https://img.shields.io/npm/l/@lightstack-dev/nuxt-final-auth.svg?style=flat&colorA=020420&colorB=00DC82
+[license-href]: https://npmjs.com/package/@lightstack-dev/nuxt-final-auth
 [nuxt-src]: https://img.shields.io/badge/Nuxt-020420?logo=nuxt.js
 [nuxt-href]: https://nuxt.com

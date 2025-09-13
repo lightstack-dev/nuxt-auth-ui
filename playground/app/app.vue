@@ -7,5 +7,5 @@
 </template>
 
 <script setup>
-// const auth = useAuthUI()
+// const auth = useFinalAuth()
 </script>

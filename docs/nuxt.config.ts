@@ -16,7 +16,7 @@ export default defineNuxtConfig({
       link: [
         { rel: 'icon', type: 'image/svg+xml', href: '/favicon.svg' },
       ],
-      titleTemplate: '%s · nuxt-auth-ui · Lightstack',
+      titleTemplate: '%s · nuxt-final-auth · Lightstack',
     },
   },
 
@@ -24,7 +24,7 @@ export default defineNuxtConfig({
 
   compatibilityDate: '2025-08-30',
 
-  authUi: {
+  auth: {
     legal: {
       termsOfService: '/terms',
       privacyPolicy: '/privacy',

@@ -19,7 +19,7 @@
 
 <script setup lang="ts">
 import { ref, computed } from 'vue'
-import { useI18n, useAuthUI, useAppConfig } from '#imports'
+import { useI18n, useFinalAuth, useAppConfig } from '#imports'
 import type { SocialProvider } from '../types/config'
 
 // Define props
@@ -40,7 +40,7 @@ const emit = defineEmits<{
 
 // Composables
 const { t } = useI18n()
-const auth = useAuthUI()
+const auth = useFinalAuth()
 const appConfig = useAppConfig()
 
 // Reactive state

@@ -1,10 +1,10 @@
 import { defineNuxtModule, addPlugin, addImports, addComponent, addTemplate, createResolver, extendPages, addServerHandler, addRouteMiddleware } from '@nuxt/kit'
-import type { AuthUIConfig } from './runtime/types/config'
+import type { authConfig } from './runtime/types/config'
 
-export default defineNuxtModule<AuthUIConfig>({
+export default defineNuxtModule<authConfig>({
   meta: {
-    name: '@lightstack-dev/nuxt-auth-ui',
-    configKey: 'authUi',
+    name: '@lightstack-dev/nuxt-final-auth',
+    configKey: 'auth',
   },
   // Default configuration options of the Nuxt module
   defaults: {
@@ -41,6 +41,7 @@ export default defineNuxtModule<AuthUIConfig>({
         signUp: options.routes?.signUp || '/auth/sign-up',
         signOut: options.routes?.signOut || '/auth/sign-out',
         profile: options.routes?.profile || '/auth/profile',
+        passwordReset: options.routes?.passwordReset,
       },
       componentPrefix: options.componentPrefix || 'A',
       redirects: {
@@ -61,7 +62,7 @@ export default defineNuxtModule<AuthUIConfig>({
     // Add runtime config
     nuxt.options.runtimeConfig = nuxt.options.runtimeConfig || { public: {} }
     nuxt.options.runtimeConfig.public = nuxt.options.runtimeConfig.public || {}
-    nuxt.options.runtimeConfig.public.authUi = resolvedOptions
+    nuxt.options.runtimeConfig.public.auth = resolvedOptions
 
     // Check if i18n is configured (it's a required peer dependency)
     const hasI18n = nuxt.options.modules?.some((m) => {
@@ -71,7 +72,7 @@ export default defineNuxtModule<AuthUIConfig>({
     })
 
     if (!hasI18n) {
-      console.warn('[nuxt-auth-ui] @nuxtjs/i18n module is required but not found. Please add it to your nuxt.config.ts modules.')
+      console.warn('[nuxt-final-auth] @nuxtjs/i18n module is required but not found. Please add it to your nuxt.config.ts modules.')
     }
 
     // Use i18n:registerModule hook to provide our translations
@@ -92,8 +93,8 @@ export default defineNuxtModule<AuthUIConfig>({
     // Auto-import composables
     addImports([
       {
-        name: 'useAuthUI',
-        from: resolver.resolve('./runtime/composables/useAuthUI'),
+        name: 'useFinalAuth',
+        from: resolver.resolve('./runtime/composables/useFinalAuth'),
       },
     ])
 

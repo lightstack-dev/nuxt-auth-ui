@@ -1,8 +1,31 @@
 {
-  "extends": "./.nuxt/tsconfig.json",
+  "compilerOptions": {
+    "target": "ESNext",
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "strict": true,
+    "jsx": "preserve",
+    "importHelpers": true,
+    "experimentalDecorators": true,
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "sourceMap": true,
+    "baseUrl": ".",
+    "types": [
+      "@nuxt/types",
+      "@nuxt/ui",
+      "@types/node"
+    ],
+    "paths": {
+      "#imports": ["./src/runtime/composables"]
+    },
+    "lib": ["ESNext", "DOM"]
+  },
   "exclude": [
     "dist",
     "node_modules",
-    "playground",
+    ".nuxt",
+    "playground/.nuxt",
+    "docs/.nuxt"
   ]
 }

@@ -90,7 +90,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref, useI18n, useAuthUI } from '#imports'
+import { computed, ref, useI18n, useFinalAuth } from '#imports'
 
 import { signInSchema, type SignInFormData } from '../utils/validation'
 
@@ -124,7 +124,7 @@ const emit = defineEmits<{
 
 // Composables
 const { t } = useI18n()
-const auth = useAuthUI()
+const auth = useFinalAuth()
 
 // Reactive state
 const loading = ref(false)
@@ -148,7 +148,8 @@ const socialProviders = computed<SocialProvider[]>(() => {
 })
 
 // Methods
-const onSubmit = async (data: SignInFormData) => {
+const onSubmit = async (event: { data: SignInFormData }) => {
+  const data = event.data
   if (props.mock) {
     // In mock mode, just show a success state briefly
     loading.value = true

@@ -106,7 +106,7 @@ Configure legal document URLs in your `nuxt.config.ts`:
 
 ```typescript [nuxt.config.ts]
 export default defineNuxtConfig({
-  authUi: {
+  auth: {
     legal: {
       terms: '/terms',
       privacy: '/privacy',

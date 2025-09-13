@@ -1,18 +1,16 @@
 import { useRuntimeConfig, computed, navigateTo, useFetch, ref } from '#imports'
-import type { AuthUIConfig, SocialProvider } from '../types/config'
+import type { authConfig, SocialProvider } from '../types/config'
 
-// Declare the Logto types that will be available at runtime
-declare global {
-  const useLogtoUser: () => {
-    sub: string
-    username?: string
-    email?: string
-    name?: string
-    picture?: string
-  } | null
+// Type for Logto user that will be available at runtime
+interface LogtoUser {
+  sub: string
+  username?: string
+  email?: string
+  name?: string
+  picture?: string
 }
 
-export interface AuthUIUser {
+export interface authUser {
   id: string
   username?: string
   primaryEmail?: string
@@ -20,11 +18,20 @@ export interface AuthUIUser {
   avatar?: string
 }
 
-export function useAuthUI() {
+export function useFinalAuth() {
   // useLogtoUser is auto-imported by Logto module in the consuming app
-  const logtoUser = typeof useLogtoUser !== 'undefined' ? useLogtoUser() : null
+  let logtoUser: LogtoUser | null = null
+  try {
+    // Check if useLogtoUser exists (it's provided by @logto/nuxt at runtime)
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    logtoUser = typeof useLogtoUser !== 'undefined' ? useLogtoUser() : null
+  }
+  catch {
+    logtoUser = null
+  }
   const runtimeConfig = useRuntimeConfig()
-  const config = (runtimeConfig.public.authUi || {}) as AuthUIConfig
+  const config = (runtimeConfig.public.auth || {}) as authConfig
 
   const isAuthenticated = computed(() => !!logtoUser)
 
@@ -67,7 +74,7 @@ export function useAuthUI() {
     }))
   })
 
-  const user = computed<AuthUIUser | null>(() => {
+  const user = computed<authUser | null>(() => {
     if (!logtoUser) return null
 
     return {

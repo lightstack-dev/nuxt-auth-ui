@@ -10,21 +10,21 @@ export default defineNuxtConfig({
 
   app: {
     head: {
-      titleTemplate: '%s · nuxt-auth-ui Playground',
+      titleTemplate: '%s · nuxt-final-auth Playground',
     },
   },
 
   css: ['~/assets/css/main.css'],
   compatibilityDate: '2025-08-30',
 
-  authUi: {
+  auth: {
     legal: {
       termsOfService: '/terms',
       privacyPolicy: '/privacy',
       cookiePolicy: '/cookies',
     },
     middleware: {
-      global: true,
+      protectByDefault: true,
     },
   },
 
