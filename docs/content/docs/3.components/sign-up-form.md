@@ -34,7 +34,7 @@ See the component's [API](#api) for how to override these defaults.
 
 The sign-up form is intentionally minimal, asking only for email and password. This reduces friction and improves conversion rates. User profile information (name, avatar, etc.) can be collected later through the profile management UI when contextually relevant.
 
-This is an opinionated design choice based on UX best practices. See our design principle about [Minimalism & Progressive Disclosure](/docs/design-principles#minimalism-progressive-disclosure). If you need additional fields during sign-up, consider building a custom form using the `useAuthUI()`{lang="ts"} composable.
+This is an opinionated design choice based on UX best practices. See our design principle about [Minimalism & Progressive Disclosure](/docs/design-principles#minimalism-progressive-disclosure). If you need additional fields during sign-up, consider building a custom form using the `useFinalAuth()`{lang="ts"} composable.
 
 ## Authentication State Behavior
 

@@ -1,6 +1,6 @@
 {
   "private": true,
-  "name": "nuxt-auth-ui-playground",
+  "name": "nuxt-final-auth-playground",
   "type": "module",
   "scripts": {
     "dev": "nuxi dev",

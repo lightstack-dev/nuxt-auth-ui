@@ -1,11 +1,11 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest'
-import { useAuthUI } from '../../src/runtime/composables/useAuthUI'
+import { useFinalAuth } from '../../src/runtime/composables/useFinalAuth'
 
 // Mock the imports
 vi.mock('#imports', () => ({
   useRuntimeConfig: vi.fn(() => ({
     public: {
-      authUi: {
+      auth: {
         routes: {
           signIn: '/auth/sign-in',
           signUp: '/auth/sign-up',
@@ -33,13 +33,13 @@ vi.mock('#imports', () => ({
   computed: vi.fn(fn => ({ value: fn() })),
 }))
 
-describe('useAuthUI', () => {
+describe('useFinalAuth', () => {
   beforeEach(() => {
     vi.clearAllMocks()
   })
 
   it('should return authentication state and methods', () => {
-    const auth = useAuthUI()
+    const auth = useFinalAuth()
 
     expect(auth).toHaveProperty('isAuthenticated')
     expect(auth).toHaveProperty('user')
@@ -49,7 +49,7 @@ describe('useAuthUI', () => {
   })
 
   it('should return correct auth URLs', () => {
-    const auth = useAuthUI()
+    const auth = useFinalAuth()
 
     expect(auth.getAuthUrl('sign-in')).toBe('/auth/sign-in')
     expect(auth.getAuthUrl('sign-up')).toBe('/auth/sign-up')
@@ -58,14 +58,14 @@ describe('useAuthUI', () => {
   })
 
   it('should handle unknown route types', () => {
-    const auth = useAuthUI()
+    const auth = useFinalAuth()
 
     // @ts-expect-error Testing invalid route type
     expect(auth.getAuthUrl('invalid')).toBeUndefined()
   })
 
   it('should provide sign in/out methods', () => {
-    const auth = useAuthUI()
+    const auth = useFinalAuth()
 
     expect(typeof auth.signIn).toBe('function')
     expect(typeof auth.signUp).toBe('function')
@@ -73,7 +73,7 @@ describe('useAuthUI', () => {
   })
 
   it('should provide social providers functionality', () => {
-    const auth = useAuthUI()
+    const auth = useFinalAuth()
 
     expect(typeof auth.getSocialProviders).toBe('function')
     expect(auth.getSocialProviders()).toEqual([])

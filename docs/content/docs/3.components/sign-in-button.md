@@ -30,7 +30,7 @@ See the component's [API](#api) for how to override these defaults.
 
 ## Authentication State Behavior
 
-The component checks `useAuthUI().isAuthenticated`{lang="ts"} and will:
+The component checks `useFinalAuth().isAuthenticated`{lang="ts"} and will:
 
 - **Render** when no user is signed in
 - **Remove itself from DOM** when a user is authenticated (not just hidden with CSS)

@@ -2,7 +2,7 @@
   <UHeader>
     <template #title>
       <LightstackLogogram202508 class="max-h-4 w-auto" />
-      nuxt-auth-ui
+      nuxt-final-auth
     </template>
     <UNavigationMenu
       class="justify-center w-full"
@@ -39,7 +39,7 @@ const items = computed<NavigationMenuItem[]>(() => [
     icon: 'i-simple-icons-github',
     label: 'GitHub',
     target: '_blank',
-    to: 'https://github.com/lightstack-dev/nuxt-auth-ui',
+    to: 'https://github.com/lightstack-dev/nuxt-final-auth',
   },
 ])
 </script>

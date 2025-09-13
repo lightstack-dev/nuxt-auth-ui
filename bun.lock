@@ -54,7 +54,7 @@
       },
     },
     "playground": {
-      "name": "nuxt-auth-ui-playground",
+      "name": "nuxt-final-auth-playground",
       "dependencies": {
         "@iconify-json/lucide": "^1.2.66",
         "@iconify-json/simple-icons": "^1.2.50",
@@ -1916,7 +1916,7 @@
 
     "nuxt-app": ["nuxt-app@workspace:docs"],
 
-    "nuxt-auth-ui-playground": ["nuxt-auth-ui-playground@workspace:playground"],
+    "nuxt-final-auth-playground": ["nuxt-final-auth-playground@workspace:playground"],
 
     "nuxt-component-meta": ["nuxt-component-meta@0.12.2", "", { "dependencies": { "@nuxt/kit": "^4.0.1", "citty": "^0.1.6", "json-schema-to-zod": "^2.6.1", "mlly": "^1.7.4", "ohash": "^2.0.11", "scule": "^1.3.0", "typescript": "^5.8.3", "ufo": "^1.6.1", "vue-component-meta": "^3.0.3" }, "bin": { "nuxt-component-meta": "bin/nuxt-component-meta.mjs" } }, "sha512-cosF2jUd47TnN7Y8PsRfzdsVomHpVxVjZZIDgyaPqe+wnl2Ys5LXMUt+K3CpXrJrGRFlDRP6ux47Ukevf9juVQ=="],
 

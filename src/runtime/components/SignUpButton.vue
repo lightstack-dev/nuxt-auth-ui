@@ -10,14 +10,14 @@
 </template>
 
 <script setup lang="ts">
-import { computed, useAppConfig, useAuthUI, useI18n } from '#imports'
+import { computed, useAppConfig, useFinalAuth, useI18n } from '#imports'
 
 defineProps<{
   mock?: boolean
   persistent?: boolean
 }>()
 
-const auth = useAuthUI()
+const auth = useFinalAuth()
 const { t } = useI18n()
 const appConfig = useAppConfig()
 

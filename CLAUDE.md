@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-This is a Nuxt module that provides production-ready authentication UI components powered by Logto. It's distributed as an npm package `@lightstack-dev/nuxt-auth-ui`. See [README.md](README.md) for complete project details.
+This is a Nuxt module that provides production-ready authentication UI components powered by Logto. It's distributed as an npm package `@lightstack-dev/nuxt-final-auth`. See [README.md](README.md) for complete project details.
 
 ## Development Commands
 
@@ -75,7 +75,7 @@ The module creates these server endpoints:
 
 ### Configuration
 
-Module options are set in `nuxt.config.ts` under the `authUi` key. See `src/runtime/types/config.ts` for the complete interface.
+Module options are set in `nuxt.config.ts` under the `auth` key. See `src/runtime/types/config.ts` for the complete interface.
 
 ## Code Style
 

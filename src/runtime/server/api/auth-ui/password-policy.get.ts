@@ -46,7 +46,7 @@ export default defineEventHandler(async (event) => {
     if (!response.ok) {
       // Sign-in experience endpoint may require auth in newer Logto versions
       // Return sensible defaults
-      console.info('[nuxt-auth-ui] Using default password policy (Logto sign-in-exp endpoint requires auth)')
+      console.info('[nuxt-final-auth] Using default password policy (Logto sign-in-exp endpoint requires auth)')
       return {
         length: {
           min: 8,

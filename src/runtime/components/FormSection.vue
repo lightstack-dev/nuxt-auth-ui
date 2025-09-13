@@ -27,7 +27,7 @@ const props = defineProps<{
 // Get icon with proper typing
 const icon = computed(() => {
   const iconKey = `auth${props.context.charAt(0).toUpperCase() + props.context.slice(1)}` as 'authSignIn' | 'authSignUp'
-  return appConfig.ui?.icons?.[iconKey]
+  return (appConfig as any).ui?.icons?.[iconKey]
 })
 
 const title = t(`auth.${props.context}`)

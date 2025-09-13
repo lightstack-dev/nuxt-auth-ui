@@ -1,26 +1,26 @@
-import { useRuntimeConfig, navigateTo, useNuxtApp, ref } from '#imports'
+import { useRuntimeConfig, navigateTo, useNuxtApp, ref, type Ref } from '#imports'
 
 export default defineNuxtRouteMiddleware((to) => {
   // Skip middleware on server-side rendering during build/generation
   if (import.meta.server) return
 
   const config = useRuntimeConfig()
-  const authUiConfig = config.public.authUi
+  const authConfig = config.public.auth
 
   // Skip if middleware is completely disabled
-  if (authUiConfig?.middleware === false) return
+  if (!authConfig?.middleware || authConfig.middleware === false) return
 
   // Get middleware config (defaults to protect by default)
-  const middlewareConfig = authUiConfig?.middleware || { protectByDefault: true, exceptionRoutes: [] }
+  const middlewareConfig = typeof authConfig.middleware === 'object' ? authConfig.middleware : { protectByDefault: true, exceptionRoutes: [] }
 
-  const { $logtoAuth } = useNuxtApp()
+  const { $logtoAuth } = useNuxtApp() as { $logtoAuth?: { isAuthenticated: Ref<boolean> } }
   const isAuthenticated = $logtoAuth?.isAuthenticated || ref(false)
 
   // Define auth routes that should be accessible to unauthenticated users
   const publicAuthRoutes = [
-    authUiConfig.routes?.signIn || '/auth/sign-in',
-    authUiConfig.routes?.signUp || '/auth/sign-up',
-    authUiConfig.routes?.passwordReset,
+    authConfig.routes?.signIn || '/auth/sign-in',
+    authConfig.routes?.signUp || '/auth/sign-up',
+    authConfig.routes?.passwordReset,
   ].filter(Boolean) // Remove undefined routes
 
   const currentPath = to.path
@@ -53,7 +53,7 @@ export default defineNuxtRouteMiddleware((to) => {
     // User is authenticated
     if (isAuthRoute) {
       // Redirect authenticated users away from auth pages
-      const redirectTo = authUiConfig.redirects?.afterSignIn || '/'
+      const redirectTo = authConfig.redirects?.afterSignIn || '/'
       if (currentPath !== redirectTo) {
         return navigateTo(redirectTo, { replace: true })
       }
@@ -63,7 +63,7 @@ export default defineNuxtRouteMiddleware((to) => {
     // User is not authenticated
     if (isProtectedRoute) {
       // Redirect unauthenticated users to sign-in
-      const signInRoute = authUiConfig.routes?.signIn || '/auth/sign-in'
+      const signInRoute = authConfig.routes?.signIn || '/auth/sign-in'
       if (currentPath !== signInRoute) {
         // Store the intended destination for after sign-in
         const redirectAfterSignIn = currentPath !== '/' ? `?redirect=${encodeURIComponent(currentPath)}` : ''

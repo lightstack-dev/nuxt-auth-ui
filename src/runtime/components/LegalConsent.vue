@@ -55,9 +55,9 @@ const consentMessage = computed(() => {
 })
 
 const consentItems = computed(() => {
-  // Get legal config from runtime config (nuxt.config.ts authUi.legal)
+  // Get legal config from runtime config (nuxt.config.ts auth.legal)
   const runtimeConfig = useRuntimeConfig()
-  const moduleConfig = (runtimeConfig.public.authUi || {}) as Record<
+  const moduleConfig = (runtimeConfig.public.auth || {}) as Record<
     string,
     unknown
   >
@@ -74,7 +74,7 @@ const consentItems = computed(() => {
       else if (import.meta.dev) {
         // Warn in development about missing legal document configuration
         console.warn(
-          `[nuxt-auth-ui] LegalConsent: Document key "${key}" was requested but not configured in nuxt.config.ts authUi.legal`,
+          `[nuxt-final-auth] LegalConsent: Document key "${key}" was requested but not configured in nuxt.config.ts auth.legal`,
         )
       }
     })

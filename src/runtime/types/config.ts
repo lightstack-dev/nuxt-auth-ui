@@ -4,7 +4,7 @@ export interface SocialProvider {
   icon?: string
 }
 
-export interface AuthUIConfig {
+export interface authConfig {
   routes?: {
     signIn?: string
     signUp?: string

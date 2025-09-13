@@ -1,6 +1,6 @@
 <template>
   <div>
-    <UHeader title="nuxt-auth-ui Playground">
+    <UHeader title="nuxt-final-auth Playground">
       <template #right>
         <ASignInButton variant="ghost" />
         <ASignUpButton />
