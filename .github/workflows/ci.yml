@@ -46,6 +46,12 @@ jobs:
       - name: Install dependencies
         run: bun install
 
+      - name: Prepare playground
+        run: cd playground && bun x nuxi prepare
+
+      - name: Prepare docs
+        run: cd docs && bun x nuxi prepare
+
       - name: Type check
         run: bun run typecheck
 
