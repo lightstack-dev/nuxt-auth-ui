@@ -34,23 +34,24 @@
     "prepare": "nuxt-module-build build --stub && nuxt-module-build prepare",
     "docs:build": "nuxi build docs",
     "docs:generate": "nuxi generate docs",
-    "release": "npm run lint && npm run test && npm run prepack && changelogen --release && npm publish && git push --follow-tags",
+    "release": "bun run lint && bun run test && bun run prepack && changelogen --release && npm publish && git push --follow-tags",
     "lint": "eslint .",
     "lint:module": "eslint src/",
     "lint:docs": "eslint docs/",
     "lint:playground": "eslint playground/",
     "test": "vitest run",
     "test:watch": "vitest watch",
-    "typecheck": "vue-tsc --noEmit && cd playground && vue-tsc --noEmit"
+    "typecheck": "bun run typecheck:playground && bun run typecheck:docs",
+    "typecheck:playground": "cd playground && bun run typecheck",
+    "typecheck:docs": "cd docs && bun run typecheck"
   },
   "dependencies": {
-    "@iconify-json/lucide": "^1.2.66",
-    "@iconify-json/simple-icons": "^1.2.50",
+    "@iconify-json/lucide": "^1.2.67",
+    "@iconify-json/simple-icons": "^1.2.51",
     "@logto/nuxt": "^1.2.6",
-    "@nuxt/kit": "^4.1.1",
+    "@nuxt/kit": "^4.1.2",
     "@nuxt/ui": "^4.0.0-alpha.1",
     "@nuxtjs/i18n": "^10.1.0",
-    "i": "^0.3.7",
     "zod": "^3.25.76"
   },
   "peerDependencies": {
@@ -61,15 +62,15 @@
     "@nuxt/eslint": "1.9.0",
     "@nuxt/eslint-config": "^1.9.0",
     "@nuxt/module-builder": "^1.0.2",
-    "@nuxt/schema": "^4.1.1",
+    "@nuxt/schema": "^4.1.2",
     "@nuxt/test-utils": "^3.19.2",
     "@types/node": "latest",
     "@vue/test-utils": "^2.4.6",
     "changelogen": "^0.6.2",
     "eslint": "^9.35.0",
-    "nuxt": "^4.1.1",
+    "nuxt": "^4.1.2",
     "typescript": "~5.9.2",
     "vitest": "^3.2.4",
-    "vue-tsc": "^3.0.6"
+    "vue-tsc": "^3.0.7"
   }
 }

@@ -1,9 +1,6 @@
-import { useRuntimeConfig, navigateTo, useNuxtApp, ref, type Ref } from '#imports'
+import { useRuntimeConfig, navigateTo, useNuxtApp, ref, useRequestEvent, type Ref } from '#imports'
 
 export default defineNuxtRouteMiddleware((to) => {
-  // Skip middleware on server-side rendering during build/generation
-  if (import.meta.server) return
-
   const config = useRuntimeConfig()
   const authConfig = config.public.auth
 
@@ -13,8 +10,19 @@ export default defineNuxtRouteMiddleware((to) => {
   // Get middleware config (defaults to protect by default)
   const middlewareConfig = typeof authConfig.middleware === 'object' ? authConfig.middleware : { protectByDefault: true, exceptionRoutes: [] }
 
-  const { $logtoAuth } = useNuxtApp() as { $logtoAuth?: { isAuthenticated: Ref<boolean> } }
-  const isAuthenticated = $logtoAuth?.isAuthenticated || ref(false)
+  // Check authentication status
+  let isAuthenticated: boolean | Ref<boolean>
+
+  if (import.meta.server) {
+    // Server-side: check for logtoUser in event context
+    const event = useRequestEvent()
+    isAuthenticated = !!event?.context?.logtoUser
+  }
+  else {
+    // Client-side: use the Nuxt app plugin
+    const { $logtoAuth } = useNuxtApp() as { $logtoAuth?: { isAuthenticated: Ref<boolean> } }
+    isAuthenticated = $logtoAuth?.isAuthenticated || ref(false)
+  }
 
   // Define auth routes that should be accessible to unauthenticated users
   const publicAuthRoutes = [
@@ -23,13 +31,26 @@ export default defineNuxtRouteMiddleware((to) => {
     authConfig.routes?.passwordReset,
   ].filter(Boolean) // Remove undefined routes
 
+  // Define legal routes that should always be public
+  const legalRoutes = [
+    authConfig.legal?.termsOfService,
+    authConfig.legal?.privacyPolicy,
+    authConfig.legal?.cookiePolicy,
+  ].filter(Boolean) as string[] // Remove undefined routes and ensure string array
+
   const currentPath = to.path
 
   // Check if current route is a public auth route
   const isAuthRoute = publicAuthRoutes.includes(currentPath)
 
-  // Get exception routes
-  const exceptionRoutes = middlewareConfig?.exceptionRoutes || []
+  // Check if current route is a legal document route
+  const isLegalRoute = legalRoutes.includes(currentPath)
+
+  // Get exception routes (combine user-defined exceptions with legal routes)
+  const exceptionRoutes = [
+    ...(middlewareConfig?.exceptionRoutes || []),
+    ...legalRoutes, // Automatically include legal routes as exceptions
+  ]
   const isException = exceptionRoutes.some((pattern: string) => {
     if (pattern.includes('*')) {
       const regex = new RegExp('^' + pattern.replace(/\*/g, '.*') + '$')
@@ -41,15 +62,18 @@ export default defineNuxtRouteMiddleware((to) => {
   // Determine if route should be protected based on protectByDefault setting
   let isProtectedRoute: boolean
   if (middlewareConfig.protectByDefault !== false) {
-    // Protect by default: protect everything except auth routes and exceptions
-    isProtectedRoute = !isAuthRoute && !isException
+    // Protect by default: protect everything except auth routes, legal routes, and exceptions
+    isProtectedRoute = !isAuthRoute && !isLegalRoute && !isException
   }
   else {
-    // Don't protect by default: only protect exception routes (not auth routes)
-    isProtectedRoute = !isAuthRoute && isException
+    // Don't protect by default: only protect exception routes (not auth routes or legal routes)
+    isProtectedRoute = !isAuthRoute && !isLegalRoute && isException
   }
 
-  if (isAuthenticated.value) {
+  // Get the authentication value (handle both boolean and Ref)
+  const isAuthenticatedValue = typeof isAuthenticated === 'boolean' ? isAuthenticated : isAuthenticated.value
+
+  if (isAuthenticatedValue) {
     // User is authenticated
     if (isAuthRoute) {
       // Redirect authenticated users away from auth pages

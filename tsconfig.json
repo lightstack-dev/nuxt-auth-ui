@@ -12,7 +12,6 @@
     "sourceMap": true,
     "baseUrl": ".",
     "types": [
-      "@nuxt/types",
       "@nuxt/ui",
       "@types/node"
     ],
@@ -25,7 +24,8 @@
     "dist",
     "node_modules",
     ".nuxt",
-    "playground/.nuxt",
-    "docs/.nuxt"
+    "playground",
+    "docs",
+    "test"
   ]
 }

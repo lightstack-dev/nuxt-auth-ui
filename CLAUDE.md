@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-This is a Nuxt module that provides production-ready authentication UI components powered by Logto. It's distributed as an npm package `@lightstack-dev/nuxt-final-auth`. See [README.md](README.md) for complete project details.
+This is the complete authentication solution for Nuxt applications. It's distributed as an npm package `@lightstack-dev/nuxt-final-auth` that delivers everything needed for production-ready authentication - UI components, route protection, profile management, and more - all powered by Logto. See [README.md](README.md) for complete project details.
 
 ## Development Commands
 
@@ -39,13 +39,14 @@ npm run typecheck
 
 ### Module Structure
 
-- **Main Module**: `src/module.ts` - Nuxt module definition that configures all features
-- **Runtime Components**: `src/runtime/components/` - Vue components (SignInForm, SignUpForm, etc.)
-- **Server API**: `src/runtime/server/api/auth-ui/` - Server endpoints for Logto integration
-- **Composables**: `src/runtime/composables/` - Vue composables for auth UI logic
-- **Pages**: `src/runtime/pages/` - Pre-built auth pages
-- **Locales**: `src/runtime/locales/` - i18n translation files
-- **Types**: `src/runtime/types/` - TypeScript type definitions
+- **Main Module**: `src/module.ts` - Nuxt module definition that configures the complete auth system
+- **Runtime Components**: `src/runtime/components/` - Production-ready auth components (SignInForm, SignUpForm, etc.)
+- **Server API**: `src/runtime/server/api/auth-ui/` - Server endpoints for full Logto integration
+- **Composables**: `src/runtime/composables/` - Vue composables for auth state and logic
+- **Pages**: `src/runtime/pages/` - Complete pre-built auth pages ready to use
+- **Middleware**: `src/runtime/middleware/` - Route protection and auth guards
+- **Locales**: `src/runtime/locales/` - Comprehensive i18n translations
+- **Types**: `src/runtime/types/` - Full TypeScript type definitions
 
 ### Workspace Structure
 
@@ -56,26 +57,38 @@ This is a monorepo with three workspaces (see package.json:8-11):
 
 ### Key Dependencies
 
-- **@nuxt/ui v4**: Component library (auto-installed)
-- **@logto/nuxt**: Authentication provider (peer dependency)
-- **@nuxtjs/i18n**: Internationalization (peer dependency)
+All dependencies are automatically installed with the module:
+- **@nuxt/ui v4**: Component library for beautiful UI
+- **@logto/nuxt**: Authentication provider integration
+- **@nuxtjs/i18n**: Internationalization support
 - **@iconify-json/lucide & simple-icons**: Icon sets
 
-### Component Naming
+### Component System
 
-Components use a configurable prefix (default: 'A'):
-- ASignInForm, ASignUpForm, ASignInButton, ASignUpButton, ASocialProviderButtons
+The module provides a complete set of authentication components using a configurable prefix (default: 'A'):
+- **Forms**: ASignInForm, ASignUpForm - Complete authentication forms with validation
+- **Buttons**: ASignInButton, ASignUpButton - Quick action buttons
+- **Social**: ASocialProviderButtons - Social provider integration
+- **Profile** (coming soon): User menu, profile management, security settings
 
 ### API Endpoints
 
-The module creates these server endpoints:
-- `/api/auth-ui/connectors` - Fetch available social connectors
-- `/api/auth-ui/password-policy` - Get Logto password requirements
-- `/api/auth-ui/register` - Handle user registration
+The module provides a complete authentication API:
+- `/api/auth-ui/connectors` - Social provider discovery and configuration
+- `/api/auth-ui/password-policy` - Dynamic password policy enforcement
+- `/api/auth-ui/register` - Complete user registration flow
+- Additional endpoints coming for profile management, MFA, and account security
 
 ### Configuration
 
-Module options are set in `nuxt.config.ts` under the `auth` key. See `src/runtime/types/config.ts` for the complete interface.
+The module provides comprehensive configuration through `nuxt.config.ts` under the `auth` key, including:
+- Route customization for all auth pages
+- Social provider configuration
+- Legal document links
+- Global route protection with middleware
+- Component prefix customization
+
+See `src/runtime/types/config.ts` for the complete configuration interface.
 
 ## Code Style
 

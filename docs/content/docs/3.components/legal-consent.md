@@ -120,6 +120,10 @@ export default defineNuxtConfig({
 Learn more about configuring legal documents in the [Legal Documents Configuration](/docs/configuration/legal-documents).
 ::
 
+::note
+**Automatic Route Protection**: Legal document routes are automatically excluded from authentication middleware. Your configured legal pages remain publicly accessible even when using `protectByDefault: true`{lang="ts"}. See [Route Protection Middleware](/docs/configuration/middleware#behavior) for details.
+::
+
 ## API
 
 ### Props
