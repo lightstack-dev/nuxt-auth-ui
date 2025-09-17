@@ -11,246 +11,52 @@
 
 Production-ready authentication with beautiful UI and complete profile management for [Nuxt](https://nuxt.com/), powered by [Logto](https://logto.io/).
 
-## Why nuxt-final-auth?
+## Documentation
 
-Every auth solution has critical gaps. Logto has great admin UI but no user profile SDK. Supabase is complex to self-host. Auth0 isn't self-hostable. You always end up building half the solution yourself.
-
-nuxt-final-auth is the **complete** auth solution for Nuxt:
-- ✅ Everything Logto's SDK is missing (password changes, email updates, avatar uploads)
-- ✅ Beautiful, native-feeling UI built with Nuxt UI v4
-- ✅ Zero gaps - sign up, sign in, profile management, MFA, social auth - it's all there
-- ✅ Self-hostable with Logto
-- ✅ Production-ready from day one
+📚 **[View full documentation at nuxt-final-auth.lightstack.dev](https://nuxt-final-auth.lightstack.dev)**
 
 ## Quick Start
 
-Install the module with a single command:
-
 ```bash
+# Install the module
 npm install @lightstack-dev/nuxt-final-auth
 ```
-
-> **Note:** All required dependencies (`@logto/nuxt`, `@nuxtjs/i18n`, and `@nuxt/ui`) are automatically installed.
-
-First, set up your Logto instance following their [official Nuxt guide](https://docs.logto.io/quick-starts/nuxt).
-
-Then add the modules to your Nuxt configuration:
 
 ```typescript
 // nuxt.config.ts
 export default defineNuxtConfig({
   modules: ["@lightstack-dev/nuxt-final-auth"],
-  
-  // Configure i18n (required - the module is auto-installed but needs your locale config)
+
+  // Configure i18n (auto-installed, needs locale config)
   i18n: {
     locales: ["en"],
     defaultLocale: "en",
   },
-  
-  // Optional: Configure auth module
-  auth: {
-    // See configuration docs for all options
-  },
 });
 ```
 
-That's it! You now have:
+That's it! Check the [documentation](https://nuxt-final-auth.lightstack.dev) for configuration options and examples.
 
-- Beautiful sign-in & sign-up pages at `/auth/sign-in` and `/auth/sign-up`
-- Complete authentication forms with social providers
-- Intelligent password validation that adapts to your Logto instance
-- Built-in route protection middleware
-- Full internationalization support
-- Ready-to-use authentication components
+## Key Features
 
-## Features
+- 🎨 **Beautiful UI** - Production-ready components built with Nuxt UI v4
+- 🔐 **Complete Auth** - Sign in, sign up, social providers, password validation
+- 🛡️ **Route Protection** - Automatic middleware with SSR support
+- 🌍 **i18n Ready** - Full internationalization support
+- 📦 **Zero Config** - All dependencies auto-installed
+- 🚀 **TypeScript** - Fully typed for excellent DX
 
-### What You Get Today
-✅ **Complete Auth Forms** - SignInForm & SignUpForm with email verification  
-✅ **Smart Components** - SignInButton, SignUpButton, SocialProviderButtons  
-✅ **Route Protection** - Built-in middleware for global or per-route authentication  
-✅ **Dynamic Password Validation** - Automatically adapts to your Logto instance's password policy  
-✅ **Flexible Sizing** - Configurable size prop (xs/sm/md/lg/xl) that cascades through all components  
-✅ **Full i18n Support** - Built on @nuxtjs/i18n with comprehensive translations  
-✅ **Social Auth** - Auto-detects or configures social providers (Google, GitHub, Microsoft, etc.)  
-✅ **Legal Compliance** - Built-in consent components for terms, privacy, and cookies  
-✅ **Built with Nuxt UI v4** - Automatically themed with your app's design system  
-✅ **TypeScript** - Fully typed with excellent DX  
-✅ **Self-hostable** - Works with any Logto instance
-
-### Coming Soon (The Complete SDK)
-🚧 **Profile Management** - Change passwords, update emails, upload avatars  
-🚧 **Account Security** - MFA setup, backup codes, session management  
-🚧 **Social Accounts** - Link/unlink social providers  
-🚧 **User Components** - User menu, profile pages, account settings
-
-## Components
-
-Drop authentication components anywhere in your app:
-
-```vue
-<template>
-  <!-- Complete sign-in form with social auth -->
-  <ASignInForm />
-  
-  <!-- Sign-up form with email verification -->
-  <ASignUpForm />
-  
-  <!-- Individual buttons -->
-  <ASignInButton />
-  <ASignUpButton />
-  
-  <!-- Social provider buttons -->
-  <ASocialProviderButtons />
-  
-  <!-- Size customization -->
-  <ASignInForm size="lg" />
-  <ASignUpButton size="sm" />
-</template>
-```
-
-## Configuration
-
-Customize everything through module options and app.config:
-
-```typescript
-// nuxt.config.ts
-export default defineNuxtConfig({
-  modules: [
-    "@logto/nuxt",
-    "@nuxtjs/i18n", // Optional but recommended
-    "@lightstack-dev/nuxt-final-auth"
-  ],
-  
-  auth: {
-    // Routes (customizable)
-    routes: {
-      signIn: "/auth/sign-in",
-      signUp: "/auth/sign-up",
-      signOut: "/auth/sign-out",
-      profile: "/auth/profile",
-      passwordReset: "/auth/password-reset",
-    },
-    
-    // Social providers (auto-detected if not specified)
-    socialProviders: ["google", "github", "microsoft"],
-    
-    // Legal documents
-    legal: {
-      termsOfService: "/terms",
-      privacyPolicy: "/privacy",
-      cookiePolicy: "/cookies",
-    },
-    
-    // Component prefix (default: 'A')
-    componentPrefix: "A",
-    
-    // Route protection middleware
-    middleware: {
-      global: true,  // Protect all routes
-      exceptionRoutes: [  // Except these public routes
-        "/",
-        "/about",
-        "/pricing"
-      ]
-    },
-  },
-  
-  // i18n configuration (optional)
-  i18n: {
-    locales: ["en", "es", "fr"],
-    defaultLocale: "en",
-  },
-});
-```
-
-```typescript
-// app.config.ts
-export default defineAppConfig({
-  ui: {
-    // Icon customization
-    icons: {
-      authSignIn: "i-lucide-log-in",
-      authSignUp: "i-lucide-user-plus",
-      authGoogle: "i-simple-icons-google",
-      authGithub: "i-simple-icons-github",
-    },
-  },
-});
-```
-
-## Intelligent Features
-
-### 🎯 Dynamic Password Validation
-
-The SignUpForm automatically fetches and applies your Logto instance's password policy:
-
-- **Smart Loading**: Policy fetched with social providers or lazily on email field focus
-- **Real-time Validation**: Client-side validation matches server requirements
-- **Clear Feedback**: Dynamic error messages in user's language
-- **Zero Configuration**: Works out of the box with any Logto instance
-
-### 🌍 Full i18n Support
-
-Built on @nuxtjs/i18n with comprehensive translations:
-
-```vue
-<template>
-  <!-- Automatically uses user's locale -->
-  <ASignInForm />
-  
-  <!-- All messages are translatable -->
-  <ASignUpForm :legal="['termsOfService', 'privacyPolicy']" />
-</template>
-```
-
-### 📏 Flexible Sizing
-
-All components support size customization that cascades to child elements:
-
-```vue
-<template>
-  <!-- Extra large forms for desktop -->
-  <ASignInForm size="xl" />
-  
-  <!-- Compact buttons for mobile -->
-  <ASignUpButton size="sm" />
-</template>
-```
 
 ## Requirements
 
 - Nuxt 4.x
 - A Logto instance (cloud or self-hosted)
 
-## Development
+## Links
 
-<details>
-  <summary>Local development</summary>
-  
-  ```bash
-  # Install dependencies
-  npm install
-  
-  # Develop with the playground
-  npm run dev
-  
-  # Develop with the docs
-  npm run dev:docs
-  
-  # Run ESLint
-  npm run lint
-  
-  # Run tests
-  npm run test
-  
-  # Run type checks
-  npm run typecheck
-  ```
-  
-  See `package.json` for all available scripts.
-
-</details>
+- 📚 [Documentation](https://nuxt-final-auth.lightstack.dev)
+- 🐛 [Report Issues](https://github.com/lightstack-dev/nuxt-final-auth/issues)
+- 💡 [Discussions](https://github.com/lightstack-dev/nuxt-final-auth/discussions)
 
 ## License
 

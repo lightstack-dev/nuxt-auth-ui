@@ -8,7 +8,7 @@ The SignUpButton component provides a simple, pre-configured registration entry 
 ## Basic Usage and Defaults
 
 ::code-preview
-::a-sign-up-button{mock}
+::a-sign-up-button
 ::
 
 #code
@@ -50,7 +50,7 @@ To keep the button visible regardless of authentication state, use the `persiste
 Use the `label` prop or `default` slot to override the button's text:
 
 ::code-preview
-::a-sign-up-button{label="Create Account" mock}
+::a-sign-up-button{label="Create Account"}
 ::
 
 #code
@@ -84,7 +84,7 @@ export default defineAppConfig({
 Remove or change the leading icon _for a single SignInButton_:
 
 ::code-preview
-::a-sign-up-button{:leading-icon="undefined" mock}
+::a-sign-up-button{:leading-icon="undefined"}
 ::
 
 #code
@@ -96,7 +96,7 @@ Remove or change the leading icon _for a single SignInButton_:
 ::
 
 ::code-preview
-::a-sign-up-button{leading-icon="i-lucide-user-plus-2" mock}
+::a-sign-up-button{leading-icon="i-lucide-user-plus-2"}
 ::
 
 #code
@@ -112,7 +112,7 @@ Remove or change the leading icon _for a single SignInButton_:
 The SignUpButton is based on [Nuxt UI's `UButton`](https://ui4.nuxt.com/docs/components/button), so you can use any of its style props, for example:
 
 ::code-preview
-::a-sign-up-button{color="success" label="Get Started Free" size="xl" mock variant="subtle"}
+::a-sign-up-button{color="success" label="Get Started Free" size="xl" variant="subtle"}
 ::
 
 #code
@@ -124,16 +124,6 @@ The SignUpButton is based on [Nuxt UI's `UButton`](https://ui4.nuxt.com/docs/com
 ```
 ::
 
-### Mock Mode
-
-Enable mock mode for documentation, testing, or demos:
-
-```vue
-<ASignUpButton mock />
-```
-
-In mock mode, clicking the button doesn't trigger navigation (like all buttons on this page).
-
 ## API
 
 The component extends [Nuxt UI's `UButton`](https://ui4.nuxt.com/docs/components/button) with the following settings:
@@ -144,7 +134,6 @@ The component extends [Nuxt UI's `UButton`](https://ui4.nuxt.com/docs/components
 | -------------- | ------------------------------------- | --------------------------------------- | --------------------------------------------------------------------------------------------------- |
 | `label`        | `string`{lang="ts-type"}              | `'Sign Up'`{lang="vue-html"}            | Button text label, configurable via [`messages.signUp`{lang="ts"}](/docs/configuration#messages)    |
 | `leading-icon` | `string \| undefined`{lang="ts-type"} | `'i-lucide-user-plus'`{lang="vue-html"} | Icon shown before text, configurable via [`icons.authSignUp`{lang="ts"}](/docs/configuration#icons) |
-| `mock`         | `boolean`{lang="ts-type"}             | `'false'`{lang="vue-html"}              | Enable mock mode for documentation/testing                                                          |
 | `persistent`   | `boolean`{lang="ts-type"}             | `'false'`{lang="vue-html"}              | Keep button visible when user is authenticated                                                      |
 | `to`           | `string`{lang="ts-type"}              | `'/auth/sign-up'`{lang="vue-html"}      | Navigation destination, configurable via [`routes.signUp`{lang="ts"}](/docs/configuration#routes)   |
 

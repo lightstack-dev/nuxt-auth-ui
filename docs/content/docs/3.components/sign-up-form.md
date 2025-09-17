@@ -8,7 +8,7 @@ The SignUpForm component provides a complete registration flow with social provi
 ## Basic Usage and Defaults
 
 ::code-preview
-::a-sign-up-form{mock}
+::a-sign-up-form
 ::
 
 #code
@@ -69,7 +69,7 @@ By default, the sign-up form includes the [SocialProviderButtons component](/doc
 With the `:social="false"`{lang="vue-html"} prop, you can remove social providers from a SignUpForm (even though some might be configured in Nuxt or Logto):
 
 ::code-preview
-::a-sign-up-form{mock :social="false"}
+::a-sign-up-form{:social="false"}
 ::
 
 #code
@@ -88,7 +88,7 @@ To only use social provider buttons without the rest of the sign-up form, use th
 By default, the form includes a [SignInButton](/docs/components/sign-up-button) for new users, displayed in the same row as the sign-up button. This secondary action button can be removed with the `:secondary="false"`{lang="vue-html"} prop:
 
 ::code-preview
-::a-sign-up-form{mock :secondary="false"}
+::a-sign-up-form{:secondary="false"}
 ::
 
 #code
@@ -104,14 +104,14 @@ By default, the form includes a [SignInButton](/docs/components/sign-up-button) 
 After successful registration, the form automatically shows a verification code input:
 
 ::code-preview
-::a-sign-up-form{mock="verification"}
+::a-sign-up-form
 ::
 
 #code
 
 ```vue
-<!-- Start directly in verification step (for demos/documentation) -->
-<ASignUpForm mock="verification" />
+<!-- Verification step is shown after successful registration -->
+<ASignUpForm />
 ```
 ::
 
@@ -130,7 +130,7 @@ The verification step can be controlled programmatically using the exposed `show
 Control the size of form inputs and buttons using the `size` prop. This cascades to all interactive elements including input fields, buttons, and the verification PIN input:
 
 ::code-preview
-::a-sign-up-form{mock size="xl"}
+::a-sign-up-form{size="xl"}
 ::
 
 #code
@@ -163,32 +163,6 @@ Disable autofocus with the `:autofocus="false"`{lang="vue-html"} prop to prevent
 ```
 
 During the verification step, the PIN input automatically receives focus for immediate code entry.
-
-Autofocus is automatically disabled in mock mode to prevent unwanted focus during demos.
-
-### Mock Mode
-
-Enable mock mode for documentation, testing, or demos:
-
-```vue
-<!-- Basic mock mode -->
-<ASignUpForm mock />
-
-<!-- Start directly in verification step -->
-<ASignUpForm mock="verification" />
-```
-
-In mock mode:
-
-- Form submissions simulate registration without API calls
-- Verification flow shows without sending emails
-- Social buttons animate without redirecting
-- Console logs display submitted data
-- Autofocus is disabled to prevent unwanted focus during demos
-
-The `mock="verification"`{lang="vue-html"} variant starts the form directly in the verification step, useful for showcasing the verification UI without going through registration first.
-
-Perfect for showcasing UI without backend setup (like for all forms on this page)!
 
 ### Error Recovery & Flow Control
 
@@ -238,7 +212,6 @@ The component extends [Nuxt UI's `UForm`](https://ui4.nuxt.com/docs/components/f
 | ----------- | ------------------------------------------------------ | ---------------------------------------------- | ------------------------------------------------------------------------------- |
 | `autofocus` | `boolean`{lang="ts-type"}                              | `'true'`{lang="vue-html"}                      | Auto-focus the email field on mount                                             |
 | `class`     | `string \| undefined`{lang="ts-type"}                  | `'max-w-md space-y-6 w-full'`{lang="vue-html"} | Basic spacing and width for the sign-up form                                    |
-| `mock`      | `boolean \| 'verification'`{lang="ts-type"}            | `'false'`{lang="vue-html"}                     | Enable mock mode. Use `'verification'`{lang="vue-html"} to start in verify step |
 | `secondary` | `boolean`{lang="ts-type"}                              | `'true'`{lang="vue-html"}                      | Show sign-in button for existing users                                          |
 | `size`      | `'xs' \| 'sm' \| 'md' \| 'lg' \| 'xl'`{lang="ts-type"} | `''md''`{lang="vue-html"}                      | Size of form inputs and buttons                                                 |
 | `social`    | `boolean`{lang="ts-type"}                              | `'true'`{lang="vue-html"}                      | Show social provider buttons                                                    |

@@ -1,8 +1,5 @@
 export default defineNuxtConfig({
   modules: [
-    '@nuxt/ui',
-    '@logto/nuxt',
-    '@nuxtjs/i18n',
     '../src/module',
   ],
 
@@ -22,9 +19,6 @@ export default defineNuxtConfig({
       termsOfService: '/terms',
       privacyPolicy: '/privacy',
       cookiePolicy: '/cookies',
-    },
-    middleware: {
-      protectByDefault: true,
     },
   },
 

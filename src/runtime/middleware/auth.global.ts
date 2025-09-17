@@ -28,7 +28,7 @@ export default defineNuxtRouteMiddleware((to) => {
   const publicAuthRoutes = [
     authConfig.routes?.signIn || '/auth/sign-in',
     authConfig.routes?.signUp || '/auth/sign-up',
-    authConfig.routes?.passwordReset,
+    authConfig.routes?.reset,
   ].filter(Boolean) // Remove undefined routes
 
   // Define legal routes that should always be public

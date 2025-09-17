@@ -2,8 +2,8 @@
   <UContainer>
     <UPage>
       <UPageHeader
-        :title="page?.title"
-        :description="page?.description"
+        :title="m(page?.title)"
+        :description="m(page?.description)"
       />
       <UPageBody>
         <ContentRenderer
@@ -28,6 +28,7 @@
 <script setup lang="ts">
 const route = useRoute()
 const { t } = useI18n({ useScope: 'local' })
+const { m } = useMarkdown()
 
 const { data: page } = await useAsyncData(route.path, () => {
   return queryCollection('docs')

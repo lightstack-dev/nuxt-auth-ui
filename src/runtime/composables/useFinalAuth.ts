@@ -22,9 +22,9 @@ export function useFinalAuth() {
   // useLogtoUser is auto-imported by Logto module in the consuming app
   let logtoUser: LogtoUser | null = null
   try {
-    // Check if useLogtoUser exists (it's provided by @logto/nuxt at runtime)
+    // Check if useLogtoUser exists (it's auto-imported by @logto/nuxt when not in mock mode)
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-ignore
+    // @ts-ignore - useLogtoUser may not exist when mock mode is enabled
     logtoUser = typeof useLogtoUser !== 'undefined' ? useLogtoUser() : null
   }
   catch {
@@ -182,13 +182,13 @@ export function useFinalAuth() {
     await navigateTo('/sign-out')
   }
 
-  const getAuthUrl = (type: 'sign-in' | 'sign-up' | 'profile' | 'password-reset') => {
+  const getAuthUrl = (type: 'sign-in' | 'sign-up' | 'profile' | 'reset') => {
     const routes = config.routes || {
       signIn: '/auth/sign-in',
       signUp: '/auth/sign-up',
       signOut: '/auth/sign-out',
       profile: '/auth/profile',
-      passwordReset: '/auth/password-reset',
+      reset: '/auth/reset',
     }
 
     switch (type) {
@@ -198,8 +198,8 @@ export function useFinalAuth() {
         return routes.signUp || '/auth/sign-up'
       case 'profile':
         return routes.profile || '/auth/profile'
-      case 'password-reset':
-        return routes.passwordReset || '/auth/password-reset'
+      case 'reset':
+        return routes.reset || '/auth/reset'
     }
   }
 

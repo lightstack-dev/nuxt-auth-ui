@@ -13,13 +13,16 @@
 import { computed, useAppConfig, useFinalAuth, useI18n } from '#imports'
 
 defineProps<{
-  mock?: boolean
   persistent?: boolean
 }>()
 
 const auth = useFinalAuth()
 const { t } = useI18n()
 const appConfig = useAppConfig()
+const config = useRuntimeConfig()
+
+// Check if in mock mode
+const mock = config.public.auth?.mock ?? false
 
 // Get icon with proper typing
 const signUpIcon = computed(() => {

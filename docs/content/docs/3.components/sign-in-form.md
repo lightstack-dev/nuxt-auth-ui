@@ -8,7 +8,7 @@ The SignInForm component provides a complete authentication form with social pro
 ## Basic Usage and Defaults
 
 ::code-preview
-::a-sign-in-form{mock}
+::a-sign-in-form
 ::
 
 #code
@@ -44,7 +44,7 @@ By default, the sign-in form includes the [SocialProviderButtons component](/doc
 With the `:social="false"`{lang="vue-html"} prop, you can remove social providers from a SignInForm (even though some might be configured in Nuxt or Logto):
 
 ::code-preview
-::a-sign-in-form{mock :social="false"}
+::a-sign-in-form{:social="false"}
 ::
 
 #code
@@ -63,7 +63,7 @@ To only use social provider buttons without the rest of the sign-in form, use th
 By default, the form includes a [SignUpButton](/docs/components/sign-up-button) for new users, displayed in the same row as the sign-in button. This secondary action button can be removed with the `:secondary="false"`{lang="vue-html"} prop:
 
 ::code-preview
-::a-sign-in-form{mock :social="false" :secondary="false"}
+::a-sign-in-form{:social="false" :secondary="false"}
 ::
 
 #code
@@ -85,7 +85,7 @@ Icons for these buttons can be customized via [`ui.icons` key in `app.config.ts`
 Control the size of form inputs and buttons using the `size` prop. This cascades to all interactive elements including input fields, buttons, checkboxes, and social provider buttons:
 
 ::code-preview
-::a-sign-in-form{mock size="xl"}
+::a-sign-in-form{size="xl"}
 ::
 
 #code
@@ -110,25 +110,6 @@ By default, the email field receives focus when the form mounts, making it ready
 <ASignUpForm :autofocus="false" />
 ```
 
-::note
-Autofocus is automatically disabled in mock mode to prevent unwanted focus during demos.
-::
-
-### Mock Mode
-
-Enable mock mode for documentation, testing, or demos:
-
-```vue
-<ASignInForm mock />
-```
-
-In mock mode:
-
-- Form submissions show loading states without API calls
-- Social buttons animate without redirecting
-- Console logs display submitted data
-
-Perfect for showcasing UI without backend setup (like for all forms on this page)!
 
 ### Hackability
 
@@ -144,7 +125,6 @@ The component extends [Nuxt UI's `UForm`](https://ui4.nuxt.com/docs/components/f
 | ----------- | ------------------------------------------------------ | ---------------------------------------------- | ---------------------------------------------------------- |
 | `autofocus` | `boolean`{lang="ts-type"}                              | `'true'`{lang="vue-html"}                      | Auto-focus the email field on mount         |
 | `class`     | `string \| undefined`{lang="ts-type"}                  | `'max-w-md space-y-6 w-full'`{lang="vue-html"} | Basic spacing and width for the sign-in form |
-| `mock`      | `boolean`{lang="ts-type"}                              | `'false'`{lang="vue-html"}                     | Enable mock mode for documentation/testing  |
 | `secondary` | `boolean`{lang="ts-type"}                              | `'true'`{lang="vue-html"}                      | Show sign-up button for new users           |
 | `size`      | `'xs' \| 'sm' \| 'md' \| 'lg' \| 'xl'`{lang="ts-type"} | `'md'`{lang="vue-html"}                        | Size of form inputs and buttons                            |
 | `social`    | `boolean`{lang="ts-type"}                              | `'true'`{lang="vue-html"}                      | Show social provider buttons                               |

@@ -23,12 +23,10 @@ import { useI18n, useFinalAuth, useAppConfig } from '#imports'
 import type { SocialProvider } from '../types/config'
 
 // Define props
-const props = withDefaults(defineProps<{
-  mock?: boolean
+withDefaults(defineProps<{
   loading?: boolean
   size?: 'xs' | 'sm' | 'md' | 'lg' | 'xl'
 }>(), {
-  mock: false,
   loading: false,
   size: 'md',
 })
@@ -42,6 +40,10 @@ const emit = defineEmits<{
 const { t } = useI18n()
 const auth = useFinalAuth()
 const appConfig = useAppConfig()
+const config = useRuntimeConfig()
+
+// Check if in mock mode
+const mock = config.public.auth?.mock ?? false
 
 // Reactive state
 const loadingProvider = ref<string | null>(null)
@@ -67,7 +69,7 @@ const providers = computed<SocialProvider[]>(() => {
 const handleSocialAction = async (provider: SocialProvider) => {
   loadingProvider.value = provider.name
 
-  if (props.mock) {
+  if (mock) {
     // In mock mode, just show a loading state briefly
     setTimeout(() => {
       loadingProvider.value = null

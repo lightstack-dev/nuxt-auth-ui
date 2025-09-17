@@ -8,7 +8,7 @@ The SocialProviderButtons component provides a set of social authentication butt
 ## Basic Usage
 
 ::code-preview
-::a-social-provider-buttons{mock}
+::a-social-provider-buttons
 ::
 
 #code
@@ -39,7 +39,7 @@ Please refer to the [Social Providers Configuration](/docs/configuration/social-
 Control the size of social provider buttons using the `size` prop:
 
 ::code-preview
-::a-social-provider-buttons{mock size="xl"}
+::a-social-provider-buttons{size="xl"}
 ::
 
 #code
@@ -52,26 +52,12 @@ Control the size of social provider buttons using the `size` prop:
 
 Available sizes: `'xs'`{lang="vue-html"}, `'sm'`{lang="vue-html"}, `'md'`{lang="vue-html"} (default), `'lg'`{lang="vue-html"}, `'xl'`{lang="vue-html"}.
 
-### Mock Mode
-
-Enable mock mode for documentation, testing, or demos:
-
-```vue
-<ASocialProviderButtons mock />
-```
-
-In mock mode:
-
-- Buttons show loading states without redirecting
-- Console logs display clicked provider information
-- Perfect for showcasing UI without backend setup (like in this documentation)
-
 ## Custom Event Handling
 
 The `@click` event fires **before** redirecting to the social provider:
 
 ::code-preview
-::a-social-provider-buttons{mock}
+::a-social-provider-buttons
 ::
 
 #code
@@ -101,7 +87,6 @@ const handleProviderClick = (provider) => {
 | --------- | ------------------------------------------------------ | ------------------------------ | ------------------------------------------ |
 | `class`   | `string \| undefined`{lang="ts-type"}                  | `'space-y-3'`{lang="vue-html"} | Basic spacing between the buttons          |
 | `loading` | `boolean`{lang="ts-type"}                              | `'false'`{lang="vue-html"}     | Show loading state on all buttons          |
-| `mock`    | `boolean`{lang="ts-type"}                              | `'false'`{lang="vue-html"}     | Enable mock mode for documentation/testing |
 | `size`    | `'xs' \| 'sm' \| 'md' \| 'lg' \| 'xl'`{lang="ts-type"} | `''md''`{lang="vue-html"}      | Size of the social provider buttons        |
 
 ### Events

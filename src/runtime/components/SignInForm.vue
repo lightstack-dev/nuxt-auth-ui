@@ -9,7 +9,6 @@
     <SocialProviderButtons
       v-if="social"
       :loading="loading"
-      :mock="mock"
       :size="size"
       @click="handleSocialSignIn"
     />
@@ -72,7 +71,6 @@
       <SignUpButton
         v-if="secondary"
         block
-        :mock="mock"
         :size="size"
         variant="ghost"
       />
@@ -99,16 +97,14 @@ import SignUpButton from './SignUpButton.vue'
 import SocialProviderButtons from './SocialProviderButtons.vue'
 
 // Define props
-const props = withDefaults(
+withDefaults(
   defineProps<{
-    mock?: boolean
     social?: boolean
     secondary?: boolean
     autofocus?: boolean
     size?: 'xs' | 'sm' | 'md' | 'lg' | 'xl'
   }>(),
   {
-    mock: false,
     secondary: true,
     social: true,
     autofocus: true,
@@ -125,6 +121,10 @@ const emit = defineEmits<{
 // Composables
 const { t } = useI18n()
 const auth = useFinalAuth()
+const config = useRuntimeConfig()
+
+// Check if in mock mode
+const mock = config.public.auth?.mock ?? false
 
 // Reactive state
 const loading = ref(false)
@@ -139,7 +139,7 @@ const state = ref<SignInFormData>({
 
 // Computed
 const forgotPasswordUrl = computed(() => {
-  return auth.getAuthUrl('password-reset')
+  return auth.getAuthUrl('reset')
 })
 
 // Get social providers for separator display
@@ -150,7 +150,7 @@ const socialProviders = computed<SocialProvider[]>(() => {
 // Methods
 const onSubmit = async (event: { data: SignInFormData }) => {
   const data = event.data
-  if (props.mock) {
+  if (mock) {
     // In mock mode, just show a success state briefly
     loading.value = true
     setTimeout(() => {
