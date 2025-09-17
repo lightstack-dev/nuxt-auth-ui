@@ -23,6 +23,7 @@ export function useFinalAuth() {
   let logtoUser: LogtoUser | null = null
   try {
     // Check if useLogtoUser exists (it's auto-imported by @logto/nuxt when not in mock mode)
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore - useLogtoUser may not exist when mock mode is enabled
     logtoUser = typeof useLogtoUser !== 'undefined' ? useLogtoUser() : null
   }

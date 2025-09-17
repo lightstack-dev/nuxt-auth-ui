@@ -139,7 +139,7 @@ const state = ref<SignInFormData>({
 
 // Computed
 const forgotPasswordUrl = computed(() => {
-  return auth.getAuthUrl('password-reset')
+  return auth.getAuthUrl('reset')
 })
 
 // Get social providers for separator display
