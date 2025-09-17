@@ -11,7 +11,7 @@ export interface authConfig {
     signUp?: string
     signOut?: string
     profile?: string
-    passwordReset?: string
+    reset?: string
   }
   componentPrefix?: string
   redirects?: {
@@ -38,7 +38,7 @@ export interface ResolvedAuthConfig {
     signUp: string
     signOut: string
     profile: string
-    passwordReset?: string
+    reset: string
   }
   componentPrefix: string
   redirects: {

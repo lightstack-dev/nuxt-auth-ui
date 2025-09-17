@@ -105,6 +105,19 @@ ESLint configuration (eslint.config.mjs:10-14):
 - Single quotes
 - Vue multi-word component names disabled for docs/ and playground/
 
+## TypeScript Best Practices
+
+### Module Type Generation
+- Use `addTypeTemplate()` in `src/module.ts` for runtime config types, NOT manual `.d.ts` files
+- Manual type files get overwritten by Nuxt's auto-generation
+- All runtime config properties must be declared in the type template
+
+### Type Safety Guidelines  
+- Avoid `any` type assertions - use proper defaults and targeted assertions instead
+- Use `@ts-ignore` sparingly and only for legitimate cases (e.g., conditional imports)
+- Prefer `@ts-expect-error` for intentional type violations in tests
+- Always run `bun run typecheck` before commits
+
 ## Testing Approach
 
 - Test framework: Vitest

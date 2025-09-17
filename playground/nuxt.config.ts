@@ -20,9 +20,6 @@ export default defineNuxtConfig({
       privacyPolicy: '/privacy',
       cookiePolicy: '/cookies',
     },
-    middleware: {
-      protectByDefault: true,
-    },
   },
 
   i18n: {

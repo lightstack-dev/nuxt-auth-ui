@@ -54,7 +54,7 @@ describe('useFinalAuth', () => {
     expect(auth.getAuthUrl('sign-in')).toBe('/auth/sign-in')
     expect(auth.getAuthUrl('sign-up')).toBe('/auth/sign-up')
     expect(auth.getAuthUrl('profile')).toBe('/auth/profile')
-    expect(auth.getAuthUrl('password-reset')).toBe('/auth/password-reset')
+    expect(auth.getAuthUrl('reset')).toBe('/auth/reset')
   })
 
   it('should handle unknown route types', () => {

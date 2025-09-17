@@ -1,4 +1,4 @@
-import { defineNuxtModule, addPlugin, addImports, addComponent, addTemplate, createResolver, extendPages, addServerHandler, addRouteMiddleware, hasNuxtModule, installModule } from '@nuxt/kit'
+import { defineNuxtModule, addPlugin, addImports, addComponent, addTemplate, addTypeTemplate, createResolver, extendPages, addServerHandler, addRouteMiddleware, hasNuxtModule, installModule } from '@nuxt/kit'
 import type { authConfig, ResolvedAuthConfig } from './runtime/types/config'
 
 export default defineNuxtModule<authConfig>({
@@ -14,6 +14,7 @@ export default defineNuxtModule<authConfig>({
       signUp: '/auth/sign-up',
       signOut: '/auth/sign-out',
       profile: '/auth/profile',
+      reset: '/auth/reset',
     },
     componentPrefix: 'A',
     redirects: {
@@ -60,7 +61,7 @@ export default defineNuxtModule<authConfig>({
         signUp: options.routes?.signUp || '/auth/sign-up',
         signOut: options.routes?.signOut || '/auth/sign-out',
         profile: options.routes?.profile || '/auth/profile',
-        passwordReset: options.routes?.passwordReset,
+        reset: options.routes?.reset || '/auth/reset',
       },
       componentPrefix: options.componentPrefix || 'A',
       redirects: {
@@ -79,9 +80,14 @@ export default defineNuxtModule<authConfig>({
     }
 
     // Add runtime config
+    // NOTE: Runtime config is properly typed via addTypeTemplate for consuming applications
     nuxt.options.runtimeConfig = nuxt.options.runtimeConfig || { public: {} }
     nuxt.options.runtimeConfig.public = nuxt.options.runtimeConfig.public || {}
-    nuxt.options.runtimeConfig.public.auth = resolvedOptions
+    // Runtime config assignment with type assertion
+    // This is needed because Nuxt's runtime config type inference expects concrete types,
+    // but our ResolvedAuthConfig contains union types (e.g., middleware: false | object).
+    // The runtime values are safe, and consumers get proper types via our addTypeTemplate.
+    nuxt.options.runtimeConfig.public.auth = resolvedOptions as typeof nuxt.options.runtimeConfig.public.auth
 
     // Use i18n:registerModule hook to provide our translations
     // This is the official way for modules to provide translations in i18n v8+
@@ -107,7 +113,8 @@ export default defineNuxtModule<authConfig>({
     ])
 
     // Add type declarations using best practice for module authors
-    addTemplate({
+    // This generates types at runtime for consuming apps
+    addTypeTemplate({
       filename: 'types/auth-ui.d.ts',
       getContents: () => `
 declare module '@nuxt/schema' {
@@ -140,23 +147,23 @@ declare module '@nuxt/schema' {
   interface RuntimeConfig {
     public: {
       auth?: {
-        mock?: boolean
-        routes?: {
-          signIn?: string
-          signUp?: string
-          signOut?: string
-          profile?: string
-          passwordReset?: string
+        mock: boolean
+        routes: {
+          signIn: string
+          signUp: string
+          signOut: string
+          profile: string
+          reset: string
         }
-        componentPrefix?: string
-        redirects?: {
-          afterSignIn?: string
-          afterSignOut?: string
+        componentPrefix: string
+        redirects: {
+          afterSignIn: string
+          afterSignOut: string
         }
-        middleware?: false | {
-          protectByDefault?: boolean
-          name?: string
-          exceptionRoutes?: string[]
+        middleware: false | {
+          protectByDefault: boolean
+          name: string
+          exceptionRoutes: string[]
         }
         legal?: {
           termsOfService?: string

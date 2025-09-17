@@ -34,7 +34,7 @@ export const signUpSchema = z.object({
 })
 
 // Password reset schema
-export const passwordResetSchema = z.object({
+export const resetSchema = z.object({
   email: z
     .string()
     .min(1, 'Email is required')
@@ -44,4 +44,4 @@ export const passwordResetSchema = z.object({
 // Type exports
 export type SignInFormData = z.infer<typeof signInSchema>
 export type SignUpFormData = z.infer<typeof signUpSchema>
-export type PasswordResetFormData = z.infer<typeof passwordResetSchema>
+export type ResetFormData = z.infer<typeof resetSchema>
