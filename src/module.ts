@@ -172,7 +172,7 @@ declare module '@nuxt/schema' {
 }
 
 export {}
-      `
+      `,
     })
 
     addComponent({
