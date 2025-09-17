@@ -42,7 +42,7 @@ const { t } = useI18n()
 const config = useRuntimeConfig()
 
 // Check if in mock mode
-const mock = config.public.auth?.mock === true
+const mock = config.public.auth?.mock ?? false
 
 // Computed properties
 const consentMessage = computed(() => {

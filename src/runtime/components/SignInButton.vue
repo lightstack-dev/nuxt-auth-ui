@@ -22,7 +22,7 @@ const appConfig = useAppConfig()
 const config = useRuntimeConfig()
 
 // Check if in mock mode
-const mock = config.public.auth?.mock === true
+const mock = config.public.auth?.mock ?? false
 
 // Get icon with proper typing
 const signInIcon = computed(() => {

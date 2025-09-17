@@ -1,4 +1,4 @@
-import { defineNuxtModule, addPlugin, addImports, addComponent, addTypeTemplate, createResolver, extendPages, addServerHandler, addRouteMiddleware, hasNuxtModule, installModule } from '@nuxt/kit'
+import { defineNuxtModule, addPlugin, addImports, addComponent, addTypeTemplate, createResolver, extendPages, addServerHandler, addRouteMiddleware, hasNuxtModule, installModule, useLogger } from '@nuxt/kit'
 import type { authConfig, ResolvedAuthConfig } from './runtime/types/config'
 
 export default defineNuxtModule<authConfig>({
@@ -29,6 +29,17 @@ export default defineNuxtModule<authConfig>({
   },
   async setup(options, nuxt) {
     const resolver = createResolver(import.meta.url)
+    const logger = useLogger('@lightstack-dev/nuxt-final-auth')
+
+    // Validate configuration
+    if (typeof options.mock !== 'boolean') {
+      throw new TypeError('auth.mock must be a boolean value')
+    }
+
+    // Warn about mock mode in production
+    if (options.mock && process.env.NODE_ENV === 'production') {
+      logger.warn('Mock mode is enabled in production environment')
+    }
 
     // Auto-install required modules
     if (!hasNuxtModule('@nuxtjs/i18n')) {

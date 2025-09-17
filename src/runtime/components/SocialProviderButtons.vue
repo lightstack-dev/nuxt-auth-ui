@@ -43,7 +43,7 @@ const appConfig = useAppConfig()
 const config = useRuntimeConfig()
 
 // Check if in mock mode
-const mock = config.public.auth?.mock === true
+const mock = config.public.auth?.mock ?? false
 
 // Reactive state
 const loadingProvider = ref<string | null>(null)
