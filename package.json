@@ -46,8 +46,6 @@
     "typecheck:docs": "cd docs && bun run typecheck"
   },
   "dependencies": {
-    "@iconify-json/lucide": "^1.2.67",
-    "@iconify-json/simple-icons": "^1.2.51",
     "@logto/nuxt": "^1.2.6",
     "@nuxt/kit": "^4.1.2",
     "@nuxt/ui": "^4.0.0-alpha.1",
@@ -58,6 +56,8 @@
     "nuxt": "^4.0.0"
   },
   "devDependencies": {
+    "@iconify-json/lucide": "^1.2.68",
+    "@iconify-json/simple-icons": "^1.2.52",
     "@nuxt/devtools": "^2.6.3",
     "@nuxt/eslint": "1.9.0",
     "@nuxt/eslint-config": "^1.9.0",

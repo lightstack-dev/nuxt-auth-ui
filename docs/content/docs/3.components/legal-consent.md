@@ -8,7 +8,7 @@ The LegalConsent component displays consent messages and links to legal document
 ## Basic Usage and Defaults
 
 ::code-preview
-::a-legal-consent{mock}
+::a-legal-consent
 ::
 
 #code
@@ -35,7 +35,7 @@ See the component's [API](#api) for how to override these defaults.
 The component displays different consent messages based on the context:
 
 ::code-preview
-::a-legal-consent{mock context="signUp"}
+::a-legal-consent{context="signUp"}
 ::
 
 #code
@@ -47,7 +47,7 @@ The component displays different consent messages based on the context:
 ::
 
 ::code-preview
-::a-legal-consent{mock context="signIn"}
+::a-legal-consent{context="signIn"}
 ::
 
 #code
@@ -63,7 +63,7 @@ The component displays different consent messages based on the context:
 Control which legal documents to show:
 
 ::code-preview
-::a-legal-consent{mock :legal='["privacyPolicy"]'}
+::a-legal-consent{:legal='["privacyPolicy"]'}
 ::
 
 #code
@@ -75,7 +75,7 @@ Control which legal documents to show:
 ::
 
 ::code-preview
-::a-legal-consent{mock :legal='["termsOfService", "privacyPolicy"]'}
+::a-legal-consent{:legal='["termsOfService", "privacyPolicy"]'}
 ::
 
 #code
@@ -89,16 +89,6 @@ Control which legal documents to show:
 ::note
 If you specify documents that aren't configured in your `nuxt.config.ts`, they will be filtered out with a console warning in development. If none of the specified documents exist, the component won't render.
 ::
-
-### Mock Mode
-
-Enable mock mode for documentation, testing, or demos:
-
-```vue
-<ALegalConsent mock />
-```
-
-In mock mode, clicking links doesn't navigate (like all examples on this page).
 
 ## Configuration
 
@@ -132,7 +122,6 @@ Learn more about configuring legal documents in the [Legal Documents Configurati
 | --------- | --------------------------------------------- | ----------------------------- | ------------------------------------------------------------------------ |
 | `context` | `'signIn' \| 'signUp' \| 'general'`{lang="ts-type"} | `'general'`{lang="vue-html"}  | Determines which consent message to display                             |
 | `legal`   | `string[]`{lang="ts-type"}                    | `undefined`{lang="vue-html"}  | Array of document keys to display. If omitted, shows all configured docs. Non-existent keys trigger dev warnings |
-| `mock`    | `boolean`{lang="ts-type"}                     | `false`{lang="vue-html"}      | Enable mock mode for documentation/testing                              |
 
 ### Localization Keys
 

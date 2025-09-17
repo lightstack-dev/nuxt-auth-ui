@@ -8,7 +8,7 @@ The FormSection component provides a consistent page layout wrapper for authenti
 ## Basic Usage and Defaults
 
 ::code-preview
-::a-form-section{context="signIn" mock}
+::a-form-section{context="signIn"}
   <div class="text-center">
     <p>Your authentication form content goes here</p>
   </div>
@@ -40,7 +40,7 @@ See the component's [API](#api) for how to override these defaults.
 The component adapts its title, description, and icon based on context:
 
 ::code-preview
-::a-form-section{context="signUp" mock}
+::a-form-section{context="signUp"}
   <div class="text-center">
     <p>Sign-up form would go here</p>
   </div>
@@ -139,7 +139,7 @@ The component uses these i18n keys under the `auth` namespace:
 | `auth.signIn`         | "Sign In"                           | Sign-in page title       |
 | `auth.signUp`         | "Sign Up"                           | Sign-up page title       |
 | `auth.signInTitle`    | "Welcome Back"                      | Sign-in card title       |
-| `auth.signUpTitle`    | "Let's Get You Signed Up"           | Sign-up card title       |
+| `auth.signUpTitle`    | "Let’s Get You Signed Up"           | Sign-up card title       |
 
 ## Integration
 

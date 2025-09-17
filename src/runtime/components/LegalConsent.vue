@@ -31,16 +31,18 @@ const props = withDefaults(
   defineProps<{
     legal?: string[]
     context?: 'signIn' | 'signUp' | 'general'
-    mock?: boolean
   }>(),
   {
     context: 'general',
-    mock: false,
   },
 )
 
 // Composables
 const { t } = useI18n()
+const config = useRuntimeConfig()
+
+// Check if in mock mode
+const mock = config.public.auth?.mock === true
 
 // Computed properties
 const consentMessage = computed(() => {

@@ -1,0 +1,17 @@
+{
+  "name": "nuxt-final-auth - The final auth solution for Nuxt",
+  "short_name": "nuxt-final-auth",
+  "description": "The final auth solution for Nuxt",
+  "theme_color": "#615fff",
+  "background_color": "#615fff",
+  "display": "standalone",
+  "start_url": "/",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

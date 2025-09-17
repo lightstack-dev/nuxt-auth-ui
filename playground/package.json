@@ -10,11 +10,6 @@
     "typecheck": "vue-tsc --noEmit"
   },
   "dependencies": {
-    "@iconify-json/lucide": "^1.2.67",
-    "@iconify-json/simple-icons": "^1.2.51",
-    "@logto/nuxt": "^1.2.6",
-    "@nuxt/ui": "^4.0.0-alpha.1",
-    "@nuxtjs/i18n": "^10.1.0",
     "nuxt": "^4.1.2"
   }
 }

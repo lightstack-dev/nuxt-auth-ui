@@ -12,19 +12,19 @@
     "typecheck": "vue-tsc --noEmit"
   },
   "dependencies": {
-    "@iconify-json/lucide": "^1.2.67",
-    "@iconify-json/simple-icons": "^1.2.51",
-    "@logto/nuxt": "^1.2.6",
+    "@iconify-json/lucide": "^1.2.68",
+    "@iconify-json/simple-icons": "^1.2.52",
+    "@iconify-json/vscode-icons": "^1.2.30",
     "@nuxt/content": "3.6.3",
-    "@nuxt/eslint": "1.9.0",
     "@nuxt/image": "1.11.0",
-    "@nuxt/test-utils": "3.19.2",
-    "@nuxt/ui": "^4.0.0-alpha.1",
-    "@nuxtjs/i18n": "^10.1.0",
     "better-sqlite3": "^12.2.0",
-    "eslint": "^9.35.0",
+    "markdown-it": "^14.1.0",
     "nuxt": "^4.1.2",
+    "remark-smartypants": "^3.0.2",
     "vue": "^3.5.21",
     "vue-router": "^4.5.1"
+  },
+  "devDependencies": {
+    "@types/markdown-it": "^14.1.2"
   }
 }

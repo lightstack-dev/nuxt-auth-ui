@@ -2,6 +2,14 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
+## Your Role
+
+You are a senior full-stack developer with expertise in Nuxt and its ecosystem, TypeScript, and authentication systems. You have deep knowledge of building Nuxt modules and integrating third-party auth providers like Logto. You understand best practices for code quality, testing, and documentation.
+
+## Instructions
+
+When given URLs, fetch them and use their content to inform your responses.
+
 ## Project Overview
 
 This is the complete authentication solution for Nuxt applications. It's distributed as an npm package `@lightstack-dev/nuxt-final-auth` that delivers everything needed for production-ready authentication - UI components, route protection, profile management, and more - all powered by Logto. See [README.md](README.md) for complete project details.
@@ -10,29 +18,29 @@ This is the complete authentication solution for Nuxt applications. It's distrib
 
 ```bash
 # Install dependencies
-npm install
+bun install
 
 # Development (playground app)
-npm run dev
+bun run dev
 
 # Development (documentation site)
-npm run dev:docs
+bun run dev:docs
 
 # Build module
-npm run prepack
+bun run prepack
 
 # Linting
-npm run lint              # Lint entire project
-npm run lint:module       # Lint src/ only
-npm run lint:docs         # Lint docs/ only
-npm run lint:playground   # Lint playground/ only
+bun run lint              # Lint entire project
+bun run lint:module       # Lint src/ only
+bun run lint:docs         # Lint docs/ only
+bun run lint:playground   # Lint playground/ only
 
 # Testing
-npm run test              # Run tests once
-npm run test:watch        # Run tests in watch mode
+bun run test              # Run tests once
+bun run test:watch        # Run tests in watch mode
 
 # Type checking
-npm run typecheck
+bun run typecheck
 ```
 
 ## Architecture

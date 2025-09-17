@@ -12,7 +12,6 @@
       <SocialProviderButtons
         v-if="social"
         :loading="loading"
-        :mock="!!mock"
         :size="size"
         @click="handleSocialSignUp"
       />
@@ -30,7 +29,7 @@
         <UInput
           v-model="state.email"
           autocomplete="email"
-          :autofocus="!props.mock && autofocus"
+          :autofocus="!mock && autofocus"
           :disabled="loading"
           :placeholder="t('auth.emailPlaceholder')"
           :size="size"
@@ -115,7 +114,7 @@
       >
         <UPinInput
           v-model="verificationCode"
-          :autofocus="!(props.mock === true || props.mock === 'verification') && verificationStep && autofocus"
+          :autofocus="!mock && verificationStep && autofocus"
           :disabled="loading"
           :length="6"
           size="xl"
@@ -160,16 +159,14 @@ import SignInButton from './SignInButton.vue'
 import SocialProviderButtons from './SocialProviderButtons.vue'
 
 // Define props
-const props = withDefaults(
+withDefaults(
   defineProps<{
-    mock?: boolean | 'verification'
     social?: boolean
     secondary?: boolean
     autofocus?: boolean
     size?: 'xs' | 'sm' | 'md' | 'lg' | 'xl'
   }>(),
   {
-    mock: false,
     social: true,
     secondary: true,
     autofocus: true,
@@ -186,6 +183,10 @@ const emit = defineEmits<{
 // Composables
 const { t } = useI18n()
 const auth = useFinalAuth()
+const config = useRuntimeConfig()
+
+// Check if in mock mode
+const mock = config.public.auth?.mock === true
 
 // Computed properties
 
@@ -198,7 +199,7 @@ const socialProviders = computed<SocialProvider[]>(() => {
 const loading = ref(false)
 const error = ref<string | null>(null)
 const loadingProvider = ref<string | null>(null)
-const verificationStep = ref(props.mock === 'verification')
+const verificationStep = ref(false)
 const verificationCode = ref<number[]>([])
 const passwordPolicyFetched = ref(false)
 
@@ -224,7 +225,7 @@ const passwordPolicy = ref<{
 
 // Fetch password policy on email field focus
 const fetchPasswordPolicy = async () => {
-  if (passwordPolicyFetched.value || props.mock) return
+  if (passwordPolicyFetched.value || mock) return
 
   try {
     const policy = await auth.getPasswordPolicy()
@@ -285,7 +286,7 @@ const dynamicSignUpSchema = computed(() => {
 
 const onSubmit = async (event: { data: SignUpFormData }) => {
   const data = event.data
-  if (props.mock) {
+  if (mock) {
     // In mock mode, simulate registration and verification
     loading.value = true
     setTimeout(() => {
@@ -332,7 +333,7 @@ const handleSocialSignUp = (provider: SocialProvider) => {
 }
 
 const verifyCode = async () => {
-  if (props.mock) {
+  if (mock) {
     loading.value = true
     setTimeout(() => {
       loading.value = false
@@ -361,7 +362,7 @@ const verifyCode = async () => {
 }
 
 const resendVerification = async () => {
-  if (props.mock) {
+  if (mock) {
     console.log('[Mock] Resending verification code to:', state.value.email)
     return
   }

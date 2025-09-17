@@ -1,5 +1,5 @@
-import { defineNuxtModule, addPlugin, addImports, addComponent, addTemplate, createResolver, extendPages, addServerHandler, addRouteMiddleware } from '@nuxt/kit'
-import type { authConfig } from './runtime/types/config'
+import { defineNuxtModule, addPlugin, addImports, addComponent, addTemplate, createResolver, extendPages, addServerHandler, addRouteMiddleware, hasNuxtModule, installModule } from '@nuxt/kit'
+import type { authConfig, ResolvedAuthConfig } from './runtime/types/config'
 
 export default defineNuxtModule<authConfig>({
   meta: {
@@ -8,6 +8,7 @@ export default defineNuxtModule<authConfig>({
   },
   // Default configuration options of the Nuxt module
   defaults: {
+    mock: false,
     routes: {
       signIn: '/auth/sign-in',
       signUp: '/auth/sign-up',
@@ -28,6 +29,23 @@ export default defineNuxtModule<authConfig>({
   async setup(options, nuxt) {
     const resolver = createResolver(import.meta.url)
 
+    // Auto-install required modules
+    if (!hasNuxtModule('@nuxtjs/i18n')) {
+      await installModule('@nuxtjs/i18n', {
+        locales: ['en'],
+        defaultLocale: 'en',
+      })
+    }
+
+    if (!hasNuxtModule('@nuxt/ui')) {
+      await installModule('@nuxt/ui')
+    }
+
+    // Only install Logto module if not in mock mode
+    if (!options.mock && !hasNuxtModule('@logto/nuxt')) {
+      await installModule('@logto/nuxt')
+    }
+
     // Extend app.config with our defaults
     // This merges with user's app.config automatically
     nuxt.hook('app:resolve', (app) => {
@@ -35,7 +53,8 @@ export default defineNuxtModule<authConfig>({
     })
 
     // Merge options with defaults to ensure all values are defined
-    const resolvedOptions = {
+    const resolvedOptions: ResolvedAuthConfig = {
+      mock: options.mock || false,
       routes: {
         signIn: options.routes?.signIn || '/auth/sign-in',
         signUp: options.routes?.signUp || '/auth/sign-up',
@@ -64,17 +83,6 @@ export default defineNuxtModule<authConfig>({
     nuxt.options.runtimeConfig.public = nuxt.options.runtimeConfig.public || {}
     nuxt.options.runtimeConfig.public.auth = resolvedOptions
 
-    // Check if i18n is configured (it's a required peer dependency)
-    const hasI18n = nuxt.options.modules?.some((m) => {
-      if (!m) return false
-      const moduleName = typeof m === 'string' ? m : Array.isArray(m) ? m[0] : null
-      return typeof moduleName === 'string' && (moduleName === '@nuxtjs/i18n' || moduleName.includes('i18n'))
-    })
-
-    if (!hasI18n) {
-      console.warn('[nuxt-final-auth] @nuxtjs/i18n module is required but not found. Please add it to your nuxt.config.ts modules.')
-    }
-
     // Use i18n:registerModule hook to provide our translations
     // This is the official way for modules to provide translations in i18n v8+
     nuxt.hook('i18n:registerModule', (register) => {
@@ -98,10 +106,73 @@ export default defineNuxtModule<authConfig>({
       },
     ])
 
-    // Add type declarations
+    // Add type declarations using best practice for module authors
     addTemplate({
       filename: 'types/auth-ui.d.ts',
-      src: resolver.resolve('./runtime/types/app-config.d.ts'),
+      getContents: () => `
+declare module '@nuxt/schema' {
+  interface AppConfigInput {
+    ui?: {
+      icons?: {
+        // Auth-specific icons
+        authSignIn?: string
+        authSignUp?: string
+        authSignOut?: string
+        authUser?: string
+        authProfile?: string
+        authSettings?: string
+        authSecurity?: string
+        authPassword?: string
+        authEmail?: string
+        authSocial?: string
+        authGoogle?: string
+        authGitHub?: string
+        authMicrosoft?: string
+        authProvider?: string
+        [key: string]: string | undefined
+      }
+      [key: string]: unknown
+    }
+  }
+}
+
+declare module '@nuxt/schema' {
+  interface RuntimeConfig {
+    public: {
+      auth?: {
+        mock?: boolean
+        routes?: {
+          signIn?: string
+          signUp?: string
+          signOut?: string
+          profile?: string
+          passwordReset?: string
+        }
+        componentPrefix?: string
+        redirects?: {
+          afterSignIn?: string
+          afterSignOut?: string
+        }
+        middleware?: false | {
+          protectByDefault?: boolean
+          name?: string
+          exceptionRoutes?: string[]
+        }
+        legal?: {
+          termsOfService?: string
+          privacyPolicy?: string
+          cookiePolicy?: string
+        }
+        socialProviders?: string[]
+        [key: string]: unknown
+      }
+      [key: string]: unknown
+    }
+  }
+}
+
+export {}
+      `
     })
 
     addComponent({

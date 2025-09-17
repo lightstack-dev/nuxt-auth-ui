@@ -5,6 +5,7 @@ export interface SocialProvider {
 }
 
 export interface authConfig {
+  mock?: boolean
   routes?: {
     signIn?: string
     signUp?: string
@@ -21,6 +22,33 @@ export interface authConfig {
     protectByDefault?: boolean
     name?: string
     exceptionRoutes?: string[]
+  }
+  legal?: {
+    termsOfService?: string
+    privacyPolicy?: string
+    cookiePolicy?: string
+  }
+  socialProviders?: string[]
+}
+
+export interface ResolvedAuthConfig {
+  mock: boolean
+  routes: {
+    signIn: string
+    signUp: string
+    signOut: string
+    profile: string
+    passwordReset?: string
+  }
+  componentPrefix: string
+  redirects: {
+    afterSignIn: string
+    afterSignOut: string
+  }
+  middleware: false | {
+    protectByDefault: boolean
+    name: string
+    exceptionRoutes: string[]
   }
   legal?: {
     termsOfService?: string
