@@ -1,4 +1,4 @@
-import { defineNuxtModule, addPlugin, addImports, addComponent, addTypeTemplate, createResolver, extendPages, addServerHandler, addRouteMiddleware, hasNuxtModule, installModule, useLogger } from '@nuxt/kit'
+import { defineNuxtModule, addPlugin, addImports, addComponent, addTypeTemplate, createResolver, extendPages, addRouteMiddleware, hasNuxtModule, installModule, useLogger } from '@nuxt/kit'
 import type { authConfig, ResolvedAuthConfig } from './runtime/types/config'
 
 export default defineNuxtModule<authConfig>({
