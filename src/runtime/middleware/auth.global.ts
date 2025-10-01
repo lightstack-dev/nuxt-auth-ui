@@ -1,4 +1,4 @@
-import { useRuntimeConfig, navigateTo, useSupabaseUser } from '#imports'
+import { useRuntimeConfig, navigateTo } from '#imports'
 
 export default defineNuxtRouteMiddleware((to) => {
   const config = useRuntimeConfig()
@@ -7,13 +7,24 @@ export default defineNuxtRouteMiddleware((to) => {
   // Skip if middleware is completely disabled
   if (!authConfig?.middleware || typeof authConfig.middleware === 'boolean') return
 
+  // Skip middleware in mock mode (no auth needed for demos/docs)
+  if (authConfig.mock) return
+
   // Get middleware config (defaults to protect by default)
   const middlewareConfig = typeof authConfig.middleware === 'object' ? authConfig.middleware : { protectByDefault: true, exceptionRoutes: [] }
 
   // Check authentication status using Supabase
-  // useSupabaseUser() works in both client and server contexts
-  const user = useSupabaseUser()
-  const isAuthenticated = !!user.value
+  // Dynamically import to avoid errors when @nuxtjs/supabase isn't installed
+  let isAuthenticated = false
+  try {
+    // @ts-expect-error - useSupabaseUser is auto-imported by @nuxtjs/supabase
+    const user = useSupabaseUser()
+    isAuthenticated = !!user.value
+  }
+  catch {
+    // Supabase not available - treat as unauthenticated
+    isAuthenticated = false
+  }
 
   // Define auth routes that should be accessible to unauthenticated users
   const publicAuthRoutes = [
