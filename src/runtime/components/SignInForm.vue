@@ -88,7 +88,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref, useI18n, useFinalAuth } from '#imports'
+import { computed, ref, useI18n, useFinalAuth, useSupabaseClient, useRuntimeConfig } from '#imports'
 
 import { signInSchema, type SignInFormData } from '../utils/validation'
 
@@ -122,6 +122,7 @@ const emit = defineEmits<{
 const { t } = useI18n()
 const auth = useFinalAuth()
 const config = useRuntimeConfig()
+const supabase = useSupabaseClient()
 
 // Check if in mock mode
 const mock = config.public.auth?.mock ?? false
@@ -167,8 +168,13 @@ const onSubmit = async (event: { data: SignInFormData }) => {
     // Emit the event for parent components to handle if needed
     emit('submit', data)
 
-    // Perform the actual sign-in
-    await auth.signIn(data.email, data.password, data.rememberMe)
+    // Perform the actual sign-in using Supabase
+    const { error: signInError } = await supabase.auth.signInWithPassword({
+      email: data.email,
+      password: data.password,
+    })
+
+    if (signInError) throw signInError
 
     // Emit success if sign-in completes
     emit('success')

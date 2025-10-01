@@ -19,7 +19,7 @@
 
 <script setup lang="ts">
 import { ref, computed } from 'vue'
-import { useI18n, useFinalAuth, useAppConfig } from '#imports'
+import { useI18n, useFinalAuth, useAppConfig, useRuntimeConfig, useSupabaseClient } from '#imports'
 import type { SocialProvider } from '../types/config'
 
 // Define props
@@ -41,6 +41,7 @@ const { t } = useI18n()
 const auth = useFinalAuth()
 const appConfig = useAppConfig()
 const config = useRuntimeConfig()
+const supabase = useSupabaseClient()
 
 // Check if in mock mode
 const mock = config.public.auth?.mock ?? false
@@ -82,8 +83,16 @@ const handleSocialAction = async (provider: SocialProvider) => {
     // Emit the event for parent components to handle
     emit('click', provider)
 
-    // Perform social authentication (handles both sign-in and sign-up)
-    await auth.signInWithSocial(provider.name)
+    // Perform social authentication using Supabase (handles both sign-in and sign-up)
+    const { error } = await supabase.auth.signInWithOAuth({
+      // Type assertion needed as Supabase provider type is a specific union
+      provider: provider.name as 'google' | 'github' | 'gitlab' | 'bitbucket' | 'discord' | 'facebook' | 'apple' | 'azure' | 'linkedin' | 'microsoft' | 'notion' | 'slack' | 'spotify' | 'twitch' | 'twitter' | 'workos' | 'zoom',
+      options: {
+        redirectTo: `${window.location.origin}${config.public.auth?.redirects?.afterSignIn || '/'}`,
+      },
+    })
+
+    if (error) throw error
 
     // Note: success event not emitted here as social actions redirect
   }
