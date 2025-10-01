@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Your Role
 
-You are a senior full-stack developer with expertise in Nuxt and its ecosystem, TypeScript, and authentication systems. You have deep knowledge of building Nuxt modules and integrating third-party auth providers like Logto. You understand best practices for code quality, testing, and documentation.
+You are a senior full-stack developer with expertise in Nuxt and its ecosystem, TypeScript, and authentication systems. You have deep knowledge of building Nuxt modules and integrating third-party auth providers, particularly Supabase. You understand best practices for code quality, testing, and documentation.
 
 ## Instructions
 
@@ -12,7 +12,32 @@ When given URLs, fetch them and use their content to inform your responses.
 
 ## Project Overview
 
-This is the complete authentication solution for Nuxt applications. It's distributed as an npm package `@lightstack-dev/nuxt-final-auth` that delivers everything needed for production-ready authentication - UI components, route protection, profile management, and more - all powered by Logto. See [README.md](README.md) for complete project details.
+This is a production-ready authentication UI module for Nuxt applications powered by Supabase. It's distributed as an npm package `@lightstack-dev/nuxt-final-auth` that provides polished, ready-to-use UI components and auth flows so developers can focus on their business logic instead of rebuilding auth interfaces.
+
+**What this module provides:**
+- Beautiful, validated auth forms (sign in/up/out, password reset)
+- Profile management components
+- Social authentication UI
+- i18n support out of the box
+- Works with Supabase (self-hosted or cloud)
+
+**What this module assumes:**
+- Developers have basic Supabase knowledge
+- Supabase is configured and running (via Supabase CLI, Lightstack CLI, or cloud)
+- Developers use `@nuxtjs/supabase` module for Supabase integration
+
+**Value proposition:**
+Stop rebuilding auth UI for every project. This module handles the boring, repetitive UI layer while Supabase handles the authentication primitives.
+
+See [README.md](README.md) for complete project details.
+
+## Related Projects
+
+**Lightstack CLI** ([github.com/lightstack-dev/cli](https://github.com/lightstack-dev/cli)):
+- Optional companion tool (no hard dependency)
+- Provides HTTPS local development and self-hosted Supabase deployment
+- Used in playground for development
+- When encountering CLI issues during development, create issues in the CLI repo
 
 ## Development Commands
 
@@ -67,7 +92,7 @@ This is a monorepo with three workspaces (see package.json:8-11):
 
 All dependencies are automatically installed with the module:
 - **@nuxt/ui v4**: Component library for beautiful UI
-- **@logto/nuxt**: Authentication provider integration
+- **@nuxtjs/supabase**: Supabase integration (peer dependency - users must install)
 - **@nuxtjs/i18n**: Internationalization support
 - **@iconify-json/lucide & simple-icons**: Icon sets
 
@@ -81,11 +106,11 @@ The module provides a complete set of authentication components using a configur
 
 ### API Endpoints
 
-The module provides a complete authentication API:
-- `/api/auth-ui/connectors` - Social provider discovery and configuration
-- `/api/auth-ui/password-policy` - Dynamic password policy enforcement
-- `/api/auth-ui/register` - Complete user registration flow
-- Additional endpoints coming for profile management, MFA, and account security
+The module provides server endpoints for functionality beyond Supabase's built-in auth:
+- Token-based invitations and validations
+- Profile management helpers
+- Custom auth flow enhancements
+- Note: Many auth operations are handled directly by `@nuxtjs/supabase` module, so we only add endpoints where additional server logic is needed
 
 ### Configuration
 

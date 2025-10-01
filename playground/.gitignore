@@ -1,0 +1,5 @@
+
+# Lightstack
+.light/certs/
+.light/traefik/
+.env

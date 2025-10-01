@@ -1,7 +1,7 @@
 {
   "name": "@lightstack-dev/nuxt-final-auth",
   "version": "0.1.0",
-  "description": "Beautiful, production-ready authentication UI for Nuxt, powered by Logto",
+  "description": "Beautiful, production-ready authentication UI for Nuxt, powered by Supabase",
   "repository": "lightstack-dev/nuxt-final-auth",
   "license": "MIT",
   "type": "module",
@@ -46,13 +46,13 @@
     "typecheck:docs": "cd docs && bun run typecheck"
   },
   "dependencies": {
-    "@logto/nuxt": "^1.2.6",
     "@nuxt/kit": "^4.1.2",
     "@nuxt/ui": "^4.0.0-alpha.1",
     "@nuxtjs/i18n": "^10.1.0",
     "zod": "^3.25.76"
   },
   "peerDependencies": {
+    "@nuxtjs/supabase": "^2.0.0",
     "nuxt": "^4.0.0"
   },
   "devDependencies": {

@@ -1,5 +1,6 @@
 export default defineNuxtConfig({
   modules: [
+    '@nuxtjs/supabase',
     '../src/module',
   ],
 
@@ -28,10 +29,9 @@ export default defineNuxtConfig({
     vueI18n: './i18n.config.ts',
   },
 
-  logto: {
-    cookieSecure: false, // Set to true in production with HTTPS
-    // cookieEncryptionKey is set via NUXT_LOGTO_COOKIE_ENCRYPTION_KEY in .env
-    resources: [], // Add your API resources here if needed
-    scopes: ['profile', 'email', 'phone'], // Request these scopes
+  supabase: {
+    url: process.env.SUPABASE_URL,
+    key: process.env.SUPABASE_ANON_KEY,
+    redirect: false, // We handle redirects in our auth components
   },
 })

@@ -1,0 +1,5 @@
+services:
+  router:
+    volumes:
+      - ./traefik:/etc/traefik/dynamic:ro
+      - ./certs:/certs:ro
