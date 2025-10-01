@@ -38,14 +38,15 @@ describe('useFinalAuth', () => {
     vi.clearAllMocks()
   })
 
-  it('should return authentication state and methods', () => {
+  it('should return helper utilities', () => {
     const auth = useFinalAuth()
 
-    expect(auth).toHaveProperty('isAuthenticated')
-    expect(auth).toHaveProperty('user')
-    expect(auth).toHaveProperty('signIn')
-    expect(auth).toHaveProperty('signOut')
     expect(auth).toHaveProperty('getAuthUrl')
+    expect(auth).toHaveProperty('getSocialProviders')
+    // Minimal composable - no auth operations (use Supabase directly)
+    expect(auth).not.toHaveProperty('signIn')
+    expect(auth).not.toHaveProperty('signOut')
+    expect(auth).not.toHaveProperty('user')
   })
 
   it('should return correct auth URLs', () => {
@@ -64,12 +65,13 @@ describe('useFinalAuth', () => {
     expect(auth.getAuthUrl('invalid')).toBeUndefined()
   })
 
-  it('should provide sign in/out methods', () => {
+  it('should not provide auth operation methods', () => {
     const auth = useFinalAuth()
 
-    expect(typeof auth.signIn).toBe('function')
-    expect(typeof auth.signUp).toBe('function')
-    expect(typeof auth.signOut).toBe('function')
+    // Auth operations should be done via Supabase composables directly
+    expect(auth.signIn).toBeUndefined()
+    expect(auth.signUp).toBeUndefined()
+    expect(auth.signOut).toBeUndefined()
   })
 
   it('should provide social providers functionality', () => {

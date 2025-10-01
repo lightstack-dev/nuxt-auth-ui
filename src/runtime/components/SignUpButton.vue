@@ -28,7 +28,8 @@ const mock = config.public.auth?.mock ?? false
 let isAuthenticated = false
 if (!mock) {
   try {
-    // @ts-expect-error - useSupabaseUser is auto-imported by @nuxtjs/supabase
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore useSupabaseUser is auto-imported by @nuxtjs/supabase when installed
     const user = useSupabaseUser()
     isAuthenticated = !!user.value
   }

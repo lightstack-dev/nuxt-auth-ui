@@ -17,7 +17,8 @@ export default defineNuxtRouteMiddleware((to) => {
   // Dynamically import to avoid errors when @nuxtjs/supabase isn't installed
   let isAuthenticated = false
   try {
-    // @ts-expect-error - useSupabaseUser is auto-imported by @nuxtjs/supabase
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore useSupabaseUser is auto-imported by @nuxtjs/supabase when installed
     const user = useSupabaseUser()
     isAuthenticated = !!user.value
   }

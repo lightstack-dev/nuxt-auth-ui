@@ -56,7 +56,8 @@ interface SupabaseAuthClient {
 let supabase: SupabaseAuthClient | null = null
 if (!mock) {
   try {
-    // @ts-expect-error - useSupabaseClient is auto-imported by @nuxtjs/supabase
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore useSupabaseClient is auto-imported by @nuxtjs/supabase when installed
     supabase = useSupabaseClient()
   }
   catch {
@@ -102,6 +103,10 @@ const handleSocialAction = async (provider: SocialProvider) => {
     emit('click', provider)
 
     // Perform social authentication using Supabase (handles both sign-in and sign-up)
+    if (!supabase) {
+      throw new Error('Supabase client not initialized')
+    }
+
     const { error } = await supabase.auth.signInWithOAuth({
       // Type assertion needed as Supabase provider type is a specific union
       provider: provider.name as 'google' | 'github' | 'gitlab' | 'bitbucket' | 'discord' | 'facebook' | 'apple' | 'azure' | 'linkedin' | 'microsoft' | 'notion' | 'slack' | 'spotify' | 'twitch' | 'twitter' | 'workos' | 'zoom',

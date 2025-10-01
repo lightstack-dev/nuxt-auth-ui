@@ -137,7 +137,8 @@ interface SupabaseAuthClient {
 let supabase: SupabaseAuthClient | null = null
 if (!mock) {
   try {
-    // @ts-expect-error - useSupabaseClient is auto-imported by @nuxtjs/supabase
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore useSupabaseClient is auto-imported by @nuxtjs/supabase when installed
     supabase = useSupabaseClient()
   }
   catch {
@@ -187,6 +188,10 @@ const onSubmit = async (event: { data: SignInFormData }) => {
     emit('submit', data)
 
     // Perform the actual sign-in using Supabase
+    if (!supabase) {
+      throw new Error('Supabase client not initialized')
+    }
+
     const { error: signInError } = await supabase.auth.signInWithPassword({
       email: data.email,
       password: data.password,
