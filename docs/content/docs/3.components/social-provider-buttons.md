@@ -3,7 +3,7 @@ title: SocialProviderButtons
 description: Reusable social authentication buttons with flexible configuration
 ---
 
-The SocialProviderButtons component provides a set of social authentication buttons based on your [module configuration](/docs/configuration/social-providers), with automatic fallback to Logto-detected providers. Social providers handle both sign-in and sign-up in one seamless flow -- the provider determines whether it's a new user (registration) or existing user (authentication).
+The SocialProviderButtons component provides a set of social authentication buttons based on your [module configuration](/docs/configuration/social-providers). Social providers handle both sign-in and sign-up in one seamless flow -- Supabase automatically determines whether it's a new user (registration) or existing user (authentication).
 
 ## Basic Usage
 
@@ -21,8 +21,7 @@ The SocialProviderButtons component provides a set of social authentication butt
 
 By default, the component:
 
-- Lists configured social providers
-- Falls back to auto-detected providers from your Logto instance
+- Lists manually configured social providers (no auto-detection)
 - Uses consistent button labeling and loading states
 - Handles authentication seamlessly (both sign-in and sign-up)
 - Provides proper error handling and user feedback
