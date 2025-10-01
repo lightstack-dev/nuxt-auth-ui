@@ -1,0 +1,27 @@
+services:
+  router:
+    image: traefik:v3.5
+    container_name: ${PROJECT_NAME:-playground}-router
+    command:
+      - --api.dashboard=true
+      - --providers.file.directory=/etc/traefik/dynamic
+      - --providers.file.filename=/etc/traefik/dynamic/tls.yml
+      - --providers.file.watch=true
+      - --entrypoints.web.address=:80
+      - --entrypoints.websecure.address=:443
+      - --entrypoints.web.http.redirections.entryPoint.to=websecure
+      - --entrypoints.web.http.redirections.entryPoint.scheme=https
+    ports:
+      - "80:80"
+      - "443:443"
+      - "8080:8080"
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    volumes:
+      - ./traefik:/etc/traefik/dynamic:ro
+    networks:
+      - lightstack
+
+networks:
+  lightstack:
+    driver: bridge

@@ -1,4 +1,4 @@
-import { useRuntimeConfig, navigateTo, useNuxtApp, ref, useRequestEvent, type Ref } from '#imports'
+import { useRuntimeConfig, navigateTo } from '#imports'
 
 export default defineNuxtRouteMiddleware((to) => {
   const config = useRuntimeConfig()
@@ -7,21 +7,24 @@ export default defineNuxtRouteMiddleware((to) => {
   // Skip if middleware is completely disabled
   if (!authConfig?.middleware || typeof authConfig.middleware === 'boolean') return
 
+  // Skip middleware in mock mode (no auth needed for demos/docs)
+  if (authConfig.mock) return
+
   // Get middleware config (defaults to protect by default)
   const middlewareConfig = typeof authConfig.middleware === 'object' ? authConfig.middleware : { protectByDefault: true, exceptionRoutes: [] }
 
-  // Check authentication status
-  let isAuthenticated: boolean | Ref<boolean>
-
-  if (import.meta.server) {
-    // Server-side: check for logtoUser in event context
-    const event = useRequestEvent()
-    isAuthenticated = !!event?.context?.logtoUser
+  // Check authentication status using Supabase
+  // Dynamically import to avoid errors when @nuxtjs/supabase isn't installed
+  let isAuthenticated = false
+  try {
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore useSupabaseUser is auto-imported by @nuxtjs/supabase when installed
+    const user = useSupabaseUser()
+    isAuthenticated = !!user.value
   }
-  else {
-    // Client-side: use the Nuxt app plugin
-    const { $logtoAuth } = useNuxtApp() as { $logtoAuth?: { isAuthenticated: Ref<boolean> } }
-    isAuthenticated = $logtoAuth?.isAuthenticated || ref(false)
+  catch {
+    // Supabase not available - treat as unauthenticated
+    isAuthenticated = false
   }
 
   // Define auth routes that should be accessible to unauthenticated users
@@ -70,10 +73,7 @@ export default defineNuxtRouteMiddleware((to) => {
     isProtectedRoute = !isAuthRoute && !isLegalRoute && isException
   }
 
-  // Get the authentication value (handle both boolean and Ref)
-  const isAuthenticatedValue = typeof isAuthenticated === 'boolean' ? isAuthenticated : isAuthenticated.value
-
-  if (isAuthenticatedValue) {
+  if (isAuthenticated) {
     // User is authenticated
     if (isAuthRoute) {
       // Redirect authenticated users away from auth pages

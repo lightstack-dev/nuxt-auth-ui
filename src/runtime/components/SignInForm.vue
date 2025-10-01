@@ -88,7 +88,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref, useI18n, useFinalAuth } from '#imports'
+import { computed, ref, useI18n, useFinalAuth, useRuntimeConfig } from '#imports'
 
 import { signInSchema, type SignInFormData } from '../utils/validation'
 
@@ -125,6 +125,26 @@ const config = useRuntimeConfig()
 
 // Check if in mock mode
 const mock = config.public.auth?.mock ?? false
+
+// Define minimal Supabase client interface for type safety
+interface SupabaseAuthClient {
+  auth: {
+    signInWithPassword: (credentials: { email: string, password: string }) => Promise<{ error: Error | null }>
+  }
+}
+
+// Only initialize Supabase client if not in mock mode
+let supabase: SupabaseAuthClient | null = null
+if (!mock) {
+  try {
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore useSupabaseClient is auto-imported by @nuxtjs/supabase when installed
+    supabase = useSupabaseClient()
+  }
+  catch {
+    console.warn('Supabase client not available')
+  }
+}
 
 // Reactive state
 const loading = ref(false)
@@ -167,8 +187,17 @@ const onSubmit = async (event: { data: SignInFormData }) => {
     // Emit the event for parent components to handle if needed
     emit('submit', data)
 
-    // Perform the actual sign-in
-    await auth.signIn(data.email, data.password, data.rememberMe)
+    // Perform the actual sign-in using Supabase
+    if (!supabase) {
+      throw new Error('Supabase client not initialized')
+    }
+
+    const { error: signInError } = await supabase.auth.signInWithPassword({
+      email: data.email,
+      password: data.password,
+    })
+
+    if (signInError) throw signInError
 
     // Emit success if sign-in completes
     emit('success')

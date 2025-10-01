@@ -1,4 +1,4 @@
-import { defineNuxtModule, addPlugin, addImports, addComponent, addTypeTemplate, createResolver, extendPages, addServerHandler, addRouteMiddleware, hasNuxtModule, installModule, useLogger } from '@nuxt/kit'
+import { defineNuxtModule, addPlugin, addImports, addComponent, addTypeTemplate, createResolver, extendPages, addRouteMiddleware, hasNuxtModule, installModule, useLogger } from '@nuxt/kit'
 import type { authConfig, ResolvedAuthConfig } from './runtime/types/config'
 
 export default defineNuxtModule<authConfig>({
@@ -53,9 +53,12 @@ export default defineNuxtModule<authConfig>({
       await installModule('@nuxt/ui')
     }
 
-    // Only install Logto module if not in mock mode
-    if (!options.mock && !hasNuxtModule('@logto/nuxt')) {
-      await installModule('@logto/nuxt')
+    // Check for required Supabase module (peer dependency)
+    // Only warn during prepare/build, but allow it to continue
+    if (!options.mock && !hasNuxtModule('@nuxtjs/supabase')) {
+      logger.warn('Missing required peer dependency: @nuxtjs/supabase')
+      logger.info('Install with: npm install @nuxtjs/supabase')
+      logger.info('The module will not function without @nuxtjs/supabase')
     }
 
     // Extend app.config with our defaults
@@ -229,21 +232,8 @@ export {}
       filePath: resolver.resolve('./runtime/components/SocialProviderButtons.vue'),
     })
 
-    // Add server API routes
-    addServerHandler({
-      route: '/api/auth-ui/connectors',
-      handler: resolver.resolve('./runtime/server/api/auth-ui/connectors.get'),
-    })
-
-    addServerHandler({
-      route: '/api/auth-ui/password-policy',
-      handler: resolver.resolve('./runtime/server/api/auth-ui/password-policy.get'),
-    })
-
-    addServerHandler({
-      route: '/api/auth-ui/register',
-      handler: resolver.resolve('./runtime/server/api/auth-ui/register.post'),
-    })
+    // Server API routes removed - all auth operations handled by Supabase client
+    // Social providers and password policies are configured in nuxt.config.ts
 
     // Add auth pages
     extendPages((pages) => {

@@ -5,7 +5,7 @@ features:
     description: Production-ready components with Nuxt UI
     icon: i-lucide-palette
   - title: Complete Auth
-    description: Sign in, sign up, profile management, and more with Logto
+    description: Sign in, sign up, profile management, and more with Supabase
     icon: i-lucide-lock
   - title: Route Protection
     description: Built-in middleware with SSR support
@@ -14,7 +14,7 @@ features:
     description: Full internationalization support
     icon: i-lucide-globe
   - title: Zero Config
-    description: All dependencies auto-installed
+    description: Works out of the box with your Supabase setup
     icon: i-lucide-package
   - title: TypeScript
     description: Fully typed for excellent developer experience
@@ -66,8 +66,8 @@ to: /docs
 
 ::u-page-section
 ---
-title: Because it really sucks to build auth over and over again for every project.
-description: Every other auth solution has critical gaps. You always end up building half the solution yourself. Let’s fix that.
+title: Because it really sucks to build auth UI over and over again for every project.
+description: This module handles the UI layer you’d otherwise rebuild for every Supabase project. Focus on your app, not auth forms.
 icon: i-lucide-target
 ---
 ::
@@ -100,7 +100,7 @@ to: /docs/components
 ---
 class: max-w-md mx-auto w-full
 title: "Example: Let’s Get You Signed up"
-description: With this beautiful sign-up form right out of the box
+description: Using this beautiful sign-up form right out of the box
 ---
 
 ::a-sign-up-form{mock}

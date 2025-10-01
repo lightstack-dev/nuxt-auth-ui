@@ -34,7 +34,6 @@
           :placeholder="t('auth.emailPlaceholder')"
           :size="size"
           type="email"
-          @focus="fetchPasswordPolicy"
         />
       </UFormField>
 
@@ -149,7 +148,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref, useFinalAuth, useI18n } from '#imports'
+import { computed, ref, useFinalAuth, useI18n, useRuntimeConfig } from '#imports'
 import { z } from 'zod'
 
 import type { SignUpFormData } from '../utils/validation'
@@ -188,6 +187,27 @@ const config = useRuntimeConfig()
 // Check if in mock mode
 const mock = config.public.auth?.mock ?? false
 
+// Define minimal Supabase client interface for type safety
+interface SupabaseAuthClient {
+  auth: {
+    signUp: (credentials: { email: string, password: string }) => Promise<{ error: Error | null }>
+    resend: (params: { type: string, email: string }) => Promise<{ error: Error | null }>
+  }
+}
+
+// Only initialize Supabase client if not in mock mode
+let supabase: SupabaseAuthClient | null = null
+if (!mock) {
+  try {
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore useSupabaseClient is auto-imported by @nuxtjs/supabase when installed
+    supabase = useSupabaseClient()
+  }
+  catch {
+    console.warn('Supabase client not available')
+  }
+}
+
 // Computed properties
 
 // Get social providers for separator display
@@ -201,7 +221,6 @@ const error = ref<string | null>(null)
 const loadingProvider = ref<string | null>(null)
 const verificationStep = ref(false)
 const verificationCode = ref<number[]>([])
-const passwordPolicyFetched = ref(false)
 
 const state = ref<SignUpFormData>({
   email: '',
@@ -209,35 +228,13 @@ const state = ref<SignUpFormData>({
   passwordConfirmation: '',
 })
 
-// Password policy state
+// Password policy state - using Supabase defaults
 const passwordPolicy = ref<{
   length: { min: number, max: number }
   characterTypes?: { min: number }
-  rejects?: {
-    pwned?: boolean
-    repetitionAndSequence?: boolean
-    userInfo?: boolean
-    words?: string[]
-  }
 }>({
-  length: { min: 8, max: 256 },
+  length: { min: 6, max: 256 }, // Supabase default minimum is 6
 })
-
-// Fetch password policy on email field focus
-const fetchPasswordPolicy = async () => {
-  if (passwordPolicyFetched.value || mock) return
-
-  try {
-    const policy = await auth.getPasswordPolicy()
-    if (policy && 'length' in policy) {
-      passwordPolicy.value = policy
-      passwordPolicyFetched.value = true
-    }
-  }
-  catch (error) {
-    console.warn('Failed to fetch password policy, using defaults', error)
-  }
-}
 
 // Dynamic schema based on password policy
 const dynamicSignUpSchema = computed(() => {
@@ -304,8 +301,17 @@ const onSubmit = async (event: { data: SignUpFormData }) => {
     // Emit the event for parent components to handle if needed
     emit('submit', data)
 
-    // Perform the actual sign-up
-    await auth.signUp(data.email, data.password)
+    // Perform the actual sign-up using Supabase
+    if (!supabase) {
+      throw new Error('Supabase client not initialized')
+    }
+
+    const { error: signUpError } = await supabase.auth.signUp({
+      email: data.email,
+      password: data.password,
+    })
+
+    if (signUpError) throw signUpError
 
     // After successful registration, show verification step
     verificationStep.value = true
@@ -332,6 +338,9 @@ const handleSocialSignUp = (provider: SocialProvider) => {
   // The SocialProviderButtons component handles the actual sign-up
 }
 
+// Note: Email verification is handled automatically by Supabase
+// Users receive an email with a confirmation link
+// The verification UI allows manual PIN entry for mock mode compatibility
 const verifyCode = async () => {
   if (mock) {
     loading.value = true
@@ -343,22 +352,9 @@ const verifyCode = async () => {
     return
   }
 
-  loading.value = true
-  error.value = null
-
-  try {
-    // TODO: Implement actual verification via API
-    await auth.verifyEmail(state.value.email, verificationCode.value.join(''))
-
-    emit('success')
-  }
-  catch (err) {
-    error.value
-      = err instanceof Error ? err.message : 'Invalid verification code'
-  }
-  finally {
-    loading.value = false
-  }
+  // In real Supabase mode, users must click the link in their email
+  // This PIN verification is only for mock mode
+  error.value = 'Please check your email and click the verification link'
 }
 
 const resendVerification = async () => {
@@ -371,10 +367,18 @@ const resendVerification = async () => {
   error.value = null
 
   try {
-    // TODO: Implement resend verification via API
-    await auth.resendVerificationEmail(state.value.email)
+    // Supabase: resend confirmation email
+    if (!supabase) {
+      throw new Error('Supabase client not initialized')
+    }
 
-    // Show success message
+    const { error: resendError } = await supabase.auth.resend({
+      type: 'signup',
+      email: state.value.email,
+    })
+
+    if (resendError) throw resendError
+
     error.value = null
   }
   catch (err) {

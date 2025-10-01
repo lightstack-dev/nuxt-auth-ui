@@ -10,6 +10,10 @@
     "typecheck": "vue-tsc --noEmit"
   },
   "dependencies": {
+    "@nuxtjs/supabase": "^2.0.0",
     "nuxt": "^4.1.2"
+  },
+  "devDependencies": {
+    "supabase": "^2.47.2"
   }
 }

@@ -41,7 +41,7 @@ The SignInForm component is unaware of authentication state. It always renders w
 
 By default, the sign-in form includes the [SocialProviderButtons component](/docs/components/social-provider-buttons). These buttons only render when social providers have been configured or auto-detected.
 
-With the `:social="false"`{lang="vue-html"} prop, you can remove social providers from a SignInForm (even though some might be configured in Nuxt or Logto):
+With the `:social="false"`{lang="vue-html"} prop, you can remove social providers from a SignInForm (even though some might be configured in your module config):
 
 ::code-preview
 ::a-sign-in-form{:social="false"}

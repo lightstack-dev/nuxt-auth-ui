@@ -19,7 +19,7 @@
 
 <script setup lang="ts">
 import { ref, computed } from 'vue'
-import { useI18n, useFinalAuth, useAppConfig } from '#imports'
+import { useI18n, useFinalAuth, useAppConfig, useRuntimeConfig } from '#imports'
 import type { SocialProvider } from '../types/config'
 
 // Define props
@@ -44,6 +44,26 @@ const config = useRuntimeConfig()
 
 // Check if in mock mode
 const mock = config.public.auth?.mock ?? false
+
+// Define minimal Supabase client interface for type safety
+interface SupabaseAuthClient {
+  auth: {
+    signInWithOAuth: (params: { provider: string, options?: { redirectTo?: string } }) => Promise<{ error: Error | null }>
+  }
+}
+
+// Only initialize Supabase client if not in mock mode
+let supabase: SupabaseAuthClient | null = null
+if (!mock) {
+  try {
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore useSupabaseClient is auto-imported by @nuxtjs/supabase when installed
+    supabase = useSupabaseClient()
+  }
+  catch {
+    console.warn('Supabase client not available')
+  }
+}
 
 // Reactive state
 const loadingProvider = ref<string | null>(null)
@@ -82,8 +102,20 @@ const handleSocialAction = async (provider: SocialProvider) => {
     // Emit the event for parent components to handle
     emit('click', provider)
 
-    // Perform social authentication (handles both sign-in and sign-up)
-    await auth.signInWithSocial(provider.name)
+    // Perform social authentication using Supabase (handles both sign-in and sign-up)
+    if (!supabase) {
+      throw new Error('Supabase client not initialized')
+    }
+
+    const { error } = await supabase.auth.signInWithOAuth({
+      // Type assertion needed as Supabase provider type is a specific union
+      provider: provider.name as 'google' | 'github' | 'gitlab' | 'bitbucket' | 'discord' | 'facebook' | 'apple' | 'azure' | 'linkedin' | 'microsoft' | 'notion' | 'slack' | 'spotify' | 'twitch' | 'twitter' | 'workos' | 'zoom',
+      options: {
+        redirectTo: `${window.location.origin}${config.public.auth?.redirects?.afterSignIn || '/'}`,
+      },
+    })
+
+    if (error) throw error
 
     // Note: success event not emitted here as social actions redirect
   }
