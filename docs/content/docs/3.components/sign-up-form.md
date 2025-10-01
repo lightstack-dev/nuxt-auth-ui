@@ -23,7 +23,7 @@ By default, the form:
 
 - Displays configured social provider buttons for quick registration
 - Includes only email, password, and confirm password fields (minimal by design)
-- Enforces password strength requirements according to your Logto instance's policy
+- Enforces password strength requirements (configurable in Supabase)
 - Provides email verification flow after registration
 - Shows a sign-in button for existing users (in the same row as sign-up)
 - Renders form elements in `size="md"`{lang="vue-html"}
@@ -49,16 +49,16 @@ The SignUpForm component manages a two-step registration process:
 
 The component automatically transitions between these steps, showing a verification code input after successful registration.
 
-## Dynamic Password Validation
+## Password Validation
 
-The SignUpForm intelligently fetches and applies your Logto instance's password policy:
+The SignUpForm enforces password strength requirements:
 
-- **Automatic Detection**: When social providers are auto-detected, password policy is fetched alongside
-- **Lazy Loading**: When social providers are configured, password policy loads when user focuses the email field
-- **Real-time Validation**: Client-side validation automatically matches your server's password requirements
-- **Smart Caching**: Policy is fetched once per session and cached for performance
+- **Client-side Validation**: Built-in validation for common password requirements (min length, character types)
+- **Server-side Enforcement**: Supabase handles the final validation based on your project's auth configuration
+- **Real-time Feedback**: Users see validation errors as they type
+- **Sensible Defaults**: Minimum 6 characters (Supabase default)
 
-This ensures users always see accurate password requirements without manual configuration or maintenance.
+Password policies can be configured in your Supabase project settings (Dashboard > Authentication > Providers > Email).
 
 ## Customization
 
@@ -66,7 +66,7 @@ This ensures users always see accurate password requirements without manual conf
 
 By default, the sign-up form includes the [SocialProviderButtons component](/docs/components/social-provider-buttons). These buttons only render when social providers have been configured or auto-detected.
 
-With the `:social="false"`{lang="vue-html"} prop, you can remove social providers from a SignUpForm (even though some might be configured in Nuxt or Logto):
+With the `:social="false"`{lang="vue-html"} prop, you can remove social providers from a SignUpForm (even though some might be configured in your module config):
 
 ::code-preview
 ::a-sign-up-form{:social="false"}
@@ -123,7 +123,7 @@ Features of the verification step:
 - **Clear messaging** - Shows which email address the code was sent to
 - **Loading states** - During verification and resend operations
 
-The verification step can be controlled programmatically using the exposed `showVerification()`{lang="ts"} method. This is useful for error recovery or custom flow control within the same registration session (Logto sessions expire after 1 hour).
+The verification step can be controlled programmatically using the exposed `showVerification()`{lang="ts"} method. This is useful for error recovery or custom flow control within the same registration session.
 
 ### Size
 
@@ -196,7 +196,7 @@ const handleRetryVerification = () => {
 </template>
 ```
 
-**Note:** Logto registration sessions are short-lived (1 hour expiration) and follow a sequential flow. Users cannot resume registration from email links or deep link directly to verification steps.
+**Note:** Supabase email verification is handled via confirmation links sent to the user's email. The PIN input in the form UI is primarily for mock mode compatibility.
 
 ### Hackability
 
@@ -257,18 +257,18 @@ interface SocialProvider {
 
 ### Validation Rules
 
-The form enforces dynamic client-side validation based on your Logto instance's password policy:
+The form enforces client-side validation:
 
 | Field                  | Client-side Validation                                    |
 | ---------------------- | --------------------------------------------------------- |
 | `email`                | Required, valid email format                              |
-| `password`             | Dynamic: Fetched from your Logto instance (min/max length, character types) |
+| `password`             | Minimum 6 characters (Supabase default), configurable     |
 | `passwordConfirmation` | Required, must match password                             |
 
-The password validation automatically adapts to your server's configuration:
-- **Length Requirements**: Min/max characters as configured in Logto
-- **Character Types**: Required character types (lowercase, uppercase, numbers, symbols) based on policy
-- **Fallback**: Uses sensible defaults (8+ characters) if policy fetch fails
+Password validation:
+- **Default**: Minimum 6 characters (matches Supabase defaults)
+- **Server-side**: Final validation done by Supabase based on your project configuration
+- **Configurable**: Set password requirements in Supabase Dashboard > Authentication > Providers > Email
 
 Note: Full password validation including pwned password checks and custom word rejection happens server-side.
 
