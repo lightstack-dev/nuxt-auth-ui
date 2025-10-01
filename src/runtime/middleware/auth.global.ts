@@ -1,4 +1,4 @@
-import { useRuntimeConfig, navigateTo, useNuxtApp, ref, useRequestEvent, type Ref } from '#imports'
+import { useRuntimeConfig, navigateTo, useSupabaseUser } from '#imports'
 
 export default defineNuxtRouteMiddleware((to) => {
   const config = useRuntimeConfig()
@@ -10,19 +10,10 @@ export default defineNuxtRouteMiddleware((to) => {
   // Get middleware config (defaults to protect by default)
   const middlewareConfig = typeof authConfig.middleware === 'object' ? authConfig.middleware : { protectByDefault: true, exceptionRoutes: [] }
 
-  // Check authentication status
-  let isAuthenticated: boolean | Ref<boolean>
-
-  if (import.meta.server) {
-    // Server-side: check for logtoUser in event context
-    const event = useRequestEvent()
-    isAuthenticated = !!event?.context?.logtoUser
-  }
-  else {
-    // Client-side: use the Nuxt app plugin
-    const { $logtoAuth } = useNuxtApp() as { $logtoAuth?: { isAuthenticated: Ref<boolean> } }
-    isAuthenticated = $logtoAuth?.isAuthenticated || ref(false)
-  }
+  // Check authentication status using Supabase
+  // useSupabaseUser() works in both client and server contexts
+  const user = useSupabaseUser()
+  const isAuthenticated = !!user.value
 
   // Define auth routes that should be accessible to unauthenticated users
   const publicAuthRoutes = [
@@ -70,10 +61,7 @@ export default defineNuxtRouteMiddleware((to) => {
     isProtectedRoute = !isAuthRoute && !isLegalRoute && isException
   }
 
-  // Get the authentication value (handle both boolean and Ref)
-  const isAuthenticatedValue = typeof isAuthenticated === 'boolean' ? isAuthenticated : isAuthenticated.value
-
-  if (isAuthenticatedValue) {
+  if (isAuthenticated) {
     // User is authenticated
     if (isAuthRoute) {
       // Redirect authenticated users away from auth pages
