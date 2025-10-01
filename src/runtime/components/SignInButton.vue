@@ -1,6 +1,6 @@
 <template>
   <UButton
-    v-if="persistent || !auth.isAuthenticated.value"
+    v-if="persistent || !isAuthenticated"
     :label="t('auth.signIn')"
     :leading-icon="signInIcon"
     :to="mock ? undefined : auth.getAuthUrl('sign-in')"
@@ -23,6 +23,20 @@ const config = useRuntimeConfig()
 
 // Check if in mock mode
 const mock = config.public.auth?.mock ?? false
+
+// Check authentication status
+let isAuthenticated = false
+if (!mock) {
+  try {
+    // @ts-expect-error - useSupabaseUser is auto-imported by @nuxtjs/supabase
+    const user = useSupabaseUser()
+    isAuthenticated = !!user.value
+  }
+  catch {
+    // Supabase not available - treat as unauthenticated
+    isAuthenticated = false
+  }
+}
 
 // Get icon with proper typing
 const signInIcon = computed(() => {

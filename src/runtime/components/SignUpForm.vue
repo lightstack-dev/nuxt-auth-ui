@@ -148,7 +148,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref, useFinalAuth, useI18n, useSupabaseClient, useRuntimeConfig } from '#imports'
+import { computed, ref, useFinalAuth, useI18n, useRuntimeConfig } from '#imports'
 import { z } from 'zod'
 
 import type { SignUpFormData } from '../utils/validation'
@@ -183,10 +183,29 @@ const emit = defineEmits<{
 const { t } = useI18n()
 const auth = useFinalAuth()
 const config = useRuntimeConfig()
-const supabase = useSupabaseClient()
 
 // Check if in mock mode
 const mock = config.public.auth?.mock ?? false
+
+// Define minimal Supabase client interface for type safety
+interface SupabaseAuthClient {
+  auth: {
+    signUp: (credentials: { email: string, password: string }) => Promise<{ error: Error | null }>
+    resend: (params: { type: string, email: string }) => Promise<{ error: Error | null }>
+  }
+}
+
+// Only initialize Supabase client if not in mock mode
+let supabase: SupabaseAuthClient | null = null
+if (!mock) {
+  try {
+    // @ts-expect-error - useSupabaseClient is auto-imported by @nuxtjs/supabase
+    supabase = useSupabaseClient()
+  }
+  catch {
+    console.warn('Supabase client not available')
+  }
+}
 
 // Computed properties
 

@@ -19,7 +19,7 @@
 
 <script setup lang="ts">
 import { ref, computed } from 'vue'
-import { useI18n, useFinalAuth, useAppConfig, useRuntimeConfig, useSupabaseClient } from '#imports'
+import { useI18n, useFinalAuth, useAppConfig, useRuntimeConfig } from '#imports'
 import type { SocialProvider } from '../types/config'
 
 // Define props
@@ -41,10 +41,28 @@ const { t } = useI18n()
 const auth = useFinalAuth()
 const appConfig = useAppConfig()
 const config = useRuntimeConfig()
-const supabase = useSupabaseClient()
 
 // Check if in mock mode
 const mock = config.public.auth?.mock ?? false
+
+// Define minimal Supabase client interface for type safety
+interface SupabaseAuthClient {
+  auth: {
+    signInWithOAuth: (params: { provider: string, options?: { redirectTo?: string } }) => Promise<{ error: Error | null }>
+  }
+}
+
+// Only initialize Supabase client if not in mock mode
+let supabase: SupabaseAuthClient | null = null
+if (!mock) {
+  try {
+    // @ts-expect-error - useSupabaseClient is auto-imported by @nuxtjs/supabase
+    supabase = useSupabaseClient()
+  }
+  catch {
+    console.warn('Supabase client not available')
+  }
+}
 
 // Reactive state
 const loadingProvider = ref<string | null>(null)
