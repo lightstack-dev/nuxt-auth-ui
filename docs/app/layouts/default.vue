@@ -84,7 +84,7 @@ const footerMainItems = computed<NavigationMenuItem[]>(() => [
   {
     label: t('powered'),
     target: '_blank',
-    to: 'https://logto.io',
+    to: 'https://supabase.com',
   },
 ])
 </script>
@@ -93,6 +93,6 @@ const footerMainItems = computed<NavigationMenuItem[]>(() => [
 en:
   docs: Docs
   copyright: MIT Licensed © {year} Lightstack
-  powered: Powered by Logto
+  powered: Powered by Supabase
   made: Made for Nuxt
 </i18n>
