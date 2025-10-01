@@ -5,7 +5,7 @@ features:
     description: Production-ready components with Nuxt UI
     icon: i-lucide-palette
   - title: Complete Auth
-    description: Sign in, sign up, profile management, and more with Logto
+    description: Sign in, sign up, profile management, and more with Supabase
     icon: i-lucide-lock
   - title: Route Protection
     description: Built-in middleware with SSR support
